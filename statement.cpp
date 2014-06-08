@@ -27,4 +27,9 @@ Statement::~Statement()
     sqlite3_finalize(impl->stmt);
 }
 
+void Statement::reset()
+{
+    checkResult(sqlite3_reset(impl->stmt));
+}
+
 }

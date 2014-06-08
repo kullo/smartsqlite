@@ -14,6 +14,8 @@ public:
     Statement(Statement &&other);
     ~Statement();
 
+    void reset();
+
 private:
     struct Impl;
     std::unique_ptr<Impl> impl;

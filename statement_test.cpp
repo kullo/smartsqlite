@@ -2,8 +2,19 @@
 
 #include "connection.h"
 
-TEST(Statement, canBePrepared)
+class Statement : public testing::Test
 {
-    SqliteWrapper::Connection conn(":memory:");
-    conn.prepare("PRAGMA user_version");
+protected:
+    void SetUp()
+    {
+        conn.reset(new SqliteWrapper::Connection(":memory:"));
+    }
+
+    std::unique_ptr<SqliteWrapper::Connection> conn;
+};
+
+TEST_F(Statement, canBeReset)
+{
+    SqliteWrapper::Statement stmt = conn->prepare("PRAGMA user_version");
+    stmt.reset();
 }

@@ -4,19 +4,19 @@
 #include "connection.h"
 #include "exceptions.h"
 
-class Connection : public testing::Test
+TEST(Connection, cannotOpenFileInNonexistingFolder)
 {
-protected:
-    std::unique_ptr<SqliteWrapper::Connection> conn;
-};
-
-TEST_F(Connection, cannotOpenFileInNonexistingFolder)
-{
-    EXPECT_THROW(conn.reset(new SqliteWrapper::Connection("/does/not/exist")),
+    EXPECT_THROW(SqliteWrapper::Connection("/does/not/exist"),
                  SqliteWrapper::Exception);
 }
 
-TEST_F(Connection, canBeOpened)
+TEST(Connection, canBeOpened)
 {
-    conn.reset(new SqliteWrapper::Connection(":memory:"));
+    SqliteWrapper::Connection(":memory:");
+}
+
+TEST(Connection, canPrepareStatement)
+{
+    SqliteWrapper::Connection conn(":memory:");
+    conn.prepare("PRAGMA user_version");
 }
