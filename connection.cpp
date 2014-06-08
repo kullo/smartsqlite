@@ -27,6 +27,11 @@ Connection::~Connection()
     sqlite3_close(impl->conn);
 }
 
+void Connection::setBusyTimeout(int ms)
+{
+    checkResult(sqlite3_busy_timeout(impl->conn, ms));
+}
+
 Statement Connection::prepare(const std::string &sql)
 {
     sqlite3_stmt *stmtPtr;

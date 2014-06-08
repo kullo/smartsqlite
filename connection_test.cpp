@@ -15,6 +15,12 @@ TEST(Connection, canBeOpened)
     SqliteWrapper::Connection(":memory:");
 }
 
+TEST(Connection, canSetBusyTimeout)
+{
+    SqliteWrapper::Connection conn(":memory:");
+    conn.setBusyTimeout(42);
+}
+
 TEST(Connection, canPrepareStatement)
 {
     SqliteWrapper::Connection conn(":memory:");

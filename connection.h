@@ -15,6 +15,7 @@ public:
     Connection(Connection &&other);
     ~Connection();
 
+    void setBusyTimeout(int ms);
     Statement prepare(const std::string &sql);
 
 private:
