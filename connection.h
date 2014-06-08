@@ -17,6 +17,7 @@ public:
 
     void setBusyTimeout(int ms);
     Statement prepare(const std::string &sql);
+    void exec(const std::string &sql);
 
 private:
     struct Impl;

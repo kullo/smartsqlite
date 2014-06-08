@@ -1,4 +1,7 @@
 #include "connection.h"
+
+#include <memory>
+
 #include "exceptions.h"
 #include "sqlite3.h"
 #include "util.h"
@@ -47,6 +50,22 @@ Statement Connection::prepare(const std::string &sql)
     }
 
     return stmt;
+}
+
+void Connection::exec(const std::string &sql)
+{
+    char *errmsg;
+    int result = sqlite3_exec(impl->conn, sql.c_str(), nullptr, nullptr, &errmsg);
+
+    std::unique_ptr<char, void(*)(void*)> errmsgSafe(errmsg, sqlite3_free);
+    if (errmsgSafe)
+    {
+        checkResult(result, errmsgSafe.get());
+    }
+    else
+    {
+        checkResult(result);
+    }
 }
 
 }

@@ -26,3 +26,9 @@ TEST(Connection, canPrepareStatement)
     SqliteWrapper::Connection conn(":memory:");
     conn.prepare("PRAGMA user_version");
 }
+
+TEST(Connection, canExec)
+{
+    SqliteWrapper::Connection conn(":memory:");
+    conn.exec("PRAGMA user_version = 42");
+}
