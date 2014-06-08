@@ -27,6 +27,11 @@ Statement::~Statement()
     sqlite3_finalize(impl->stmt);
 }
 
+void Statement::clearBindings()
+{
+    checkResult(sqlite3_clear_bindings(impl->stmt));
+}
+
 void Statement::reset()
 {
     checkResult(sqlite3_reset(impl->stmt));

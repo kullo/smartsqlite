@@ -14,6 +14,7 @@ public:
     Statement(Statement &&other);
     ~Statement();
 
+    void clearBindings();
     void reset();
 
 private:

@@ -13,6 +13,12 @@ protected:
     std::unique_ptr<SqliteWrapper::Connection> conn;
 };
 
+TEST_F(Statement, canClearBindings)
+{
+    SqliteWrapper::Statement stmt = conn->prepare("PRAGMA user_version");
+    stmt.clearBindings();
+}
+
 TEST_F(Statement, canBeReset)
 {
     SqliteWrapper::Statement stmt = conn->prepare("PRAGMA user_version");
