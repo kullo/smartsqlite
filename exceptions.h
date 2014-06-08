@@ -9,12 +9,12 @@ namespace SqliteWrapper {
 class Exception : public std::exception
 {
 public:
+    Exception(const std::string &message) throw();
     Exception(int resultCode);
     virtual ~Exception() throw() = default;
     virtual const char *what() const throw();
 
 private:
-    Exception(const std::string &message) throw();
     std::string m_message;
 };
 

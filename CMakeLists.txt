@@ -6,6 +6,7 @@ set(INCLUDES
     exceptions.h
     util.h
     result_names.h
+    statement.h
     version.h
 )
 
@@ -14,11 +15,13 @@ set(LIB_SRC
     exceptions.cpp
     sqlite3.c
     util.cpp
+    statement.cpp
     version.cpp
 )
 
 set(TEST_SRC
     connection_test.cpp
+    statement_test.cpp
     version_test.cpp
 )
 

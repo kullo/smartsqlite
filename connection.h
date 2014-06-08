@@ -4,13 +4,18 @@
 #include <memory>
 #include <string>
 
+#include "statement.h"
+
 namespace SqliteWrapper {
 
 class Connection
 {
 public:
     explicit Connection(const std::string &connectionString);
+    Connection(Connection &&other);
     ~Connection();
+
+    Statement prepare(const std::string &sql);
 
 private:
     struct Impl;
