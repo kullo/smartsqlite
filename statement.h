@@ -27,6 +27,9 @@ public:
     template <typename... T>
     int bindUnchecked(int pos, const T&... values);
 
+    void bindNull(int pos);
+    int bindUncheckedNull(int pos);
+
     void clearBindings();
     void reset();
 

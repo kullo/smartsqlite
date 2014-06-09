@@ -35,6 +35,16 @@ Statement::~Statement()
     sqlite3_finalize(impl->stmt);
 }
 
+void Statement::bindNull(int pos)
+{
+    checkResult(bindUncheckedNull(pos));
+}
+
+int Statement::bindUncheckedNull(int pos)
+{
+    return sqlite3_bind_null(impl->stmt, pos);
+}
+
 template <>
 int Statement::bindUnchecked(int pos, const int &value)
 {

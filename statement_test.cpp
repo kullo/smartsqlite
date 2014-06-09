@@ -48,6 +48,11 @@ TEST_F(Statement, canBeReset)
     makeSelect().reset();
 }
 
+TEST_F(Statement, canBindNull)
+{
+    makeSelect().bindNull(1);
+}
+
 TEST_F(Statement, canBindInt)
 {
     int value = 42;
