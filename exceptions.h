@@ -10,12 +10,18 @@ class Exception : public std::exception
 {
 public:
     Exception(const std::string &message) throw();
-    Exception(int resultCode);
-    Exception(int resultCode, const std::string &message);
+    virtual ~Exception() = default;
     virtual const char *what() const throw();
 
-private:
+protected:
     std::string m_message;
+};
+
+class SqliteException : public Exception
+{
+public:
+    SqliteException(int resultCode);
+    SqliteException(int resultCode, const std::string &message);
 };
 
 }

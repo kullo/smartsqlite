@@ -10,26 +10,26 @@ Exception::Exception(const std::string &message) throw()
 {
 }
 
-Exception::Exception(int resultCode)
-    : m_message(
+const char *Exception::what() const throw()
+{
+    return m_message.c_str();
+}
+
+SqliteException::SqliteException(int resultCode)
+    : Exception(
           resultToResultName(resultCode) + ": " +
           sqlite3_errstr(resultCode)
           )
 {
 }
 
-Exception::Exception(int resultCode, const std::string &message)
-    : m_message(
+SqliteException::SqliteException(int resultCode, const std::string &message)
+    : Exception(
           resultToResultName(resultCode) + ": " +
           sqlite3_errstr(resultCode) + "\n" +
           message
           )
 {
-}
-
-const char *Exception::what() const throw()
-{
-    return m_message.c_str();
 }
 
 }

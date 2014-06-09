@@ -9,14 +9,14 @@ void checkResult(int result)
 {
     if (result == SQLITE_OK) return;
 
-    throw Exception(result);
+    throw SqliteException(result);
 }
 
 void checkResult(int result, const std::string &message)
 {
     if (result == SQLITE_OK) return;
 
-    throw Exception(result, message);
+    throw SqliteException(result, message);
 }
 
 }
