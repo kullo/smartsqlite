@@ -3,7 +3,7 @@
 
 #include <string>
 
-#include "sqlite/sqlite3.h"
+#include "sqlite3.h"
 
 namespace SqliteWrapper {
     inline std::string resultToResultName(int result)

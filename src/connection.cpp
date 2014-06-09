@@ -3,7 +3,7 @@
 #include <memory>
 
 #include "exceptions.h"
-#include "sqlite/sqlite3.h"
+#include "sqlite3.h"
 #include "util.h"
 
 namespace SqliteWrapper {
