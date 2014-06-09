@@ -22,6 +22,12 @@ Statement::Statement(Statement &&other)
     std::swap(impl, other.impl);
 }
 
+Statement &Statement::operator=(Statement &&rhs)
+{
+    std::swap(impl, rhs.impl);
+    return *this;
+}
+
 Statement::~Statement()
 {
     sqlite3_finalize(impl->stmt);

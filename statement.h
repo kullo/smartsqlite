@@ -12,6 +12,7 @@ class Statement
 public:
     explicit Statement(sqlite3_stmt *stmt);
     Statement(Statement &&other);
+    Statement &operator=(Statement &&rhs);
     ~Statement();
 
     void clearBindings();
