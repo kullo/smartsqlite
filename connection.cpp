@@ -25,6 +25,12 @@ Connection::Connection(Connection &&other)
     std::swap(impl, other.impl);
 }
 
+Connection &Connection::operator=(Connection &&rhs)
+{
+    std::swap(impl, rhs.impl);
+    return *this;
+}
+
 Connection::~Connection()
 {
     sqlite3_close(impl->conn);

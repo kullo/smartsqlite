@@ -13,6 +13,7 @@ class Connection
 public:
     explicit Connection(const std::string &connectionString);
     Connection(Connection &&other);
+    Connection &operator=(Connection &&rhs);
     ~Connection();
 
     void setBusyTimeout(int ms);
