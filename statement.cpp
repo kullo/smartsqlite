@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <vector>
 
+#include "exceptions.h"
 #include "sqlite3.h"
 
 namespace SqliteWrapper {
@@ -103,7 +104,7 @@ void Statement::reset()
 }
 
 RowIterator::RowIterator(sqlite3_stmt *stmt, bool done)
-    : m_stmt(stmt), m_done(done)
+    : m_stmt(stmt), m_done(done), m_row(stmt)
 {
     if (!done)
     {
@@ -136,12 +137,42 @@ RowIterator &RowIterator::operator++()
     default:
         checkResult(result);
     }
+    m_row.setColumns(sqlite3_column_count(m_stmt));
     return *this;
 }
 
 Row &RowIterator::operator*()
 {
     return m_row;
+}
+
+Row *RowIterator::operator->()
+{
+    return &m_row;
+}
+
+Row::Row(sqlite3_stmt *stmt)
+    : m_stmt(stmt)
+{
+}
+
+void Row::setColumns(int columns)
+{
+    m_columns = columns;
+}
+
+void Row::checkPosRange(int pos)
+{
+    if (pos < 0 || pos >= m_columns)
+    {
+        throw Exception("Column out of range");
+    }
+}
+
+template <>
+std::string Row::getUnchecked(int pos)
+{
+    return reinterpret_cast<const char*>(sqlite3_column_text(m_stmt, pos));
 }
 
 }

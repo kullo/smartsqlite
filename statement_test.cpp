@@ -114,6 +114,8 @@ TEST_F(Statement, canStepThroughNonemptyResult)
     for (auto iter = stmt.begin(); iter != stmt.end(); ++iter)
     {
         ++counter;
+        int pos = 0;
+        EXPECT_THAT(iter->get<std::string>(pos++), Eq(std::string("6*7")));
     }
-    EXPECT_THAT(counter, Gt(0));
+    EXPECT_THAT(counter, Eq(1));
 }

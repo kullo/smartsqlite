@@ -10,8 +10,32 @@ struct sqlite3_stmt;
 
 namespace SqliteWrapper {
 
+class RowIterator;
+
 class Row
 {
+public:
+    Row(sqlite3_stmt *stmt);
+
+    template <typename T>
+    T get(int pos)
+    {
+        checkPosRange(pos);
+        return getUnchecked<T>(pos);
+    }
+
+    // specialize this to add bindings for custom types
+    template <typename T>
+    T getUnchecked(int pos);
+
+private:
+    void setColumns(int columns);
+    void checkPosRange(int pos);
+
+    sqlite3_stmt *m_stmt = nullptr;
+    int m_columns = 0;
+
+    friend class RowIterator;
 };
 
 class RowIterator : public std::iterator<std::input_iterator_tag, Row, void>
@@ -22,6 +46,7 @@ public:
     bool operator!=(const RowIterator &rhs) const;
     RowIterator &operator++();
     Row &operator*();
+    Row *operator->();
 
 private:
     sqlite3_stmt *m_stmt;
