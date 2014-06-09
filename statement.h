@@ -17,15 +17,15 @@ public:
     Statement &operator=(Statement &&rhs);
     ~Statement();
 
-    template <typename T>
-    void bind(int pos, const T &value)
+    template <typename... T>
+    void bind(int pos, const T&... values)
     {
-        checkResult(bindUnchecked(pos, value));
+        checkResult(bindUnchecked(pos, values...));
     }
 
     // specialize this to add bindings for custom types
-    template <typename T>
-    int bindUnchecked(int pos, const T &value);
+    template <typename... T>
+    int bindUnchecked(int pos, const T&... values);
 
     void clearBindings();
     void reset();

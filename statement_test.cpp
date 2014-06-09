@@ -50,5 +50,36 @@ TEST_F(Statement, canBeReset)
 
 TEST_F(Statement, canBindInt)
 {
-    makeSelect().bind(1, 42);
+    int value = 42;
+    makeSelect().bind(1, value);
+}
+
+TEST_F(Statement, canBindInt64)
+{
+    std::int64_t value = 42;
+    makeSelect().bind(1, value);
+}
+
+TEST_F(Statement, canBindDouble)
+{
+    double value = 42;
+    makeSelect().bind(1, value);
+}
+
+TEST_F(Statement, canBindString)
+{
+    std::string value = "Hello, world.";
+    makeSelect().bind(1, value);
+}
+
+TEST_F(Statement, canBindBlobFromByteVector)
+{
+    std::vector<unsigned char> value = {42, 23, 5};
+    makeSelect().bind(1, value);
+}
+
+TEST_F(Statement, canBindBlobFromPointer)
+{
+    std::vector<unsigned char> value = {42, 23, 5};
+    makeSelect().bind(1, static_cast<void*>(value.data()), value.size());
 }

@@ -1,5 +1,8 @@
 #include "statement.h"
 
+#include <cstdint>
+#include <vector>
+
 #include "sqlite3.h"
 
 namespace SqliteWrapper {
@@ -36,6 +39,36 @@ template <>
 int Statement::bindUnchecked(int pos, const int &value)
 {
     return sqlite3_bind_int(impl->stmt, pos, value);
+}
+
+template <>
+int Statement::bindUnchecked(int pos, const std::int64_t &value)
+{
+    return sqlite3_bind_int64(impl->stmt, pos, value);
+}
+
+template <>
+int Statement::bindUnchecked(int pos, const double &value)
+{
+    return sqlite3_bind_double(impl->stmt, pos, value);
+}
+
+template <>
+int Statement::bindUnchecked(int pos, const std::string &value)
+{
+    return sqlite3_bind_text(impl->stmt, pos, value.c_str(), value.size(), SQLITE_TRANSIENT);
+}
+
+template <>
+int Statement::bindUnchecked(int pos, const std::vector<unsigned char> &value)
+{
+    return sqlite3_bind_blob(impl->stmt, pos, value.data(), value.size(), SQLITE_TRANSIENT);
+}
+
+template <>
+int Statement::bindUnchecked(int pos, void* const &value, const std::size_t &size)
+{
+    return sqlite3_bind_blob(impl->stmt, pos, value, size, SQLITE_TRANSIENT);
 }
 
 void Statement::clearBindings()
