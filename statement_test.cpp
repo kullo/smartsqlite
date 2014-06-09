@@ -88,3 +88,16 @@ TEST_F(Statement, canBindBlobFromPointer)
     std::vector<unsigned char> value = {42, 23, 5};
     makeSelect().bind(1, static_cast<void*>(value.data()), value.size());
 }
+
+TEST_F(Statement, canStepThroughEmptyResult)
+{
+    SqliteWrapper::Statement stmt = makeSelect();
+    stmt.bindNull(1);
+
+    int counter = 0;
+    for (auto iter = stmt.begin(); iter != stmt.end(); ++iter)
+    {
+        ++counter;
+    }
+    EXPECT_THAT(counter, Eq(0));
+}
