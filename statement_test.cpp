@@ -11,12 +11,20 @@ protected:
     void SetUp()
     {
         conn.reset(new SqliteWrapper::Connection(":memory:"));
-        conn->exec("CREATE TABLE answers (question TEXT, answer INT)");
+        conn->exec("CREATE TABLE all_types "
+                   "(c_int INT, c_float FLOAT, c_text TEXT, c_blob BLOB)");
+        conn->exec("INSERT INTO all_types "
+                   "VALUES (42, 2.0, '6*7', x'deadbeef')");
     }
 
     SqliteWrapper::Statement makeSelect() const
     {
-        return conn->prepare("SELECT question FROM answers WHERE answer = ?");
+        return conn->prepare("SELECT c_text FROM all_types WHERE c_int = ?");
+    }
+
+    SqliteWrapper::Statement makeSelectAll() const
+    {
+        return conn->prepare("SELECT * FROM all_types");
     }
 
     std::unique_ptr<SqliteWrapper::Connection> conn;
@@ -104,9 +112,6 @@ TEST_F(Statement, canStepThroughEmptyResult)
 
 TEST_F(Statement, canStepThroughNonemptyResult)
 {
-    conn->exec("INSERT INTO answers (question, answer) "
-               "VALUES ('6*7', 42)");
-
     SqliteWrapper::Statement stmt = makeSelect();
     stmt.bind(1, 42);
 
@@ -114,8 +119,44 @@ TEST_F(Statement, canStepThroughNonemptyResult)
     for (auto iter = stmt.begin(); iter != stmt.end(); ++iter)
     {
         ++counter;
-        int pos = 0;
-        EXPECT_THAT(iter->get<std::string>(pos++), Eq(std::string("6*7")));
+        EXPECT_THAT(iter->get<std::string>(0), Eq(std::string("6*7")));
     }
     EXPECT_THAT(counter, Eq(1));
+}
+
+TEST_F(Statement, canGetInt)
+{
+    SqliteWrapper::Statement stmt = makeSelectAll();
+    EXPECT_THAT(stmt.begin()->get<int>(0), Eq(42));
+}
+
+TEST_F(Statement, canGetInt64)
+{
+    SqliteWrapper::Statement stmt = makeSelectAll();
+    EXPECT_THAT(stmt.begin()->get<std::int64_t>(0), Eq(42));
+}
+
+TEST_F(Statement, canGetDouble)
+{
+    SqliteWrapper::Statement stmt = makeSelectAll();
+    EXPECT_THAT(stmt.begin()->get<double>(1), DoubleEq(2.0));
+}
+
+TEST_F(Statement, canGetString)
+{
+    SqliteWrapper::Statement stmt = makeSelectAll();
+    EXPECT_THAT(stmt.begin()->get<std::string>(2), Eq(std::string("6*7")));
+}
+
+TEST_F(Statement, canGetBlob)
+{
+    std::vector<unsigned char> data(4, '\0');
+    data[0] = '\xde';
+    data[1] = '\xad';
+    data[2] = '\xbe';
+    data[3] = '\xef';
+
+    SqliteWrapper::Statement stmt = makeSelectAll();
+    EXPECT_THAT(stmt.begin()->get<std::vector<unsigned char>>(3),
+                Eq(data));
 }
