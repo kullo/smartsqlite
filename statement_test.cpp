@@ -47,3 +47,8 @@ TEST_F(Statement, canBeReset)
 {
     makeSelect().reset();
 }
+
+TEST_F(Statement, canBindInt)
+{
+    makeSelect().bind(1, 42);
+}

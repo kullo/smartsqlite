@@ -1,7 +1,6 @@
 #include "statement.h"
 
 #include "sqlite3.h"
-#include "util.h"
 
 namespace SqliteWrapper {
 
@@ -31,6 +30,12 @@ Statement &Statement::operator=(Statement &&rhs)
 Statement::~Statement()
 {
     sqlite3_finalize(impl->stmt);
+}
+
+template <>
+int Statement::bindUnchecked(int pos, const int &value)
+{
+    return sqlite3_bind_int(impl->stmt, pos, value);
 }
 
 void Statement::clearBindings()

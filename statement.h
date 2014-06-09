@@ -3,6 +3,8 @@
 
 #include <memory>
 
+#include "util.h"
+
 struct sqlite3_stmt;
 
 namespace SqliteWrapper {
@@ -14,6 +16,16 @@ public:
     Statement(Statement &&other);
     Statement &operator=(Statement &&rhs);
     ~Statement();
+
+    template <typename T>
+    void bind(int pos, const T &value)
+    {
+        checkResult(bindUnchecked(pos, value));
+    }
+
+    // specialize this to add bindings for custom types
+    template <typename T>
+    int bindUnchecked(int pos, const T &value);
 
     void clearBindings();
     void reset();
