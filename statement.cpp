@@ -139,4 +139,9 @@ RowIterator &RowIterator::operator++()
     return *this;
 }
 
+Row &RowIterator::operator*()
+{
+    return m_row;
+}
+
 }

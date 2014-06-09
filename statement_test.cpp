@@ -101,3 +101,19 @@ TEST_F(Statement, canStepThroughEmptyResult)
     }
     EXPECT_THAT(counter, Eq(0));
 }
+
+TEST_F(Statement, canStepThroughNonemptyResult)
+{
+    conn->exec("INSERT INTO answers (question, answer) "
+               "VALUES ('6*7', 42)");
+
+    SqliteWrapper::Statement stmt = makeSelect();
+    stmt.bind(1, 42);
+
+    int counter = 0;
+    for (auto iter = stmt.begin(); iter != stmt.end(); ++iter)
+    {
+        ++counter;
+    }
+    EXPECT_THAT(counter, Gt(0));
+}

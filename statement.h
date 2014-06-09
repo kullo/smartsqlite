@@ -21,10 +21,12 @@ public:
     bool operator==(const RowIterator &rhs) const;
     bool operator!=(const RowIterator &rhs) const;
     RowIterator &operator++();
+    Row &operator*();
 
 private:
     sqlite3_stmt *m_stmt;
     bool m_done;
+    Row m_row;
 };
 
 class Statement
