@@ -1,5 +1,4 @@
 #include <gmock/gmock.h>
-
 #include <type_traits>
 
 #include "connection.h"
@@ -12,6 +11,12 @@ protected:
     void SetUp()
     {
         conn.reset(new SqliteWrapper::Connection(":memory:"));
+        conn->exec("CREATE TABLE answers (question TEXT, answer INT)");
+    }
+
+    SqliteWrapper::Statement makeSelect() const
+    {
+        return conn->prepare("SELECT question FROM answers WHERE answer = ?");
     }
 
     std::unique_ptr<SqliteWrapper::Connection> conn;
@@ -35,12 +40,10 @@ TEST_F(Statement, cannotCopy)
 
 TEST_F(Statement, canClearBindings)
 {
-    SqliteWrapper::Statement stmt = conn->prepare("PRAGMA user_version");
-    stmt.clearBindings();
+    makeSelect().clearBindings();
 }
 
 TEST_F(Statement, canBeReset)
 {
-    SqliteWrapper::Statement stmt = conn->prepare("PRAGMA user_version");
-    stmt.reset();
+    makeSelect().reset();
 }
