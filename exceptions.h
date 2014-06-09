@@ -12,7 +12,6 @@ public:
     Exception(const std::string &message) throw();
     Exception(int resultCode);
     Exception(int resultCode, const std::string &message);
-    virtual ~Exception() throw() = default;
     virtual const char *what() const throw();
 
 private:
