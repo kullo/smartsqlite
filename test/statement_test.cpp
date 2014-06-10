@@ -1,4 +1,5 @@
 #include <gmock/gmock.h>
+#include <ostream>
 #include <type_traits>
 
 #include "binder.h"
@@ -17,6 +18,8 @@ protected:
                    "(c_int INT, c_float FLOAT, c_text TEXT, c_blob BLOB)");
         conn->exec("INSERT INTO all_types "
                    "VALUES (42, 2.0, '6*7', x'deadbeef')");
+        conn->exec("INSERT INTO all_types "
+                   "VALUES (NULL, NULL, NULL, NULL)");
     }
 
     SqliteWrapper::Statement makeSelect() const
@@ -26,7 +29,12 @@ protected:
 
     SqliteWrapper::Statement makeSelectAll() const
     {
-        return conn->prepare("SELECT * FROM all_types");
+        return conn->prepare("SELECT * FROM all_types WHERE c_int IS NOT NULL");
+    }
+
+    SqliteWrapper::Statement makeSelectAllNull() const
+    {
+        return conn->prepare("SELECT * FROM all_types WHERE c_int IS NULL");
     }
 
     std::vector<unsigned char> exampleBlob() const
@@ -41,6 +49,21 @@ protected:
 
     std::unique_ptr<SqliteWrapper::Connection> conn;
 };
+
+namespace SqliteWrapper {
+template<typename T>
+void PrintTo(const Nullable<T> &nullable, std::ostream *os)
+{
+    if (nullable.isNull())
+    {
+        *os << "Nullable()";
+    }
+    else
+    {
+        *os << "Nullable(" << ::testing::PrintToString(nullable.value()) << ")";
+    }
+}
+}
 
 TEST_F(Statement, canMove)
 {
@@ -109,6 +132,30 @@ TEST_F(Statement, canBindBlobFromPointer)
     makeSelect().bind(1, static_cast<void*>(value.data()), value.size());
 }
 
+TEST_F(Statement, canBindNullNullables)
+{
+    SqliteWrapper::Statement stmt = conn->prepare(
+                "INSERT INTO all_types "
+                "VALUES (?, ?, ?, ?)");
+    int pos = 1;
+    stmt.bind(pos++, SqliteWrapper::Nullable<int>());
+    stmt.bind(pos++, SqliteWrapper::Nullable<double>());
+    stmt.bind(pos++, SqliteWrapper::Nullable<std::string>());
+    stmt.bind(pos++, SqliteWrapper::Nullable<std::vector<unsigned char>>());
+}
+
+TEST_F(Statement, canBindNonNullNullables)
+{
+    SqliteWrapper::Statement stmt = conn->prepare(
+                "INSERT INTO all_types "
+                "VALUES (?, ?, ?, ?)");
+    int pos = 1;
+    stmt.bind(pos++, SqliteWrapper::Nullable<int>(23));
+    stmt.bind(pos++, SqliteWrapper::Nullable<double>(3.14));
+    stmt.bind(pos++, SqliteWrapper::Nullable<std::string>("Hello, world."));
+    stmt.bind(pos++, SqliteWrapper::Nullable<std::vector<unsigned char>>(exampleBlob()));
+}
+
 TEST_F(Statement, canStepThroughEmptyResult)
 {
     SqliteWrapper::Statement stmt = makeSelect();
@@ -167,26 +214,34 @@ TEST_F(Statement, canGetBlob)
                 Eq(exampleBlob()));
 }
 
-TEST_F(Statement, canBindNullNullables)
+TEST_F(Statement, canGetNullNullables)
 {
-    SqliteWrapper::Statement stmt = conn->prepare(
-                "INSERT INTO all_types "
-                "VALUES (?, ?, ?, ?)");
-    int pos = 1;
-    stmt.bind(pos++, SqliteWrapper::Nullable<int>());
-    stmt.bind(pos++, SqliteWrapper::Nullable<double>());
-    stmt.bind(pos++, SqliteWrapper::Nullable<std::string>());
-    stmt.bind(pos++, SqliteWrapper::Nullable<std::vector<unsigned char>>());
+    SqliteWrapper::Statement stmt = makeSelectAllNull();
+    auto iter = stmt.begin();
+    EXPECT_THAT(iter->getNullable<int>(0),
+                Eq(SqliteWrapper::Nullable<int>()));
+    EXPECT_THAT(iter->getNullable<std::int64_t>(0),
+                Eq(SqliteWrapper::Nullable<std::int64_t>()));
+    EXPECT_THAT(iter->getNullable<double>(1),
+                Eq(SqliteWrapper::Nullable<double>()));
+    EXPECT_THAT(iter->getNullable<std::string>(2),
+                Eq(SqliteWrapper::Nullable<std::string>()));
+    EXPECT_THAT(iter->getNullable<std::vector<unsigned char>>(3),
+                Eq(SqliteWrapper::Nullable<std::vector<unsigned char>>()));
 }
 
-TEST_F(Statement, canBindNonNullNullables)
+TEST_F(Statement, canGetNonNullNullables)
 {
-    SqliteWrapper::Statement stmt = conn->prepare(
-                "INSERT INTO all_types "
-                "VALUES (?, ?, ?, ?)");
-    int pos = 1;
-    stmt.bind(pos++, SqliteWrapper::Nullable<int>(23));
-    stmt.bind(pos++, SqliteWrapper::Nullable<double>(3.14));
-    stmt.bind(pos++, SqliteWrapper::Nullable<std::string>("Hello, world."));
-    stmt.bind(pos++, SqliteWrapper::Nullable<std::vector<unsigned char>>(exampleBlob()));
+    SqliteWrapper::Statement stmt = makeSelectAll();
+    auto iter = stmt.begin();
+    EXPECT_THAT(iter->getNullable<int>(0),
+                Eq(SqliteWrapper::Nullable<int>(42)));
+    EXPECT_THAT(iter->getNullable<std::int64_t>(0),
+                Eq(SqliteWrapper::Nullable<std::int64_t>(42)));
+    EXPECT_THAT(iter->getNullable<double>(1),
+                Eq(SqliteWrapper::Nullable<double>(2.0)));
+    EXPECT_THAT(iter->getNullable<std::string>(2),
+                Eq(SqliteWrapper::Nullable<std::string>("6*7")));
+    EXPECT_THAT(iter->getNullable<std::vector<unsigned char>>(3),
+                Eq(SqliteWrapper::Nullable<std::vector<unsigned char>>(exampleBlob())));
 }

@@ -120,6 +120,11 @@ Row::Row(sqlite3_stmt *stmt)
 {
 }
 
+bool Row::isNull(int pos)
+{
+    return sqlite3_column_type(m_stmt, pos) == SQLITE_NULL;
+}
+
 void Row::setColumns(int columns)
 {
     m_columns = columns;
