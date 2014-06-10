@@ -13,13 +13,6 @@ enum NullType
     Null
 };
 
-template <typename... T>
-class Binder
-{
-public:
-    static int bind(const Statement &, int, const T&...);
-};
-
 template <>
 class Binder<NullType>
 {
@@ -89,20 +82,6 @@ public:
         return sqlite3_bind_blob(stmt.statementHandle(), pos, value, size, SQLITE_TRANSIENT);
     }
 };
-
-template <typename... T>
-Statement &Statement::bind(int pos, const T&... values)
-{
-    checkResult(Binder<T...>::bind(*this, pos, values...));
-    return *this;
-}
-
-template <typename T>
-Statement &Statement::bind(int pos, const Nullable<T> &value)
-{
-    if (value.isNull()) return bindNull(pos);
-    return bind(pos, value.value());
-}
 
 }
 #endif // SQLITEWRAPPER_BINDER_H

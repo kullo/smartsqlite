@@ -56,6 +56,15 @@ private:
     Row m_row;
 };
 
+class Statement;
+
+template <typename... T>
+class Binder
+{
+public:
+    static int bind(const Statement &, int, const T&...);
+};
+
 class Statement
 {
 public:
@@ -65,10 +74,18 @@ public:
     ~Statement();
 
     template <typename... T>
-    Statement &bind(int pos, const T&...);
+    Statement &bind(int pos, const T&... values)
+    {
+        checkResult(Binder<T...>::bind(*this, pos, values...));
+        return *this;
+    }
 
     template <typename T>
-    Statement &bind(int pos, const Nullable<T> &value);
+    Statement &bind(int pos, const Nullable<T> &value)
+    {
+        if (value.isNull()) return bindNull(pos);
+        return bind(pos, value.value());
+    }
 
     Statement &bindNull(int pos);
 
