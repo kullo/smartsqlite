@@ -5,6 +5,7 @@
 #include <memory>
 
 #include "exceptions.h"
+#include "nullable.h"
 #include "util.h"
 
 struct sqlite3_stmt;
@@ -64,7 +65,10 @@ public:
     ~Statement();
 
     template <typename... T>
-    Statement &bind(int pos, const T&... values);
+    Statement &bind(int pos, const T&...);
+
+    template <typename T>
+    Statement &bind(int pos, const Nullable<T> &value);
 
     Statement &bindNull(int pos);
 

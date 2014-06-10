@@ -3,6 +3,7 @@
 
 #include "binder.h"
 #include "connection.h"
+#include "nullable.h"
 
 using namespace testing;
 
@@ -26,6 +27,16 @@ protected:
     SqliteWrapper::Statement makeSelectAll() const
     {
         return conn->prepare("SELECT * FROM all_types");
+    }
+
+    std::vector<unsigned char> exampleBlob() const
+    {
+        std::vector<unsigned char> data(4, '\0');
+        data[0] = '\xde';
+        data[1] = '\xad';
+        data[2] = '\xbe';
+        data[3] = '\xef';
+        return data;
     }
 
     std::unique_ptr<SqliteWrapper::Connection> conn;
@@ -151,13 +162,31 @@ TEST_F(Statement, canGetString)
 
 TEST_F(Statement, canGetBlob)
 {
-    std::vector<unsigned char> data(4, '\0');
-    data[0] = '\xde';
-    data[1] = '\xad';
-    data[2] = '\xbe';
-    data[3] = '\xef';
-
     SqliteWrapper::Statement stmt = makeSelectAll();
     EXPECT_THAT(stmt.begin()->get<std::vector<unsigned char>>(3),
-                Eq(data));
+                Eq(exampleBlob()));
+}
+
+TEST_F(Statement, canBindNullNullables)
+{
+    SqliteWrapper::Statement stmt = conn->prepare(
+                "INSERT INTO all_types "
+                "VALUES (?, ?, ?, ?)");
+    int pos = 1;
+    stmt.bind(pos++, SqliteWrapper::Nullable<int>());
+    stmt.bind(pos++, SqliteWrapper::Nullable<double>());
+    stmt.bind(pos++, SqliteWrapper::Nullable<std::string>());
+    stmt.bind(pos++, SqliteWrapper::Nullable<std::vector<unsigned char>>());
+}
+
+TEST_F(Statement, canBindNonNullNullables)
+{
+    SqliteWrapper::Statement stmt = conn->prepare(
+                "INSERT INTO all_types "
+                "VALUES (?, ?, ?, ?)");
+    int pos = 1;
+    stmt.bind(pos++, SqliteWrapper::Nullable<int>(23));
+    stmt.bind(pos++, SqliteWrapper::Nullable<double>(3.14));
+    stmt.bind(pos++, SqliteWrapper::Nullable<std::string>("Hello, world."));
+    stmt.bind(pos++, SqliteWrapper::Nullable<std::vector<unsigned char>>(exampleBlob()));
 }

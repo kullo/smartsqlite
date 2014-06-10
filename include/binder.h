@@ -97,6 +97,13 @@ Statement &Statement::bind(int pos, const T&... values)
     return *this;
 }
 
+template <typename T>
+Statement &Statement::bind(int pos, const Nullable<T> &value)
+{
+    if (value.isNull()) return bindNull(pos);
+    return bind(pos, value.value());
+}
+
 Statement &Statement::bindNull(int pos)
 {
     checkResult(Binder<NullType>::bind(*this, pos));
