@@ -1,6 +1,7 @@
 #include <gmock/gmock.h>
 #include <type_traits>
 
+#include "binder.h"
 #include "connection.h"
 
 using namespace testing;
