@@ -8,21 +8,6 @@
 
 namespace SqliteWrapper {
 
-enum NullType
-{
-    Null
-};
-
-template <>
-class Binder<NullType>
-{
-public:
-    static int bind(const Statement &stmt, int pos)
-    {
-        return sqlite3_bind_null(stmt.statementHandle(), pos);
-    }
-};
-
 template <>
 class Binder<int>
 {
