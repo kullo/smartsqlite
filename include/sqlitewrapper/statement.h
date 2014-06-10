@@ -86,7 +86,7 @@ public:
     template <typename... T>
     Statement &bind(int pos, const T&... values)
     {
-        checkResult(Binder<T...>::bind(*this, pos, values...));
+        checkResult(Binder<T...>::bind(*this, pos + 1, values...));
         return *this;
     }
 

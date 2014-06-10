@@ -39,7 +39,8 @@ Statement::~Statement()
 
 Statement &Statement::bindNull(int pos)
 {
-    return bind(pos, Nullable<int>(pos));
+    checkResult(sqlite3_bind_null(impl->stmt, pos + 1));
+    return *this;
 }
 
 RowIterator Statement::begin()

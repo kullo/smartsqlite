@@ -93,43 +93,43 @@ TEST_F(Statement, canBeReset)
 
 TEST_F(Statement, canBindNull)
 {
-    makeSelect().bindNull(1);
+    makeSelect().bindNull(0);
 }
 
 TEST_F(Statement, canBindInt)
 {
     int value = 42;
-    makeSelect().bind(1, value);
+    makeSelect().bind(0, value);
 }
 
 TEST_F(Statement, canBindInt64)
 {
     std::int64_t value = 42;
-    makeSelect().bind(1, value);
+    makeSelect().bind(0, value);
 }
 
 TEST_F(Statement, canBindDouble)
 {
     double value = 42;
-    makeSelect().bind(1, value);
+    makeSelect().bind(0, value);
 }
 
 TEST_F(Statement, canBindString)
 {
     std::string value = "Hello, world.";
-    makeSelect().bind(1, value);
+    makeSelect().bind(0, value);
 }
 
 TEST_F(Statement, canBindBlobFromByteVector)
 {
     std::vector<unsigned char> value = {42, 23, 5};
-    makeSelect().bind(1, value);
+    makeSelect().bind(0, value);
 }
 
 TEST_F(Statement, canBindBlobFromPointer)
 {
     std::vector<unsigned char> value = {42, 23, 5};
-    makeSelect().bind(1, static_cast<void*>(value.data()), value.size());
+    makeSelect().bind(0, static_cast<void*>(value.data()), value.size());
 }
 
 TEST_F(Statement, canBindNullNullables)
@@ -137,7 +137,7 @@ TEST_F(Statement, canBindNullNullables)
     SqliteWrapper::Statement stmt = conn->prepare(
                 "INSERT INTO all_types "
                 "VALUES (?, ?, ?, ?)");
-    int pos = 1;
+    int pos = 0;
     stmt.bind(pos++, SqliteWrapper::Nullable<int>());
     stmt.bind(pos++, SqliteWrapper::Nullable<double>());
     stmt.bind(pos++, SqliteWrapper::Nullable<std::string>());
@@ -149,7 +149,7 @@ TEST_F(Statement, canBindNonNullNullables)
     SqliteWrapper::Statement stmt = conn->prepare(
                 "INSERT INTO all_types "
                 "VALUES (?, ?, ?, ?)");
-    int pos = 1;
+    int pos = 0;
     stmt.bind(pos++, SqliteWrapper::Nullable<int>(23));
     stmt.bind(pos++, SqliteWrapper::Nullable<double>(3.14));
     stmt.bind(pos++, SqliteWrapper::Nullable<std::string>("Hello, world."));
@@ -159,7 +159,7 @@ TEST_F(Statement, canBindNonNullNullables)
 TEST_F(Statement, canStepThroughEmptyResult)
 {
     SqliteWrapper::Statement stmt = makeSelect();
-    stmt.bindNull(1);
+    stmt.bindNull(0);
 
     int counter = 0;
     for (auto iter = stmt.begin(); iter != stmt.end(); ++iter)
@@ -172,7 +172,7 @@ TEST_F(Statement, canStepThroughEmptyResult)
 TEST_F(Statement, canStepThroughNonemptyResult)
 {
     SqliteWrapper::Statement stmt = makeSelect();
-    stmt.bind(1, 42);
+    stmt.bind(0, 42);
 
     int counter = 0;
     for (auto iter = stmt.begin(); iter != stmt.end(); ++iter)
