@@ -104,11 +104,5 @@ Statement &Statement::bind(int pos, const Nullable<T> &value)
     return bind(pos, value.value());
 }
 
-Statement &Statement::bindNull(int pos)
-{
-    checkResult(Binder<NullType>::bind(*this, pos));
-    return *this;
-}
-
 }
 #endif // SQLITEWRAPPER_BINDER_H

@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <vector>
 
+#include "binder.h"
 #include "exceptions.h"
 #include "sqlite3.h"
 
@@ -34,6 +35,11 @@ Statement &Statement::operator=(Statement &&rhs)
 Statement::~Statement()
 {
     sqlite3_finalize(impl->stmt);
+}
+
+Statement &Statement::bindNull(int pos)
+{
+    return bind(pos, Nullable<int>(pos));
 }
 
 RowIterator Statement::begin()
