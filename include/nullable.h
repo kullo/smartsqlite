@@ -17,6 +17,16 @@ public:
     {
     }
 
+    bool operator==(const Nullable<T> &rhs) const
+    {
+        return (m_isNull == rhs.m_isNull) && (m_value == rhs.m_value);
+    }
+
+    bool operator!=(const Nullable<T> &rhs) const
+    {
+        return !(*this == rhs);
+    }
+
     bool isNull() const
     {
         return m_isNull;
