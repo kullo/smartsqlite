@@ -1,6 +1,6 @@
 #include <gmock/gmock.h>
 
-#include "version.h"
+#include "sqlitewrapper/version.h"
 
 using namespace testing;
 

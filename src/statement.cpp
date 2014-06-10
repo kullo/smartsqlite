@@ -1,11 +1,11 @@
-#include "statement.h"
+#include "sqlitewrapper/statement.h"
 
 #include <cstdint>
 #include <vector>
 
-#include "binder.h"
-#include "exceptions.h"
 #include "sqlite3.h"
+#include "sqlitewrapper/binder.h"
+#include "sqlitewrapper/exceptions.h"
 
 namespace SqliteWrapper {
 

@@ -1,10 +1,10 @@
-#include "connection.h"
+#include "sqlitewrapper/connection.h"
 
 #include <memory>
 
-#include "exceptions.h"
 #include "sqlite3.h"
-#include "util.h"
+#include "sqlitewrapper/exceptions.h"
+#include "sqlitewrapper/util.h"
 
 namespace SqliteWrapper {
 

@@ -2,9 +2,9 @@
 #include <ostream>
 #include <type_traits>
 
-#include "binder.h"
-#include "connection.h"
-#include "nullable.h"
+#include "sqlitewrapper/binder.h"
+#include "sqlitewrapper/connection.h"
+#include "sqlitewrapper/nullable.h"
 
 using namespace testing;
 

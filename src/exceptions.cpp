@@ -1,4 +1,4 @@
-#include "exceptions.h"
+#include "sqlitewrapper/exceptions.h"
 
 #include "result_names.h"
 #include "sqlite3.h"

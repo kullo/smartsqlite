@@ -1,4 +1,4 @@
-#include "version.h"
+#include "sqlitewrapper/version.h"
 
 #include <cstring>
 

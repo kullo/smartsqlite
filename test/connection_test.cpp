@@ -2,8 +2,8 @@
 #include <gmock/gmock.h>
 #include <type_traits>
 
-#include "connection.h"
-#include "exceptions.h"
+#include "sqlitewrapper/connection.h"
+#include "sqlitewrapper/exceptions.h"
 
 using namespace testing;
 
