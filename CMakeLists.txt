@@ -9,7 +9,7 @@ add_subdirectory("sqlite")
 include_directories("sqlite")
 
 # Google Mock / Google Test
-add_subdirectory("../gmock" "lib/gmock")
+add_subdirectory("lib/gmock")
 include_directories("${gmock_SOURCE_DIR}/include" "${gtest_SOURCE_DIR}/include")
 
 # sqlitewrapper
