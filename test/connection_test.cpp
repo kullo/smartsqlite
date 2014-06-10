@@ -51,3 +51,23 @@ TEST(Connection, canExec)
     SqliteWrapper::Connection conn(":memory:");
     conn.exec("PRAGMA user_version = 42");
 }
+
+TEST(Connection, canBeginTransaction)
+{
+    SqliteWrapper::Connection conn(":memory:");
+    conn.beginTransaction();
+}
+
+TEST(Connection, canCommitTransaction)
+{
+    SqliteWrapper::Connection conn(":memory:");
+    conn.beginTransaction();
+    conn.commitTransaction();
+}
+
+TEST(Connection, canRollbackTransaction)
+{
+    SqliteWrapper::Connection conn(":memory:");
+    conn.beginTransaction();
+    conn.rollbackTransaction();
+}

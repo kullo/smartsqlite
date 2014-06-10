@@ -20,6 +20,10 @@ public:
     Statement prepare(const std::string &sql);
     void exec(const std::string &sql);
 
+    void beginTransaction();
+    void commitTransaction();
+    void rollbackTransaction();
+
 private:
     struct Impl;
     std::unique_ptr<Impl> impl;

@@ -74,4 +74,19 @@ void Connection::exec(const std::string &sql)
     }
 }
 
+void Connection::beginTransaction()
+{
+    exec("BEGIN TRANSACTION");
+}
+
+void Connection::commitTransaction()
+{
+    exec("COMMIT TRANSACTION");
+}
+
+void Connection::rollbackTransaction()
+{
+    exec("ROLLBACK TRANSACTION");
+}
+
 }
