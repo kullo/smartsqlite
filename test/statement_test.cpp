@@ -108,9 +108,21 @@ TEST_F(Statement, canBindInt8)
     makeSelect().bind(0, value);
 }
 
+TEST_F(Statement, canBindUInt8)
+{
+    std::uint8_t value = 42;
+    makeSelect().bind(0, value);
+}
+
 TEST_F(Statement, canBindInt16)
 {
     std::int16_t value = 42;
+    makeSelect().bind(0, value);
+}
+
+TEST_F(Statement, canBindUInt16)
+{
+    std::uint16_t value = 42;
     makeSelect().bind(0, value);
 }
 
@@ -120,9 +132,21 @@ TEST_F(Statement, canBindInt32)
     makeSelect().bind(0, value);
 }
 
+TEST_F(Statement, canBindUInt32)
+{
+    std::uint32_t value = 42;
+    makeSelect().bind(0, value);
+}
+
 TEST_F(Statement, canBindInt64)
 {
     std::int64_t value = 42;
+    makeSelect().bind(0, value);
+}
+
+TEST_F(Statement, canBindUInt64)
+{
+    std::uint64_t value = 42;
     makeSelect().bind(0, value);
 }
 
