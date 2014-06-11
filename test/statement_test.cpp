@@ -243,10 +243,22 @@ TEST_F(Statement, canGetInt8)
     EXPECT_THAT(stmt.begin()->get<std::int8_t>(0), Eq(42));
 }
 
+TEST_F(Statement, canGetUInt8)
+{
+    SqliteWrapper::Statement stmt = makeSelectAll();
+    EXPECT_THAT(stmt.begin()->get<std::uint8_t>(0), Eq(42));
+}
+
 TEST_F(Statement, canGetInt16)
 {
     SqliteWrapper::Statement stmt = makeSelectAll();
     EXPECT_THAT(stmt.begin()->get<std::int16_t>(0), Eq(42));
+}
+
+TEST_F(Statement, canGetUInt16)
+{
+    SqliteWrapper::Statement stmt = makeSelectAll();
+    EXPECT_THAT(stmt.begin()->get<std::uint16_t>(0), Eq(42));
 }
 
 TEST_F(Statement, canGetInt32)
@@ -255,10 +267,22 @@ TEST_F(Statement, canGetInt32)
     EXPECT_THAT(stmt.begin()->get<std::int32_t>(0), Eq(42));
 }
 
+TEST_F(Statement, canGetUInt32)
+{
+    SqliteWrapper::Statement stmt = makeSelectAll();
+    EXPECT_THAT(stmt.begin()->get<std::uint32_t>(0), Eq(42));
+}
+
 TEST_F(Statement, canGetInt64)
 {
     SqliteWrapper::Statement stmt = makeSelectAll();
     EXPECT_THAT(stmt.begin()->get<std::int64_t>(0), Eq(42));
+}
+
+TEST_F(Statement, canGetUInt64)
+{
+    SqliteWrapper::Statement stmt = makeSelectAll();
+    EXPECT_THAT(stmt.begin()->get<std::uint64_t>(0), Eq(42));
 }
 
 TEST_F(Statement, canGetFloat)

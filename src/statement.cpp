@@ -197,6 +197,30 @@ std::int16_t Row::getUnchecked(int pos) const
 }
 
 template <>
+std::uint8_t Row::getUnchecked(int pos) const
+{
+    return getUnchecked<std::int32_t>(pos);
+}
+
+template <>
+std::uint16_t Row::getUnchecked(int pos) const
+{
+    return getUnchecked<std::int32_t>(pos);
+}
+
+template <>
+std::uint32_t Row::getUnchecked(int pos) const
+{
+    return getUnchecked<std::int32_t>(pos);
+}
+
+template <>
+std::uint64_t Row::getUnchecked(int pos) const
+{
+    return getUnchecked<std::int64_t>(pos);
+}
+
+template <>
 float Row::getUnchecked(int pos) const
 {
     return getUnchecked<double>(pos);
