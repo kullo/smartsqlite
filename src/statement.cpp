@@ -11,7 +11,7 @@ namespace SqliteWrapper {
 
 struct Statement::Impl
 {
-    sqlite3_stmt *stmt;
+    sqlite3_stmt *stmt = nullptr;
 };
 
 Statement::Statement(sqlite3_stmt *stmt)

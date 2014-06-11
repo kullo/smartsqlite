@@ -10,7 +10,7 @@ namespace SqliteWrapper {
 
 struct Connection::Impl
 {
-    sqlite3 *conn;
+    sqlite3 *conn = nullptr;
 };
 
 Connection::Connection(const std::string &connectionString)
