@@ -19,17 +19,17 @@ class Row
 public:
     Row(sqlite3_stmt *stmt);
 
-    bool isNull(int pos);
+    bool isNull(int pos) const;
 
     template <typename T>
-    T get(int pos)
+    T get(int pos) const
     {
         checkPosRange(pos);
         return getUnchecked<T>(pos);
     }
 
     template <typename T>
-    Nullable<T> getNullable(int pos)
+    Nullable<T> getNullable(int pos) const
     {
         checkPosRange(pos);
         if (isNull(pos)) return Nullable<T>();
@@ -38,11 +38,11 @@ public:
 
     // specialize this to add bindings for custom types
     template <typename T>
-    T getUnchecked(int pos);
+    T getUnchecked(int pos) const;
 
 private:
     void setColumns(int columns);
-    void checkPosRange(int pos);
+    void checkPosRange(int pos) const;
 
     sqlite3_stmt *m_stmt = nullptr;
     int m_columns = 0;

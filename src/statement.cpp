@@ -121,7 +121,7 @@ Row::Row(sqlite3_stmt *stmt)
 {
 }
 
-bool Row::isNull(int pos)
+bool Row::isNull(int pos) const
 {
     return sqlite3_column_type(m_stmt, pos) == SQLITE_NULL;
 }
@@ -131,7 +131,7 @@ void Row::setColumns(int columns)
     m_columns = columns;
 }
 
-void Row::checkPosRange(int pos)
+void Row::checkPosRange(int pos) const
 {
     if (pos < 0 || pos >= m_columns)
     {
@@ -140,31 +140,31 @@ void Row::checkPosRange(int pos)
 }
 
 template <>
-int Row::getUnchecked(int pos)
+int Row::getUnchecked(int pos) const
 {
     return sqlite3_column_int(m_stmt, pos);
 }
 
 template <>
-std::int64_t Row::getUnchecked(int pos)
+std::int64_t Row::getUnchecked(int pos) const
 {
     return sqlite3_column_int64(m_stmt, pos);
 }
 
 template <>
-double Row::getUnchecked(int pos)
+double Row::getUnchecked(int pos) const
 {
     return sqlite3_column_double(m_stmt, pos);
 }
 
 template <>
-std::string Row::getUnchecked(int pos)
+std::string Row::getUnchecked(int pos) const
 {
     return std::string(reinterpret_cast<const char*>(sqlite3_column_text(m_stmt, pos)));
 }
 
 template <>
-std::vector<unsigned char> Row::getUnchecked(int pos)
+std::vector<unsigned char> Row::getUnchecked(int pos) const
 {
     int size = sqlite3_column_bytes(m_stmt, pos);
     if (size == 0) return std::vector<unsigned char>();
