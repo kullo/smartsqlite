@@ -24,6 +24,10 @@ public:
     void commitTransaction();
     void rollbackTransaction();
 
+    void savepoint(const std::string &name);
+    void releaseSavepoint(const std::string &name);
+    void rollbackToSavepoint(const std::string &name);
+
     std::int64_t lastInsertRowId() const;
 
 private:

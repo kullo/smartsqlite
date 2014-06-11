@@ -72,6 +72,29 @@ TEST(Connection, canRollbackTransaction)
     conn.rollbackTransaction();
 }
 
+TEST(Connection, canSetSavepoint)
+{
+    SqliteWrapper::Connection conn(":memory:");
+    std::string savepoint = "abc123";
+    conn.savepoint(savepoint);
+}
+
+TEST(Connection, canReleaseSavepoint)
+{
+    SqliteWrapper::Connection conn(":memory:");
+    std::string savepoint = "abc123";
+    conn.savepoint(savepoint);
+    conn.releaseSavepoint(savepoint);
+}
+
+TEST(Connection, canRollbackToSavepoint)
+{
+    SqliteWrapper::Connection conn(":memory:");
+    std::string savepoint = "abc123";
+    conn.savepoint(savepoint);
+    conn.rollbackToSavepoint(savepoint);
+}
+
 TEST(Connection, canGetLastInsertRowId)
 {
     SqliteWrapper::Connection conn(":memory:");

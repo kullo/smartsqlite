@@ -89,6 +89,24 @@ void Connection::rollbackTransaction()
     exec("ROLLBACK TRANSACTION");
 }
 
+void Connection::savepoint(const std::string &name)
+{
+    //FIXME escape
+    exec(std::string("SAVEPOINT ") + name);
+}
+
+void Connection::releaseSavepoint(const std::string &name)
+{
+    //FIXME escape
+    exec(std::string("RELEASE SAVEPOINT ") + name);
+}
+
+void Connection::rollbackToSavepoint(const std::string &name)
+{
+    //FIXME escape
+    exec(std::string("ROLLBACK TRANSACTION TO SAVEPOINT ") + name);
+}
+
 std::int64_t Connection::lastInsertRowId() const
 {
     return sqlite3_last_insert_rowid(impl->conn);
