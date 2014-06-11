@@ -86,7 +86,7 @@ template <>
 class Binder<std::int8_t>
 {
 public:
-    static int bind(const Statement &stmt, int pos, const bool &value)
+    static int bind(const Statement &stmt, int pos, const std::int8_t &value)
     {
         return Binder<std::int32_t>::bind(stmt, pos, value);
     }
@@ -96,7 +96,7 @@ template <>
 class Binder<std::uint8_t>
 {
 public:
-    static int bind(const Statement &stmt, int pos, const bool &value)
+    static int bind(const Statement &stmt, int pos, const std::uint8_t &value)
     {
         return Binder<std::int32_t>::bind(stmt, pos, value);
     }
@@ -106,7 +106,7 @@ template <>
 class Binder<std::int16_t>
 {
 public:
-    static int bind(const Statement &stmt, int pos, const bool &value)
+    static int bind(const Statement &stmt, int pos, const std::int16_t &value)
     {
         return Binder<std::int32_t>::bind(stmt, pos, value);
     }
@@ -116,7 +116,7 @@ template <>
 class Binder<std::uint16_t>
 {
 public:
-    static int bind(const Statement &stmt, int pos, const bool &value)
+    static int bind(const Statement &stmt, int pos, const std::uint16_t &value)
     {
         return Binder<std::int32_t>::bind(stmt, pos, value);
     }
@@ -126,7 +126,7 @@ template <>
 class Binder<std::uint32_t>
 {
 public:
-    static int bind(const Statement &stmt, int pos, const bool &value)
+    static int bind(const Statement &stmt, int pos, const std::uint32_t &value)
     {
         return Binder<std::int32_t>::bind(stmt, pos, value);
     }
@@ -136,7 +136,7 @@ template <>
 class Binder<std::uint64_t>
 {
 public:
-    static int bind(const Statement &stmt, int pos, const bool &value)
+    static int bind(const Statement &stmt, int pos, const std::uint64_t &value)
     {
         return Binder<std::int64_t>::bind(stmt, pos, value);
     }
