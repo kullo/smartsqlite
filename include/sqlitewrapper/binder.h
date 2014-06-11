@@ -102,5 +102,15 @@ public:
     }
 };
 
+template <>
+class Binder<float>
+{
+public:
+    static int bind(const Statement &stmt, int pos, const bool &value)
+    {
+        return Binder<double>::bind(stmt, pos, value);
+    }
+};
+
 }
 #endif // SQLITEWRAPPER_BINDER_H

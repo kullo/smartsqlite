@@ -126,6 +126,12 @@ TEST_F(Statement, canBindInt64)
     makeSelect().bind(0, value);
 }
 
+TEST_F(Statement, canBindFloat)
+{
+    float value = 42;
+    makeSelect().bind(0, value);
+}
+
 TEST_F(Statement, canBindDouble)
 {
     double value = 42;
@@ -229,6 +235,12 @@ TEST_F(Statement, canGetInt64)
 {
     SqliteWrapper::Statement stmt = makeSelectAll();
     EXPECT_THAT(stmt.begin()->get<std::int64_t>(0), Eq(42));
+}
+
+TEST_F(Statement, canGetFloat)
+{
+    SqliteWrapper::Statement stmt = makeSelectAll();
+    EXPECT_THAT(stmt.begin()->get<float>(1), FloatEq(2.0));
 }
 
 TEST_F(Statement, canGetDouble)
