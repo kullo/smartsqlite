@@ -71,3 +71,11 @@ TEST(Connection, canRollbackTransaction)
     conn.beginTransaction();
     conn.rollbackTransaction();
 }
+
+TEST(Connection, canGetLastInsertRowId)
+{
+    SqliteWrapper::Connection conn(":memory:");
+    conn.exec("CREATE TABLE foo (id INTEGER PRIMARY KEY);"
+              "INSERT INTO foo VALUES (42)");
+    EXPECT_THAT(conn.lastInsertRowId(), Eq(42));
+}
