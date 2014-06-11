@@ -2,7 +2,7 @@
 
 #include <cstring>
 
-#include "sqlite3.h"
+#include "sqlitewrapper/sqlite3.h"
 
 namespace SqliteWrapper {
 

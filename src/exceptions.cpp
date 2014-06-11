@@ -1,7 +1,7 @@
 #include "sqlitewrapper/exceptions.h"
 
 #include "result_names.h"
-#include "sqlite3.h"
+#include "sqlitewrapper/sqlite3.h"
 
 namespace SqliteWrapper {
 

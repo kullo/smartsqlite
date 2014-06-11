@@ -3,9 +3,9 @@
 #include <cstdint>
 #include <vector>
 
-#include "sqlite3.h"
 #include "sqlitewrapper/binder.h"
 #include "sqlitewrapper/exceptions.h"
+#include "sqlitewrapper/sqlite3.h"
 
 namespace SqliteWrapper {
 
