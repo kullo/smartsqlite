@@ -96,9 +96,27 @@ TEST_F(Statement, canBindNull)
     makeSelect().bindNull(0);
 }
 
-TEST_F(Statement, canBindInt)
+TEST_F(Statement, canBindBool)
 {
-    int value = 42;
+    bool value = true;
+    makeSelect().bind(0, value);
+}
+
+TEST_F(Statement, canBindInt8)
+{
+    std::int8_t value = 42;
+    makeSelect().bind(0, value);
+}
+
+TEST_F(Statement, canBindInt16)
+{
+    std::int16_t value = 42;
+    makeSelect().bind(0, value);
+}
+
+TEST_F(Statement, canBindInt32)
+{
+    std::int32_t value = 42;
     makeSelect().bind(0, value);
 }
 

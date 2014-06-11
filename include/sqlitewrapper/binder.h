@@ -8,8 +8,10 @@
 
 namespace SqliteWrapper {
 
+// BEGIN SQLite native types
+
 template <>
-class Binder<int>
+class Binder<std::int32_t>
 {
 public:
     static int bind(const Statement &stmt, int pos, const int &value)
@@ -65,6 +67,38 @@ public:
     static int bind(const Statement &stmt, int pos, void* const &value, const std::size_t &size)
     {
         return sqlite3_bind_blob(stmt.statementHandle(), pos, value, size, SQLITE_TRANSIENT);
+    }
+};
+
+// END SQLite native types
+
+template <>
+class Binder<bool>
+{
+public:
+    static int bind(const Statement &stmt, int pos, const bool &value)
+    {
+        return Binder<std::int32_t>::bind(stmt, pos, value ? 1 : 0);
+    }
+};
+
+template <>
+class Binder<std::int8_t>
+{
+public:
+    static int bind(const Statement &stmt, int pos, const bool &value)
+    {
+        return Binder<std::int32_t>::bind(stmt, pos, value);
+    }
+};
+
+template <>
+class Binder<std::int16_t>
+{
+public:
+    static int bind(const Statement &stmt, int pos, const bool &value)
+    {
+        return Binder<std::int32_t>::bind(stmt, pos, value);
     }
 };
 
