@@ -24,6 +24,8 @@ public:
     void commitTransaction();
     void rollbackTransaction();
 
+    std::int64_t lastInsertRowId() const;
+
 private:
     struct Impl;
     std::unique_ptr<Impl> impl;

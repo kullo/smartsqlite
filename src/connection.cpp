@@ -89,4 +89,9 @@ void Connection::rollbackTransaction()
     exec("ROLLBACK TRANSACTION");
 }
 
+std::int64_t Connection::lastInsertRowId() const
+{
+    return sqlite3_last_insert_rowid(impl->conn);
+}
+
 }
