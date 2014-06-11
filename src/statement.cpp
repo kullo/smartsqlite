@@ -140,8 +140,10 @@ void Row::checkPosRange(int pos) const
     }
 }
 
+// BEGIN native types of SQLite
+
 template <>
-int Row::getUnchecked(int pos) const
+std::int32_t Row::getUnchecked(int pos) const
 {
     return sqlite3_column_int(m_stmt, pos);
 }
@@ -172,6 +174,26 @@ std::vector<unsigned char> Row::getUnchecked(int pos) const
 
     const unsigned char *data = reinterpret_cast<const unsigned char*>(sqlite3_column_blob(m_stmt, pos));
     return std::vector<unsigned char>(data, data + size);
+}
+
+// END native types of SQLite
+
+template <>
+bool Row::getUnchecked(int pos) const
+{
+    return getUnchecked<std::int32_t>(pos) != 0;
+}
+
+template <>
+std::int8_t Row::getUnchecked(int pos) const
+{
+    return getUnchecked<std::int32_t>(pos);
+}
+
+template <>
+std::int16_t Row::getUnchecked(int pos) const
+{
+    return getUnchecked<std::int32_t>(pos);
 }
 
 }

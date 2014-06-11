@@ -201,10 +201,28 @@ TEST_F(Statement, canStepThroughNonemptyResult)
     EXPECT_THAT(counter, Eq(1));
 }
 
-TEST_F(Statement, canGetInt)
+TEST_F(Statement, canGetBool)
 {
     SqliteWrapper::Statement stmt = makeSelectAll();
-    EXPECT_THAT(stmt.begin()->get<int>(0), Eq(42));
+    EXPECT_THAT(stmt.begin()->get<bool>(0), Eq(true));
+}
+
+TEST_F(Statement, canGetInt8)
+{
+    SqliteWrapper::Statement stmt = makeSelectAll();
+    EXPECT_THAT(stmt.begin()->get<std::int8_t>(0), Eq(42));
+}
+
+TEST_F(Statement, canGetInt16)
+{
+    SqliteWrapper::Statement stmt = makeSelectAll();
+    EXPECT_THAT(stmt.begin()->get<std::int16_t>(0), Eq(42));
+}
+
+TEST_F(Statement, canGetInt32)
+{
+    SqliteWrapper::Statement stmt = makeSelectAll();
+    EXPECT_THAT(stmt.begin()->get<std::int32_t>(0), Eq(42));
 }
 
 TEST_F(Statement, canGetInt64)
