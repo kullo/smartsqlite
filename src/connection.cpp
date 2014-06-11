@@ -92,19 +92,19 @@ void Connection::rollbackTransaction()
 void Connection::savepoint(const std::string &name)
 {
     //FIXME escape
-    exec(std::string("SAVEPOINT ") + name);
+    exec(std::string("SAVEPOINT '") + name + "'");
 }
 
 void Connection::releaseSavepoint(const std::string &name)
 {
     //FIXME escape
-    exec(std::string("RELEASE SAVEPOINT ") + name);
+    exec(std::string("RELEASE SAVEPOINT '") + name + "'");
 }
 
 void Connection::rollbackToSavepoint(const std::string &name)
 {
     //FIXME escape
-    exec(std::string("ROLLBACK TRANSACTION TO SAVEPOINT ") + name);
+    exec(std::string("ROLLBACK TRANSACTION TO SAVEPOINT '") + name + "'");
 }
 
 std::int64_t Connection::lastInsertRowId() const
