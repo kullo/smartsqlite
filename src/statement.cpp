@@ -71,6 +71,7 @@ sqlite3_stmt *Statement::statementHandle() const
 RowIterator::RowIterator(sqlite3_stmt *stmt, bool done)
     : m_stmt(stmt), m_done(done), m_row(stmt)
 {
+    //FIXME make it possible to invoke .begin() multiple times without moving
     if (!done)
     {
         // get first result

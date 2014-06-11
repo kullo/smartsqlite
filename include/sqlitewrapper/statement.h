@@ -99,6 +99,7 @@ public:
 
     Statement &bindNull(int pos);
 
+    //TODO better interface for querying for zero or one rows
     RowIterator begin();
     RowIterator end();
 
