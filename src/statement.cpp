@@ -228,7 +228,7 @@ std::uint64_t Row::getUnchecked(int pos) const
 template <>
 unsigned long Row::getUnchecked(int pos) const
 {
-    return getUnchecked<unsigned long>(pos);
+    return getUnchecked<std::int32_t>(pos);
 }
 #endif
 
