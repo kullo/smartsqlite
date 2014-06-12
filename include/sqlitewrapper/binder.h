@@ -142,6 +142,22 @@ public:
     }
 };
 
+// Linux:
+//   std::size_t = unsigned long = std::uint64_t
+// Mac:
+//   std::size_t = unsigned long != std::uint64_t
+#ifdef __APPLE__
+template <>
+class Binder<unsigned long>
+{
+public:
+    static int bind(const Statement &stmt, int pos, const unsigned long &value)
+    {
+        return Binder<std::int32_t>::bind(stmt, pos, value);
+    }
+};
+#endif
+
 template <>
 class Binder<float>
 {
