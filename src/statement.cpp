@@ -220,6 +220,18 @@ std::uint64_t Row::getUnchecked(int pos) const
     return getUnchecked<std::int64_t>(pos);
 }
 
+// Linux:
+//   std::size_t = unsigned long = std::uint64_t
+// Mac:
+//   std::size_t = unsigned long != std::uint64_t
+#ifdef __APPLE__
+template <>
+unsigned long Row::getUnchecked(int pos) const
+{
+    return getUnchecked<std::int32_t>(pos);
+}
+#endif
+
 template <>
 float Row::getUnchecked(int pos) const
 {
