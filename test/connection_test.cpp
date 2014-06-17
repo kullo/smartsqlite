@@ -40,6 +40,22 @@ TEST(Connection, canSetBusyTimeout)
     conn.setBusyTimeout(42);
 }
 
+static void traceFun(void *, const char *) {}
+
+TEST(Connection, canSetTracingCallback)
+{
+    SqliteWrapper::Connection conn(":memory:");
+    conn.setTracingCallback(&traceFun);
+}
+
+static void profileFun(void *, const char *, std::uint64_t) {}
+
+TEST(Connection, canSetProfilingCallback)
+{
+    SqliteWrapper::Connection conn(":memory:");
+    conn.setProfilingCallback(&profileFun);
+}
+
 TEST(Connection, canPrepareStatement)
 {
     SqliteWrapper::Connection conn(":memory:");

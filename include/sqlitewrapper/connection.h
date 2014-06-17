@@ -17,6 +17,8 @@ public:
     ~Connection();
 
     void setBusyTimeout(int ms);
+    void *setTracingCallback(void(*callback)(void *, const char*), void *extraArg = nullptr);
+    void *setProfilingCallback(void(*callback)(void *, const char *, std::uint64_t), void *extraArg = nullptr);
     Statement prepare(const std::string &sql);
     void exec(const std::string &sql);
 
