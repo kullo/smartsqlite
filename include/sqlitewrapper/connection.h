@@ -40,6 +40,8 @@ public:
     std::int64_t lastInsertRowId() const;
 
 private:
+    static std::string escape(const std::string &original);
+
     struct Impl;
     std::unique_ptr<Impl> impl;
 };

@@ -2,6 +2,7 @@
 
 #include <cassert>
 #include <memory>
+#include <sstream>
 
 #include "sqlitewrapper/exceptions.h"
 #include "sqlitewrapper/sqlite3.h"
@@ -121,25 +122,40 @@ void Connection::rollbackTransaction()
 
 void Connection::savepoint(const std::string &name)
 {
-    //FIXME escape
-    exec(std::string("SAVEPOINT '") + name + "'");
+    exec(std::string("SAVEPOINT '") + escape(name) + "'");
 }
 
 void Connection::releaseSavepoint(const std::string &name)
 {
-    //FIXME escape
-    exec(std::string("RELEASE SAVEPOINT '") + name + "'");
+    exec(std::string("RELEASE SAVEPOINT '") + escape(name) + "'");
 }
 
 void Connection::rollbackToSavepoint(const std::string &name)
 {
-    //FIXME escape
-    exec(std::string("ROLLBACK TRANSACTION TO SAVEPOINT '") + name + "'");
+    exec(std::string("ROLLBACK TRANSACTION TO SAVEPOINT '") + escape(name) + "'");
 }
 
 std::int64_t Connection::lastInsertRowId() const
 {
     return sqlite3_last_insert_rowid(impl->conn);
+}
+
+std::string Connection::escape(const std::string &original)
+{
+    std::stringstream result;
+    for (auto origChar : original)
+    {
+        if (origChar == '\'')
+        {
+            // escape single quote by two single quotes
+            result << "''";
+        }
+        else
+        {
+            result << origChar;
+        }
+    }
+    return result.str();
 }
 
 }

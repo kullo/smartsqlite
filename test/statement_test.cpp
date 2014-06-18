@@ -210,6 +210,18 @@ TEST_F(Statement, canBindNonNullNullables)
     stmt.bind(pos++, SqliteWrapper::Nullable<std::vector<unsigned char>>(exampleBlob()));
 }
 
+TEST_F(Statement, canCheckWhetherStatementHasResults)
+{
+    SqliteWrapper::Statement stmt = makeSelect();
+    stmt.bindNull(0);
+    EXPECT_THAT(stmt.hasResults(), Eq(false));
+
+    stmt.reset();
+    stmt.clearBindings();
+    stmt.bind(0, 42);
+    EXPECT_THAT(stmt.hasResults(), Eq(true));
+}
+
 TEST_F(Statement, canStepThroughEmptyResult)
 {
     SqliteWrapper::Statement stmt = makeSelect();
@@ -221,6 +233,14 @@ TEST_F(Statement, canStepThroughEmptyResult)
         ++counter;
     }
     EXPECT_THAT(counter, Eq(0));
+}
+
+TEST_F(Statement, canExecWithoutResult)
+{
+    SqliteWrapper::Statement stmt = makeSelect();
+    stmt.bindNull(0);
+
+    stmt.execWithoutResult();
 }
 
 TEST_F(Statement, canStepThroughNonemptyResult)
@@ -235,6 +255,15 @@ TEST_F(Statement, canStepThroughNonemptyResult)
         EXPECT_THAT(iter->get<std::string>(0), Eq(std::string("6*7")));
     }
     EXPECT_THAT(counter, Eq(1));
+}
+
+TEST_F(Statement, canExecWithSingleResult)
+{
+    SqliteWrapper::Statement stmt = makeSelect();
+    stmt.bind(0, 42);
+
+    auto result = stmt.execWithSingleResult();
+    EXPECT_THAT(result.get<std::string>(0), Eq(std::string("6*7")));
 }
 
 TEST_F(Statement, canGetBool)

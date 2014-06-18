@@ -99,9 +99,11 @@ public:
 
     Statement &bindNull(int pos);
 
-    //TODO better interface for querying for zero or one rows
+    bool hasResults();
     RowIterator begin();
     RowIterator end();
+    void execWithoutResult();
+    Row execWithSingleResult();
 
     void clearBindings();
     void reset();
@@ -109,6 +111,8 @@ public:
     sqlite3_stmt *statementHandle() const;
 
 private:
+    bool alreadyExecuted = false;
+
     struct Impl;
     std::unique_ptr<Impl> impl;
 };

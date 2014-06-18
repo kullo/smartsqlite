@@ -43,14 +43,36 @@ Statement &Statement::bindNull(int pos)
     return *this;
 }
 
+bool Statement::hasResults()
+{
+    return begin() != end();
+}
+
 RowIterator Statement::begin()
 {
-    return RowIterator(impl->stmt, false);
+    auto iter = RowIterator(impl->stmt, false);
+    if (!alreadyExecuted)
+    {
+        // execute statement on first call to begin()
+        ++iter;
+        alreadyExecuted = true;
+    }
+    return iter;
 }
 
 RowIterator Statement::end()
 {
     return RowIterator(impl->stmt, true);
+}
+
+void Statement::execWithoutResult()
+{
+    begin();
+}
+
+Row Statement::execWithSingleResult()
+{
+    return *begin();
 }
 
 void Statement::clearBindings()
@@ -60,6 +82,7 @@ void Statement::clearBindings()
 
 void Statement::reset()
 {
+    alreadyExecuted = false;
     checkResult(sqlite3_reset(impl->stmt));
 }
 
@@ -71,12 +94,6 @@ sqlite3_stmt *Statement::statementHandle() const
 RowIterator::RowIterator(sqlite3_stmt *stmt, bool done)
     : m_stmt(stmt), m_done(done), m_row(stmt)
 {
-    //FIXME make it possible to invoke .begin() multiple times without moving
-    if (!done)
-    {
-        // get first result
-        ++(*this);
-    }
 }
 
 bool RowIterator::operator==(const RowIterator &rhs) const

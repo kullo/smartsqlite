@@ -107,6 +107,13 @@ TEST(Connection, canSetSavepoint)
     conn.savepoint(savepoint);
 }
 
+TEST(Connection, canSetSavepointWithWeirdName)
+{
+    SqliteWrapper::Connection conn(":memory:");
+    std::string savepoint = "abc'123";
+    conn.savepoint(savepoint);
+}
+
 TEST(Connection, canReleaseSavepoint)
 {
     SqliteWrapper::Connection conn(":memory:");
