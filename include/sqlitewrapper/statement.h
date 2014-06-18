@@ -109,6 +109,8 @@ public:
     sqlite3_stmt *statementHandle() const;
 
 private:
+    bool alreadyExecuted = false;
+
     struct Impl;
     std::unique_ptr<Impl> impl;
 };
