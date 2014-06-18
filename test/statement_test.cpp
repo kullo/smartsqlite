@@ -210,6 +210,18 @@ TEST_F(Statement, canBindNonNullNullables)
     stmt.bind(pos++, SqliteWrapper::Nullable<std::vector<unsigned char>>(exampleBlob()));
 }
 
+TEST_F(Statement, canCheckWhetherStatementHasResults)
+{
+    SqliteWrapper::Statement stmt = makeSelect();
+    stmt.bindNull(0);
+    EXPECT_THAT(stmt.hasResults(), Eq(false));
+
+    stmt.reset();
+    stmt.clearBindings();
+    stmt.bind(0, 42);
+    EXPECT_THAT(stmt.hasResults(), Eq(true));
+}
+
 TEST_F(Statement, canStepThroughEmptyResult)
 {
     SqliteWrapper::Statement stmt = makeSelect();

@@ -43,6 +43,11 @@ Statement &Statement::bindNull(int pos)
     return *this;
 }
 
+bool Statement::hasResults()
+{
+    return begin() != end();
+}
+
 RowIterator Statement::begin()
 {
     auto iter = RowIterator(impl->stmt, false);

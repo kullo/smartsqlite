@@ -99,6 +99,7 @@ public:
 
     Statement &bindNull(int pos);
 
+    bool hasResults();
     RowIterator begin();
     RowIterator end();
     void execWithoutResult();
