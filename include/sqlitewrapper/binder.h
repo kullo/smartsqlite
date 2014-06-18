@@ -14,7 +14,7 @@ template <>
 class Binder<std::int32_t>
 {
 public:
-    static int bind(const Statement &stmt, int pos, const int &value)
+    static int bind(const Statement &stmt, int pos, const std::int32_t &value)
     {
         return sqlite3_bind_int(stmt.statementHandle(), pos, value);
     }
