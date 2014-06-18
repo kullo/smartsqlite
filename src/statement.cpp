@@ -60,6 +60,16 @@ RowIterator Statement::end()
     return RowIterator(impl->stmt, true);
 }
 
+void Statement::execWithoutResult()
+{
+    begin();
+}
+
+Row Statement::execWithSingleResult()
+{
+    return *begin();
+}
+
 void Statement::clearBindings()
 {
     checkResult(sqlite3_clear_bindings(impl->stmt));
