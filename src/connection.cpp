@@ -1,5 +1,6 @@
 #include "sqlitewrapper/connection.h"
 
+#include <cassert>
 #include <memory>
 
 #include "sqlitewrapper/exceptions.h"
@@ -87,9 +88,25 @@ void Connection::exec(const std::string &sql)
     }
 }
 
-void Connection::beginTransaction()
+void Connection::beginTransaction(TransactionType type)
 {
-    exec("BEGIN TRANSACTION");
+    std::string typeStr;
+    switch (type)
+    {
+    case Deferred:
+        typeStr = "DEFERRED";
+        break;
+    case Immediate:
+        typeStr = "IMMEDIATE";
+        break;
+    case Exclusive:
+        typeStr = "EXCLUSIVE";
+        break;
+    default:
+        assert(false && "Unknown transaction type");
+    }
+
+    exec(std::string("BEGIN ") + typeStr + " TRANSACTION");
 }
 
 void Connection::commitTransaction()

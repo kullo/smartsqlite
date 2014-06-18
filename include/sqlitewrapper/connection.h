@@ -8,6 +8,13 @@
 
 namespace SqliteWrapper {
 
+enum TransactionType
+{
+    Deferred,
+    Immediate,
+    Exclusive
+};
+
 class Connection
 {
 public:
@@ -22,7 +29,7 @@ public:
     Statement prepare(const std::string &sql);
     void exec(const std::string &sql);
 
-    void beginTransaction();
+    void beginTransaction(TransactionType type = Deferred);
     void commitTransaction();
     void rollbackTransaction();
 

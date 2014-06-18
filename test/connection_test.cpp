@@ -74,6 +74,18 @@ TEST(Connection, canBeginTransaction)
     conn.beginTransaction();
 }
 
+TEST(Connection, canBeginImmediateTransaction)
+{
+    SqliteWrapper::Connection conn(":memory:");
+    conn.beginTransaction(SqliteWrapper::Immediate);
+}
+
+TEST(Connection, canBeginExclusiveTransaction)
+{
+    SqliteWrapper::Connection conn(":memory:");
+    conn.beginTransaction(SqliteWrapper::Exclusive);
+}
+
 TEST(Connection, canCommitTransaction)
 {
     SqliteWrapper::Connection conn(":memory:");
