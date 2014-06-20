@@ -11,10 +11,10 @@ namespace SqliteWrapper {
 // BEGIN SQLite native types
 
 template <>
-class Binder<std::int64_t>
+class Binder<long long>
 {
 public:
-    static int bind(const Statement &stmt, int pos, const std::int64_t &value)
+    static int bind(const Statement &stmt, int pos, const long long &value)
     {
         return sqlite3_bind_int64(stmt.statementHandle(), pos, value);
     }
@@ -58,95 +58,99 @@ class Binder<bool>
 public:
     static int bind(const Statement &stmt, int pos, const bool &value)
     {
-        return Binder<std::int64_t>::bind(stmt, pos, value ? 1 : 0);
+        return Binder<long long>::bind(stmt, pos, value ? 1 : 0);
     }
 };
 
 template <>
-class Binder<std::int8_t>
+class Binder<signed char>
 {
 public:
-    static int bind(const Statement &stmt, int pos, const std::int8_t &value)
+    static int bind(const Statement &stmt, int pos, const signed char &value)
     {
-        return Binder<std::int64_t>::bind(stmt, pos, value);
+        return Binder<long long>::bind(stmt, pos, value);
     }
 };
 
 template <>
-class Binder<std::uint8_t>
+class Binder<unsigned char>
 {
 public:
-    static int bind(const Statement &stmt, int pos, const std::uint8_t &value)
+    static int bind(const Statement &stmt, int pos, const unsigned char &value)
     {
-        return Binder<std::int64_t>::bind(stmt, pos, value);
+        return Binder<long long>::bind(stmt, pos, value);
     }
 };
 
 template <>
-class Binder<std::int16_t>
+class Binder<short>
 {
 public:
-    static int bind(const Statement &stmt, int pos, const std::int16_t &value)
+    static int bind(const Statement &stmt, int pos, const short &value)
     {
-        return Binder<std::int64_t>::bind(stmt, pos, value);
+        return Binder<long long>::bind(stmt, pos, value);
     }
 };
 
 template <>
-class Binder<std::uint16_t>
+class Binder<unsigned short>
 {
 public:
-    static int bind(const Statement &stmt, int pos, const std::uint16_t &value)
+    static int bind(const Statement &stmt, int pos, const unsigned short &value)
     {
-        return Binder<std::int64_t>::bind(stmt, pos, value);
+        return Binder<long long>::bind(stmt, pos, value);
     }
 };
 
 template <>
-class Binder<std::int32_t>
+class Binder<int>
 {
 public:
-    static int bind(const Statement &stmt, int pos, const std::int32_t &value)
+    static int bind(const Statement &stmt, int pos, const int &value)
     {
-        return Binder<std::int64_t>::bind(stmt, pos, value);
+        return Binder<long long>::bind(stmt, pos, value);
     }
 };
 
 template <>
-class Binder<std::uint32_t>
+class Binder<unsigned int>
 {
 public:
-    static int bind(const Statement &stmt, int pos, const std::uint32_t &value)
+    static int bind(const Statement &stmt, int pos, const unsigned int &value)
     {
-        return Binder<std::int64_t>::bind(stmt, pos, value);
+        return Binder<long long>::bind(stmt, pos, value);
     }
 };
 
 template <>
-class Binder<std::uint64_t>
+class Binder<long>
 {
 public:
-    static int bind(const Statement &stmt, int pos, const std::uint64_t &value)
+    static int bind(const Statement &stmt, int pos, const long &value)
     {
-        return Binder<std::int64_t>::bind(stmt, pos, value);
+        return Binder<long long>::bind(stmt, pos, value);
     }
 };
 
-// Linux:
-//   std::size_t = unsigned long = std::uint64_t
-// Mac:
-//   std::size_t = unsigned long != std::uint64_t
-#ifdef __APPLE__
 template <>
 class Binder<unsigned long>
 {
 public:
     static int bind(const Statement &stmt, int pos, const unsigned long &value)
     {
-        return Binder<std::int32_t>::bind(stmt, pos, value);
+        return Binder<long long>::bind(stmt, pos, value);
     }
 };
-#endif
+
+template <>
+class Binder<unsigned long long>
+{
+public:
+    static int bind(const Statement &stmt, int pos, const unsigned long long &value)
+    {
+        return Binder<long long>::bind(stmt, pos, value);
+    }
+};
 
 template <>
 class Binder<float>
