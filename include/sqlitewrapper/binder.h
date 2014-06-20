@@ -41,20 +41,10 @@ public:
 };
 
 template <>
-class Binder<std::vector<unsigned char>>
-{
-public:
-    static int bind(const Statement &stmt, int pos, const std::vector<unsigned char> &value)
-    {
-        return sqlite3_bind_blob(stmt.statementHandle(), pos, value.data(), value.size(), SQLITE_TRANSIENT);
-    }
-};
-
-template <>
 class Binder<void*, std::size_t>
 {
 public:
-    static int bind(const Statement &stmt, int pos, void* const &value, const std::size_t &size)
+    static int bind(const Statement &stmt, int pos, const void* const &value, const std::size_t &size)
     {
         return sqlite3_bind_blob(stmt.statementHandle(), pos, value, size, SQLITE_TRANSIENT);
     }
@@ -165,6 +155,16 @@ public:
     static int bind(const Statement &stmt, int pos, const bool &value)
     {
         return Binder<double>::bind(stmt, pos, value);
+    }
+};
+
+template <>
+class Binder<std::vector<unsigned char>>
+{
+public:
+    static int bind(const Statement &stmt, int pos, const std::vector<unsigned char> &value)
+    {
+        return Binder<void*, std::size_t>::bind(stmt, pos, value.data(), value.size());
     }
 };
 
