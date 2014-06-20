@@ -10,6 +10,7 @@ add_library (sqlitewrapper
     sqlite3.c
     connection.cpp
     exceptions.cpp
+    row.cpp
     util.cpp
     statement.cpp
     version.cpp
