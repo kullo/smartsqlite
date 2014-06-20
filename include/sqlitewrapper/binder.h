@@ -11,16 +11,6 @@ namespace SqliteWrapper {
 // BEGIN SQLite native types
 
 template <>
-class Binder<std::int32_t>
-{
-public:
-    static int bind(const Statement &stmt, int pos, const std::int32_t &value)
-    {
-        return sqlite3_bind_int(stmt.statementHandle(), pos, value);
-    }
-};
-
-template <>
 class Binder<std::int64_t>
 {
 public:
@@ -78,7 +68,7 @@ class Binder<bool>
 public:
     static int bind(const Statement &stmt, int pos, const bool &value)
     {
-        return Binder<std::int32_t>::bind(stmt, pos, value ? 1 : 0);
+        return Binder<std::int64_t>::bind(stmt, pos, value ? 1 : 0);
     }
 };
 
@@ -88,7 +78,7 @@ class Binder<std::int8_t>
 public:
     static int bind(const Statement &stmt, int pos, const std::int8_t &value)
     {
-        return Binder<std::int32_t>::bind(stmt, pos, value);
+        return Binder<std::int64_t>::bind(stmt, pos, value);
     }
 };
 
@@ -98,7 +88,7 @@ class Binder<std::uint8_t>
 public:
     static int bind(const Statement &stmt, int pos, const std::uint8_t &value)
     {
-        return Binder<std::int32_t>::bind(stmt, pos, value);
+        return Binder<std::int64_t>::bind(stmt, pos, value);
     }
 };
 
@@ -108,7 +98,7 @@ class Binder<std::int16_t>
 public:
     static int bind(const Statement &stmt, int pos, const std::int16_t &value)
     {
-        return Binder<std::int32_t>::bind(stmt, pos, value);
+        return Binder<std::int64_t>::bind(stmt, pos, value);
     }
 };
 
@@ -118,7 +108,17 @@ class Binder<std::uint16_t>
 public:
     static int bind(const Statement &stmt, int pos, const std::uint16_t &value)
     {
-        return Binder<std::int32_t>::bind(stmt, pos, value);
+        return Binder<std::int64_t>::bind(stmt, pos, value);
+    }
+};
+
+template <>
+class Binder<std::int32_t>
+{
+public:
+    static int bind(const Statement &stmt, int pos, const std::int32_t &value)
+    {
+        return Binder<std::int64_t>::bind(stmt, pos, value);
     }
 };
 
@@ -128,7 +128,7 @@ class Binder<std::uint32_t>
 public:
     static int bind(const Statement &stmt, int pos, const std::uint32_t &value)
     {
-        return Binder<std::int32_t>::bind(stmt, pos, value);
+        return Binder<std::int64_t>::bind(stmt, pos, value);
     }
 };
 
