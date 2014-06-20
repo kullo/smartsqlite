@@ -91,24 +91,24 @@ sqlite3_stmt *Statement::statementHandle() const
     return impl->stmt;
 }
 
-int NativeBinder::bindLongLong(const Statement &stmt, int pos, long long value)
+int NativeBinder::bindLongLong(sqlite3_stmt *stmt, int pos, long long value)
 {
-    return sqlite3_bind_int64(stmt.statementHandle(), pos, value);
+    return sqlite3_bind_int64(stmt, pos + 1, value);
 }
 
-int NativeBinder::bindDouble(const Statement &stmt, int pos, double value)
+int NativeBinder::bindDouble(sqlite3_stmt *stmt, int pos, double value)
 {
-    return sqlite3_bind_double(stmt.statementHandle(), pos, value);
+    return sqlite3_bind_double(stmt, pos + 1, value);
 }
 
-int NativeBinder::bindString(const Statement &stmt, int pos, const std::string &value)
+int NativeBinder::bindString(sqlite3_stmt *stmt, int pos, const std::string &value)
 {
-    return sqlite3_bind_text(stmt.statementHandle(), pos, value.c_str(), value.size(), SQLITE_TRANSIENT);
+    return sqlite3_bind_text(stmt, pos + 1, value.c_str(), value.size(), SQLITE_TRANSIENT);
 }
 
-int NativeBinder::bindBlob(const Statement &stmt, int pos, const void * const &data, size_t size)
+int NativeBinder::bindBlob(sqlite3_stmt *stmt, int pos, const void * const &data, size_t size)
 {
-    return sqlite3_bind_blob(stmt.statementHandle(), pos, data, size, SQLITE_TRANSIENT);
+    return sqlite3_bind_blob(stmt, pos + 1, data, size, SQLITE_TRANSIENT);
 }
 
 }

@@ -19,16 +19,16 @@ template <typename... T>
 class Binder
 {
 public:
-    static int bind(const Statement &, int, const T&...);
+    static int bind(sqlite3_stmt *, int, const T&...);
 };
 
 class NativeBinder
 {
 public:
-    static int bindLongLong(const Statement &stmt, int pos, long long value);
-    static int bindDouble(const Statement &stmt, int pos, double value);
-    static int bindString(const Statement &stmt, int pos, const std::string &value);
-    static int bindBlob(const Statement &stmt, int pos, const void* const &data, size_t size);
+    static int bindLongLong(sqlite3_stmt *stmt, int pos, long long value);
+    static int bindDouble(sqlite3_stmt *stmt, int pos, double value);
+    static int bindString(sqlite3_stmt *stmt, int pos, const std::string &value);
+    static int bindBlob(sqlite3_stmt *stmt, int pos, const void* const &data, size_t size);
 };
 
 class Statement
@@ -42,21 +42,21 @@ public:
     template <typename T, typename std::enable_if<std::is_integral<T>::value>::type* = nullptr>
     Statement &bind(int pos, const T& value)
     {
-        checkResult(NativeBinder::bindLongLong(*this, pos + 1, value));
+        checkResult(NativeBinder::bindLongLong(statementHandle(), pos, value));
         return *this;
     }
 
     template <typename T, typename std::enable_if<std::is_floating_point<T>::value>::type* = nullptr>
     Statement &bind(int pos, const T& value)
     {
-        checkResult(NativeBinder::bindDouble(*this, pos + 1, value));
+        checkResult(NativeBinder::bindDouble(statementHandle(), pos, value));
         return *this;
     }
 
     template <typename... T>
     Statement &bind(int pos, const T&... values)
     {
-        checkResult(Binder<T...>::bind(*this, pos + 1, values...));
+        checkResult(Binder<T...>::bind(statementHandle(), pos, values...));
         return *this;
     }
 
@@ -91,7 +91,7 @@ template <>
 class Binder<std::string>
 {
 public:
-    static int bind(const Statement &stmt, int pos, const std::string &value)
+    static int bind(sqlite3_stmt *stmt, int pos, const std::string &value)
     {
         return NativeBinder::bindString(stmt, pos, value);
     }
@@ -101,7 +101,7 @@ template <>
 class Binder<void*, std::size_t>
 {
 public:
-    static int bind(const Statement &stmt, int pos, const void* const &value, const std::size_t &size)
+    static int bind(sqlite3_stmt *stmt, int pos, const void* const &value, const std::size_t &size)
     {
         return NativeBinder::bindBlob(stmt, pos, value, size);
     }
@@ -111,7 +111,7 @@ template <>
 class Binder<std::vector<unsigned char>>
 {
 public:
-    static int bind(const Statement &stmt, int pos, const std::vector<unsigned char> &value)
+    static int bind(sqlite3_stmt *stmt, int pos, const std::vector<unsigned char> &value)
     {
         return NativeBinder::bindBlob(stmt, pos, value.data(), value.size());
     }
