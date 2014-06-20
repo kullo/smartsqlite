@@ -2,7 +2,6 @@
 #include <ostream>
 #include <type_traits>
 
-#include "sqlitewrapper/binder.h"
 #include "sqlitewrapper/connection.h"
 #include "sqlitewrapper/nullable.h"
 

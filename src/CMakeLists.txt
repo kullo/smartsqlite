@@ -8,6 +8,7 @@ endif()
 
 add_library (sqlitewrapper
     sqlite3.c
+    binder.cpp
     connection.cpp
     exceptions.cpp
     row.cpp
