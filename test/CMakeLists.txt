@@ -1,11 +1,12 @@
 add_executable(${PROJECT_NAME}_tests
+    blob_test.cpp
     connection_test.cpp
     statement_test.cpp
     version_test.cpp
 )
 
 set(extra_link_libraries)
-if (NOT MINGW)
+if(NOT MINGW)
     list(APPEND extra_link_libraries dl)
 endif()
 

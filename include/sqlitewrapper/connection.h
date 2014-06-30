@@ -4,6 +4,7 @@
 #include <memory>
 #include <string>
 
+#include "blob.h"
 #include "statement.h"
 
 namespace SqliteWrapper {
@@ -41,6 +42,13 @@ public:
     void rollbackToSavepoint(const std::string &name);
 
     std::int64_t lastInsertRowId() const;
+
+    Blob openBlob(
+            const std::string &db,
+            const std::string &table,
+            const std::string &column,
+            std::int64_t rowid,
+            Blob::Flags flags);
 
 private:
     static std::string escape(const std::string &original);

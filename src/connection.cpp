@@ -140,6 +140,26 @@ std::int64_t Connection::lastInsertRowId() const
     return sqlite3_last_insert_rowid(impl->conn);
 }
 
+Blob Connection::openBlob(
+        const std::string &db,
+        const std::string &table,
+        const std::string &column,
+        std::int64_t rowid,
+        Blob::Flags flags)
+{
+    sqlite3_blob *blob;
+    checkResult(
+                sqlite3_blob_open(
+                    impl->conn,
+                    db.c_str(),
+                    table.c_str(),
+                    column.c_str(),
+                    rowid,
+                    flags,
+                    &blob));
+    return Blob(blob);
+}
+
 std::string Connection::escape(const std::string &original)
 {
     std::stringstream result;
