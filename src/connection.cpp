@@ -43,12 +43,12 @@ void Connection::setBusyTimeout(int ms)
     checkResult(sqlite3_busy_timeout(impl->conn, ms));
 }
 
-void *Connection::setTracingCallback(void (*callback)(void *, const char *), void *extraArg)
+void *Connection::setTracingCallback(TracingCallback *callback, void *extraArg)
 {
     return sqlite3_trace(impl->conn, callback, extraArg);
 }
 
-void *Connection::setProfilingCallback(void (*callback)(void *, const char *, std::uint64_t), void *extraArg)
+void *Connection::setProfilingCallback(ProfilingCallback *callback, void *extraArg)
 {
     return sqlite3_profile(
                 impl->conn,

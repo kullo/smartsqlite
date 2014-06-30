@@ -15,6 +15,9 @@ enum TransactionType
     Exclusive
 };
 
+typedef void(TracingCallback)(void *extraArg, const char *sql);
+typedef void(ProfilingCallback)(void *extraArg, const char *sql, std::uint64_t nanos);
+
 class Connection
 {
 public:
@@ -24,8 +27,8 @@ public:
     ~Connection();
 
     void setBusyTimeout(int ms);
-    void *setTracingCallback(void(*callback)(void *, const char*), void *extraArg = nullptr);
-    void *setProfilingCallback(void(*callback)(void *, const char *, std::uint64_t), void *extraArg = nullptr);
+    void *setTracingCallback(TracingCallback *callback, void *extraArg = nullptr);
+    void *setProfilingCallback(ProfilingCallback *callback, void *extraArg = nullptr);
     Statement prepare(const std::string &sql);
     void exec(const std::string &sql);
 
