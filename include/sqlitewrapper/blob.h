@@ -17,6 +17,7 @@ public:
     Blob &operator=(Blob &&rhs);
     ~Blob();
 
+    void moveToRow(std::int64_t rowid);
     size_t size() const;
 private:
     struct Impl;

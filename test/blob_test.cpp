@@ -45,4 +45,13 @@ TEST_F(Blob, canGetSize)
     EXPECT_THAT(blob.size(), Eq(8));
 }
 
+TEST_F(Blob, canMoveToRow)
+{
+    auto blob = open(rowidZero);
+    EXPECT_THAT(blob.size(), Eq(42));
+
+    blob.moveToRow(rowidNonzero);
+    EXPECT_THAT(blob.size(), Eq(8));
+}
+
 }

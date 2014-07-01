@@ -33,6 +33,12 @@ Blob::~Blob()
     sqlite3_blob_close(impl->blob);
 }
 
+void Blob::moveToRow(std::int64_t rowid)
+{
+    checkResult(sqlite3_blob_reopen(impl->blob, rowid));
+    impl->size = sqlite3_blob_bytes(impl->blob);
+}
+
 size_t Blob::size() const
 {
     return impl->size;
