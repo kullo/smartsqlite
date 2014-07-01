@@ -22,10 +22,11 @@ protected:
         rowidNonzero = conn->lastInsertRowId();
     }
 
-    SqliteWrapper::Blob open(std::int64_t rowid)
+    SqliteWrapper::Blob open(
+            std::int64_t rowid,
+            SqliteWrapper::Blob::Flags flags = SqliteWrapper::Blob::READONLY)
     {
-        return conn->openBlob("main", "blobs", "data", rowid,
-                              SqliteWrapper::Blob::READONLY);
+        return conn->openBlob("main", "blobs", "data", rowid, flags);
     }
 
     std::unique_ptr<SqliteWrapper::Connection> conn;
