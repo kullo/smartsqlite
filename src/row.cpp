@@ -8,8 +8,8 @@
 
 namespace SqliteWrapper {
 
-RowIterator::RowIterator(sqlite3_stmt *stmt, bool done)
-    : m_stmt(stmt), m_done(done), m_row(stmt)
+RowIterator::RowIterator(sqlite3 *conn, sqlite3_stmt *stmt, bool done)
+    : m_conn(conn), m_stmt(stmt), m_done(done), m_row(stmt)
 {
 }
 
@@ -35,7 +35,7 @@ RowIterator &RowIterator::operator++()
         m_done = true;
         break;
     default:
-        checkResult(result);
+        checkResult(result, m_conn);
     }
     m_row.setColumns(sqlite3_column_count(m_stmt));
     return *this;

@@ -12,6 +12,13 @@ void checkResult(int result)
     throw SqliteException(result);
 }
 
+void checkResult(int result, sqlite3 *conn)
+{
+    if (result == SQLITE_OK) return;
+
+    throw SqliteException(result, sqlite3_errmsg(conn));
+}
+
 void checkResult(int result, const std::string &message)
 {
     if (result == SQLITE_OK) return;

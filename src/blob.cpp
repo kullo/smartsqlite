@@ -7,13 +7,15 @@ namespace SqliteWrapper {
 
 struct Blob::Impl
 {
+    sqlite3 *conn = nullptr;
     sqlite3_blob *blob = nullptr;
     size_t size = 0;
 };
 
-Blob::Blob(sqlite3_blob *blob)
+Blob::Blob(sqlite3 *conn, sqlite3_blob *blob)
     : impl(new Impl)
 {
+    impl->conn = conn;
     impl->blob = blob;
     impl->size = sqlite3_blob_bytes(impl->blob);
 }
@@ -36,7 +38,7 @@ Blob::~Blob()
 
 void Blob::moveToRow(std::int64_t rowid)
 {
-    checkResult(sqlite3_blob_reopen(impl->blob, rowid));
+    checkResult(sqlite3_blob_reopen(impl->blob, rowid), impl->conn);
     impl->size = sqlite3_blob_bytes(impl->blob);
 }
 
@@ -54,14 +56,14 @@ size_t Blob::getAccessSize(size_t bufferSize, size_t offset) const
 size_t Blob::read(std::uint8_t *buffer, size_t size, size_t offset) const
 {
     size_t bytesToRead = getAccessSize(size, offset);
-    checkResult(sqlite3_blob_read(impl->blob, buffer, bytesToRead, offset));
+    checkResult(sqlite3_blob_read(impl->blob, buffer, bytesToRead, offset), impl->conn);
     return bytesToRead;
 }
 
 size_t Blob::write(std::uint8_t *buffer, size_t size, size_t offset)
 {
     size_t bytesToWrite = getAccessSize(size, offset);
-    checkResult(sqlite3_blob_write(impl->blob, buffer, bytesToWrite, offset));
+    checkResult(sqlite3_blob_write(impl->blob, buffer, bytesToWrite, offset), impl->conn);
     return bytesToWrite;
 }
 

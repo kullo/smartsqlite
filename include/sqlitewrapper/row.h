@@ -5,6 +5,7 @@
 
 #include "nullable.h"
 
+struct sqlite3;
 struct sqlite3_stmt;
 
 namespace SqliteWrapper {
@@ -50,7 +51,7 @@ private:
 class RowIterator : public std::iterator<std::input_iterator_tag, Row, void>
 {
 public:
-    RowIterator(sqlite3_stmt *stmt, bool done);
+    RowIterator(sqlite3 *conn, sqlite3_stmt *stmt, bool done);
     bool operator==(const RowIterator &rhs) const;
     bool operator!=(const RowIterator &rhs) const;
     RowIterator &operator++();
@@ -58,6 +59,7 @@ public:
     Row *operator->();
 
 private:
+    sqlite3 *m_conn;
     sqlite3_stmt *m_stmt;
     bool m_done;
     Row m_row;

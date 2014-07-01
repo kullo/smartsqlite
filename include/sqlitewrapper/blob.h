@@ -3,6 +3,7 @@
 
 #include <memory>
 
+struct sqlite3;
 struct sqlite3_blob;
 
 namespace SqliteWrapper {
@@ -12,7 +13,7 @@ class Blob
 public:
     enum Flags { READONLY = 0, READWRITE = 1 };
 
-    explicit Blob(sqlite3_blob *blob);
+    explicit Blob(sqlite3 *conn, sqlite3_blob *blob);
     Blob(Blob &&other);
     Blob &operator=(Blob &&rhs);
     ~Blob();
