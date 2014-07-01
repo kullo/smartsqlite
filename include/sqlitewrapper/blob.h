@@ -20,8 +20,8 @@ public:
 
     void moveToRow(std::int64_t rowid);
     size_t size() const;
-    size_t read(std::uint8_t *buffer, size_t size, size_t offset = 0) const;
-    size_t write(std::uint8_t *buffer, size_t size, size_t offset = 0);
+    size_t read(void *buffer, size_t size, size_t offset = 0) const;
+    size_t write(const void *buffer, size_t size, size_t offset = 0);
 
 private:
     size_t getAccessSize(size_t bufferSize, size_t offset) const;
