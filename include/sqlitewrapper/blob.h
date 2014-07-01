@@ -20,8 +20,11 @@ public:
     void moveToRow(std::int64_t rowid);
     size_t size() const;
     size_t read(size_t offset, std::uint8_t *buffer, size_t size) const;
+    size_t write(size_t offset, std::uint8_t *buffer, size_t size);
 
 private:
+    size_t getAccessSize(size_t offset, size_t bufferSize) const;
+
     struct Impl;
     std::unique_ptr<Impl> impl;
 };

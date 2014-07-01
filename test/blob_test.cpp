@@ -138,3 +138,16 @@ TEST_F(Blob, readWithOffsetAndLargerBuffer)
     };
     EXPECT_THAT(buf, Eq(expected));
 }
+
+TEST_F(Blob, write)
+{
+    auto blob = open(rowidNonzero, SqliteWrapper::Blob::READWRITE);
+    std::array<std::uint8_t, 8> original = {
+        0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef
+    };
+    EXPECT_THAT(blob.write(0, original.data(), original.size()), Eq(8));
+
+    std::array<std::uint8_t, 8> readData;
+    EXPECT_THAT(blob.read(0, readData.data(), readData.size()), Eq(8));
+    EXPECT_THAT(readData, Eq(original));
+}
