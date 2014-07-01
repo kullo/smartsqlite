@@ -45,22 +45,22 @@ size_t Blob::size() const
     return impl->size;
 }
 
-size_t Blob::getAccessSize(size_t offset, size_t bufferSize) const
+size_t Blob::getAccessSize(size_t bufferSize, size_t offset) const
 {
     if (offset >= impl->size) return 0;
     return std::min(bufferSize, impl->size - offset);
 }
 
-size_t Blob::read(size_t offset, std::uint8_t *buffer, size_t size) const
+size_t Blob::read(std::uint8_t *buffer, size_t size, size_t offset) const
 {
-    size_t bytesToRead = getAccessSize(offset, size);
+    size_t bytesToRead = getAccessSize(size, offset);
     checkResult(sqlite3_blob_read(impl->blob, buffer, bytesToRead, offset));
     return bytesToRead;
 }
 
-size_t Blob::write(size_t offset, std::uint8_t *buffer, size_t size)
+size_t Blob::write(std::uint8_t *buffer, size_t size, size_t offset)
 {
-    size_t bytesToWrite = getAccessSize(offset, size);
+    size_t bytesToWrite = getAccessSize(size, offset);
     checkResult(sqlite3_blob_write(impl->blob, buffer, bytesToWrite, offset));
     return bytesToWrite;
 }

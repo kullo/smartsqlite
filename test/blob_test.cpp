@@ -60,7 +60,7 @@ TEST_F(Blob, read)
 {
     auto blob = open(rowidNonzero);
     std::array<std::uint8_t, 8> buf;
-    EXPECT_THAT(blob.read(0, buf.data(), buf.size()), Eq(8));
+    EXPECT_THAT(blob.read(buf.data(), buf.size()), Eq(8));
 
     std::array<std::uint8_t, 8> expected = {
         0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef
@@ -72,7 +72,7 @@ TEST_F(Blob, readWithOffset)
 {
     auto blob = open(rowidNonzero);
     std::array<std::uint8_t, 8> buf;
-    EXPECT_THAT(blob.read(2, buf.data(), buf.size()), Eq(6));
+    EXPECT_THAT(blob.read(buf.data(), buf.size(), 2), Eq(6));
 
     // the last two elements are uninitialized
     buf[6] = 0x13;
@@ -87,7 +87,7 @@ TEST_F(Blob, readWithSmallerBuffer)
 {
     auto blob = open(rowidNonzero);
     std::array<std::uint8_t, 4> buf;
-    EXPECT_THAT(blob.read(0, buf.data(), buf.size()), Eq(buf.size()));
+    EXPECT_THAT(blob.read(buf.data(), buf.size()), Eq(buf.size()));
 
     std::array<std::uint8_t, 4> expected = {
         0x01, 0x23, 0x45, 0x67
@@ -99,7 +99,7 @@ TEST_F(Blob, readWithOffsetAndSmallerBuffer)
 {
     auto blob = open(rowidNonzero);
     std::array<std::uint8_t, 4> buf;
-    EXPECT_THAT(blob.read(2, buf.data(), buf.size()), Eq(buf.size()));
+    EXPECT_THAT(blob.read(buf.data(), buf.size(), 2), Eq(buf.size()));
 
     std::array<std::uint8_t, 4> expected = {
         0x45, 0x67, 0x89, 0xab
@@ -111,7 +111,7 @@ TEST_F(Blob, readWithLargerBuffer)
 {
     auto blob = open(rowidNonzero);
     std::array<std::uint8_t, 10> buf;
-    EXPECT_THAT(blob.read(0, buf.data(), buf.size()), Eq(8));
+    EXPECT_THAT(blob.read(buf.data(), buf.size()), Eq(8));
 
     // the last two elements are uninitialized
     buf[8] = 0x13;
@@ -126,7 +126,7 @@ TEST_F(Blob, readWithOffsetAndLargerBuffer)
 {
     auto blob = open(rowidNonzero);
     std::array<std::uint8_t, 10> buf;
-    EXPECT_THAT(blob.read(2, buf.data(), buf.size()), Eq(6));
+    EXPECT_THAT(blob.read(buf.data(), buf.size(), 2), Eq(6));
 
     // the last two elements are uninitialized
     buf[6] = 0x13;
@@ -145,9 +145,9 @@ TEST_F(Blob, write)
     std::array<std::uint8_t, 8> original = {
         0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef
     };
-    EXPECT_THAT(blob.write(0, original.data(), original.size()), Eq(8));
+    EXPECT_THAT(blob.write(original.data(), original.size()), Eq(8));
 
     std::array<std::uint8_t, 8> readData;
-    EXPECT_THAT(blob.read(0, readData.data(), readData.size()), Eq(8));
+    EXPECT_THAT(blob.read(readData.data(), readData.size()), Eq(8));
     EXPECT_THAT(readData, Eq(original));
 }
