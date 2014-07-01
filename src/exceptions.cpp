@@ -17,16 +17,16 @@ const char *Exception::what() const throw()
 
 SqliteException::SqliteException(int resultCode)
     : Exception(
-          resultToResultName(resultCode) + ": " +
-          sqlite3_errstr(resultCode)
+          resultToResultName(resultCode) +
+          " (" + sqlite3_errstr(resultCode) + ")"
           )
 {
 }
 
 SqliteException::SqliteException(int resultCode, const std::string &message)
     : Exception(
-          resultToResultName(resultCode) + ": " +
-          sqlite3_errstr(resultCode) + "\n" +
+          resultToResultName(resultCode) +
+          " (" + sqlite3_errstr(resultCode) + "): " +
           message
           )
 {
