@@ -19,6 +19,7 @@ Connection::Connection(const std::string &connectionString)
     : impl(new Impl)
 {
     checkResult(sqlite3_open(connectionString.c_str(), &(impl->conn)));
+    checkResult(sqlite3_extended_result_codes(impl->conn, 1));
 }
 
 Connection::Connection(Connection &&other)

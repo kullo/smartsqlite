@@ -10,6 +10,7 @@ namespace SqliteWrapper {
     {
         switch (result)
         {
+        // basic result codes
         case SQLITE_OK: return "SQLITE_OK";
         case SQLITE_ERROR: return "SQLITE_ERROR";
         case SQLITE_INTERNAL: return "SQLITE_INTERNAL";
@@ -41,7 +42,68 @@ namespace SqliteWrapper {
         case SQLITE_WARNING: return "SQLITE_WARNING";
         case SQLITE_ROW: return "SQLITE_ROW";
         case SQLITE_DONE: return "SQLITE_DONE";
-        default: return "UNKNOWN";
+
+        // extended result codes
+        case SQLITE_IOERR_READ: return "SQLITE_IOERR_READ";
+        case SQLITE_IOERR_SHORT_READ: return "SQLITE_IOERR_SHORT_READ";
+        case SQLITE_IOERR_WRITE: return "SQLITE_IOERR_WRITE";
+        case SQLITE_IOERR_FSYNC: return "SQLITE_IOERR_FSYNC";
+        case SQLITE_IOERR_DIR_FSYNC: return "SQLITE_IOERR_DIR_FSYNC";
+        case SQLITE_IOERR_TRUNCATE: return "SQLITE_IOERR_TRUNCATE";
+        case SQLITE_IOERR_FSTAT: return "SQLITE_IOERR_FSTAT";
+        case SQLITE_IOERR_UNLOCK: return "SQLITE_IOERR_UNLOCK";
+        case SQLITE_IOERR_RDLOCK: return "SQLITE_IOERR_RDLOCK";
+        case SQLITE_IOERR_DELETE: return "SQLITE_IOERR_DELETE";
+        case SQLITE_IOERR_BLOCKED: return "SQLITE_IOERR_BLOCKED";
+        case SQLITE_IOERR_NOMEM: return "SQLITE_IOERR_NOMEM";
+        case SQLITE_IOERR_ACCESS: return "SQLITE_IOERR_ACCESS";
+        case SQLITE_IOERR_CHECKRESERVEDLOCK: return "SQLITE_IOERR_CHECKRESERVEDLOCK";
+        case SQLITE_IOERR_LOCK: return "SQLITE_IOERR_LOCK";
+        case SQLITE_IOERR_CLOSE: return "SQLITE_IOERR_CLOSE";
+        case SQLITE_IOERR_DIR_CLOSE: return "SQLITE_IOERR_DIR_CLOSE";
+        case SQLITE_IOERR_SHMOPEN: return "SQLITE_IOERR_SHMOPEN";
+        case SQLITE_IOERR_SHMSIZE: return "SQLITE_IOERR_SHMSIZE";
+        case SQLITE_IOERR_SHMLOCK: return "SQLITE_IOERR_SHMLOCK";
+        case SQLITE_IOERR_SHMMAP: return "SQLITE_IOERR_SHMMAP";
+        case SQLITE_IOERR_SEEK: return "SQLITE_IOERR_SEEK";
+        case SQLITE_IOERR_DELETE_NOENT: return "SQLITE_IOERR_DELETE_NOENT";
+        case SQLITE_IOERR_MMAP: return "SQLITE_IOERR_MMAP";
+        case SQLITE_IOERR_GETTEMPPATH: return "SQLITE_IOERR_GETTEMPPATH";
+        case SQLITE_IOERR_CONVPATH: return "SQLITE_IOERR_CONVPATH";
+        case SQLITE_LOCKED_SHAREDCACHE: return "SQLITE_LOCKED_SHAREDCACHE";
+        case SQLITE_BUSY_RECOVERY: return "SQLITE_BUSY_RECOVERY";
+        case SQLITE_BUSY_SNAPSHOT: return "SQLITE_BUSY_SNAPSHOT";
+        case SQLITE_CANTOPEN_NOTEMPDIR: return "SQLITE_CANTOPEN_NOTEMPDIR";
+        case SQLITE_CANTOPEN_ISDIR: return "SQLITE_CANTOPEN_ISDIR";
+        case SQLITE_CANTOPEN_FULLPATH: return "SQLITE_CANTOPEN_FULLPATH";
+        case SQLITE_CANTOPEN_CONVPATH: return "SQLITE_CANTOPEN_CONVPATH";
+        case SQLITE_CORRUPT_VTAB: return "SQLITE_CORRUPT_VTAB";
+        case SQLITE_READONLY_RECOVERY: return "SQLITE_READONLY_RECOVERY";
+        case SQLITE_READONLY_CANTLOCK: return "SQLITE_READONLY_CANTLOCK";
+        case SQLITE_READONLY_ROLLBACK: return "SQLITE_READONLY_ROLLBACK";
+        case SQLITE_READONLY_DBMOVED: return "SQLITE_READONLY_DBMOVED";
+        case SQLITE_ABORT_ROLLBACK: return "SQLITE_ABORT_ROLLBACK";
+        case SQLITE_CONSTRAINT_CHECK: return "SQLITE_CONSTRAINT_CHECK";
+        case SQLITE_CONSTRAINT_COMMITHOOK: return "SQLITE_CONSTRAINT_COMMITHOOK";
+        case SQLITE_CONSTRAINT_FOREIGNKEY: return "SQLITE_CONSTRAINT_FOREIGNKEY";
+        case SQLITE_CONSTRAINT_FUNCTION: return "SQLITE_CONSTRAINT_FUNCTION";
+        case SQLITE_CONSTRAINT_NOTNULL: return "SQLITE_CONSTRAINT_NOTNULL";
+        case SQLITE_CONSTRAINT_PRIMARYKEY: return "SQLITE_CONSTRAINT_PRIMARYKEY";
+        case SQLITE_CONSTRAINT_TRIGGER: return "SQLITE_CONSTRAINT_TRIGGER";
+        case SQLITE_CONSTRAINT_UNIQUE: return "SQLITE_CONSTRAINT_UNIQUE";
+        case SQLITE_CONSTRAINT_VTAB: return "SQLITE_CONSTRAINT_VTAB";
+        case SQLITE_CONSTRAINT_ROWID: return "SQLITE_CONSTRAINT_ROWID";
+        case SQLITE_NOTICE_RECOVER_WAL: return "SQLITE_NOTICE_RECOVER_WAL";
+        case SQLITE_NOTICE_RECOVER_ROLLBACK: return "SQLITE_NOTICE_RECOVER_ROLLBACK";
+        case SQLITE_WARNING_AUTOINDEX: return "SQLITE_WARNING_AUTOINDEX";
+
+        default:
+            if (result & 0xffffff00)
+            {
+                // unknown extended result code, return string for basic result
+                return std::string("UNKNOWN (") + resultToResultName(result & 0xff) + ")";
+            }
+            return "UNKNOWN";
         }
     }
 }
