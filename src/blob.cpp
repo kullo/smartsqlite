@@ -1,6 +1,7 @@
 #include "sqlitewrapper/blob.h"
 
 #include "sqlitewrapper/sqlite3.h"
+#include "sqlitewrapper/util.h"
 
 namespace SqliteWrapper {
 
@@ -42,6 +43,14 @@ void Blob::moveToRow(std::int64_t rowid)
 size_t Blob::size() const
 {
     return impl->size;
+}
+
+size_t Blob::read(size_t offset, std::uint8_t *buffer, size_t size) const
+{
+    if (offset >= impl->size) return 0;
+    size_t bytesToRead = std::min(size, impl->size - offset);
+    checkResult(sqlite3_blob_read(impl->blob, buffer, bytesToRead, offset));
+    return bytesToRead;
 }
 
 }

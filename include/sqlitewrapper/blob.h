@@ -19,6 +19,8 @@ public:
 
     void moveToRow(std::int64_t rowid);
     size_t size() const;
+    size_t read(size_t offset, std::uint8_t *buffer, size_t size) const;
+
 private:
     struct Impl;
     std::unique_ptr<Impl> impl;

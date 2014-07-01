@@ -1,3 +1,4 @@
+#include <array>
 #include <gmock/gmock.h>
 #include <memory>
 
@@ -54,4 +55,85 @@ TEST_F(Blob, canMoveToRow)
     EXPECT_THAT(blob.size(), Eq(8));
 }
 
+TEST_F(Blob, read)
+{
+    auto blob = open(rowidNonzero);
+    std::array<std::uint8_t, 8> buf;
+    EXPECT_THAT(blob.read(0, buf.data(), buf.size()), Eq(8));
+
+    std::array<std::uint8_t, 8> expected = {
+        0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef
+    };
+    EXPECT_THAT(buf, Eq(expected));
+}
+
+TEST_F(Blob, readWithOffset)
+{
+    auto blob = open(rowidNonzero);
+    std::array<std::uint8_t, 8> buf;
+    EXPECT_THAT(blob.read(2, buf.data(), buf.size()), Eq(6));
+
+    // the last two elements are uninitialized
+    buf[6] = 0x13;
+    buf[7] = 0x37;
+    std::array<std::uint8_t, 8> expected = {
+        0x45, 0x67, 0x89, 0xab, 0xcd, 0xef, 0x13, 0x37
+    };
+    EXPECT_THAT(buf, Eq(expected));
+}
+
+TEST_F(Blob, readWithSmallerBuffer)
+{
+    auto blob = open(rowidNonzero);
+    std::array<std::uint8_t, 4> buf;
+    EXPECT_THAT(blob.read(0, buf.data(), buf.size()), Eq(buf.size()));
+
+    std::array<std::uint8_t, 4> expected = {
+        0x01, 0x23, 0x45, 0x67
+    };
+    EXPECT_THAT(buf, Eq(expected));
+}
+
+TEST_F(Blob, readWithOffsetAndSmallerBuffer)
+{
+    auto blob = open(rowidNonzero);
+    std::array<std::uint8_t, 4> buf;
+    EXPECT_THAT(blob.read(2, buf.data(), buf.size()), Eq(buf.size()));
+
+    std::array<std::uint8_t, 4> expected = {
+        0x45, 0x67, 0x89, 0xab
+    };
+    EXPECT_THAT(buf, Eq(expected));
+}
+
+TEST_F(Blob, readWithLargerBuffer)
+{
+    auto blob = open(rowidNonzero);
+    std::array<std::uint8_t, 10> buf;
+    EXPECT_THAT(blob.read(0, buf.data(), buf.size()), Eq(8));
+
+    // the last two elements are uninitialized
+    buf[8] = 0x13;
+    buf[9] = 0x37;
+    std::array<std::uint8_t, 10> expected = {
+        0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef, 0x13, 0x37
+    };
+    EXPECT_THAT(buf, Eq(expected));
+}
+
+TEST_F(Blob, readWithOffsetAndLargerBuffer)
+{
+    auto blob = open(rowidNonzero);
+    std::array<std::uint8_t, 10> buf;
+    EXPECT_THAT(blob.read(2, buf.data(), buf.size()), Eq(6));
+
+    // the last two elements are uninitialized
+    buf[6] = 0x13;
+    buf[7] = 0x37;
+    buf[8] = 0x42;
+    buf[9] = 0x23;
+    std::array<std::uint8_t, 10> expected = {
+        0x45, 0x67, 0x89, 0xab, 0xcd, 0xef, 0x13, 0x37, 0x42, 0x23
+    };
+    EXPECT_THAT(buf, Eq(expected));
 }
