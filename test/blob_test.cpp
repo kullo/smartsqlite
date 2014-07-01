@@ -13,12 +13,16 @@ protected:
     {
         conn.reset(new SqliteWrapper::Connection(":memory:"));
         conn->exec("CREATE TABLE blobs (data BLOB)");
+
         conn->exec("INSERT INTO blobs VALUES (zeroblob(42))");
-        rowid = conn->lastInsertRowId();
+        rowidZero = conn->lastInsertRowId();
+
+        conn->exec("INSERT INTO blobs VALUES (x'0123456789abcdef')");
+        rowidNonzero = conn->lastInsertRowId();
     }
 
     std::unique_ptr<SqliteWrapper::Connection> conn;
-    std::int64_t rowid;
+    std::int64_t rowidZero, rowidNonzero;
 };
 
 TEST_F(Blob, canOpen)
