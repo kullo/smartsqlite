@@ -17,6 +17,7 @@ public:
     Blob &operator=(Blob &&rhs);
     ~Blob();
 
+    size_t size() const;
 private:
     struct Impl;
     std::unique_ptr<Impl> impl;

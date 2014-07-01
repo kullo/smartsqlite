@@ -36,4 +36,13 @@ TEST_F(Blob, canOpen)
     open(rowidZero);
 }
 
+TEST_F(Blob, canGetSize)
+{
+    auto blob = open(rowidZero);
+    EXPECT_THAT(blob.size(), Eq(42));
+
+    blob = open(rowidNonzero);
+    EXPECT_THAT(blob.size(), Eq(8));
+}
+
 }
