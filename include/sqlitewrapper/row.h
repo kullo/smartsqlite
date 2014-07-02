@@ -2,7 +2,9 @@
 #define SQLITEWRAPPER_ROW_H
 
 #include <iterator>
+#include <vector>
 
+#include "extractor.h"
 #include "nullable.h"
 
 struct sqlite3;
@@ -19,11 +21,31 @@ public:
 
     bool isNull(int pos) const;
 
-    template <typename T>
+    // extractor for integral types
+    template <typename T, typename std::enable_if<std::is_integral<T>::value>::type* = nullptr>
     T get(int pos) const
     {
         checkPosRange(pos);
-        return getUnchecked<T>(pos);
+        return NativeExtractor::extractLongLong(m_stmt, pos);
+    }
+
+    // extractor for floating point types
+    template <typename T, typename std::enable_if<std::is_floating_point<T>::value>::type* = nullptr>
+    T get(int pos) const
+    {
+        checkPosRange(pos);
+        return NativeExtractor::extractDouble(m_stmt, pos);
+    }
+
+    // enabled only if T is _not_ numeric (so the previous specializations are not enabled)
+    template <typename T,
+              typename std::enable_if<
+                  !(std::is_integral<T>::value || std::is_floating_point<T>::value)
+                  >::type* = nullptr>
+    T get(int pos) const
+    {
+        checkPosRange(pos);
+        return Extractor<T>::extract(m_stmt, pos);
     }
 
     template <typename T>
@@ -31,12 +53,8 @@ public:
     {
         checkPosRange(pos);
         if (isNull(pos)) return Nullable<T>();
-        return Nullable<T>(getUnchecked<T>(pos));
+        return Nullable<T>(get<T>(pos));
     }
-
-    // specialize this to add bindings for custom types
-    template <typename T>
-    T getUnchecked(int pos) const;
 
 private:
     void setColumns(int columns);

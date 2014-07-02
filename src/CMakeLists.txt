@@ -12,6 +12,7 @@ add_library (sqlitewrapper
     blob.cpp
     connection.cpp
     exceptions.cpp
+    extractor.cpp
     row.cpp
     util.cpp
     statement.cpp
