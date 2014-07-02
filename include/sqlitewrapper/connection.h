@@ -7,6 +7,8 @@
 #include "blob.h"
 #include "statement.h"
 
+struct sqlite3;
+
 namespace SqliteWrapper {
 
 enum TransactionType
@@ -22,7 +24,7 @@ typedef void(ProfilingCallback)(void *extraArg, const char *sql, std::uint64_t n
 class Connection
 {
 public:
-    explicit Connection(const std::string &connectionString);
+    explicit Connection(sqlite3 *conn);
     Connection(Connection &&other);
     Connection &operator=(Connection &&rhs);
     ~Connection();
@@ -56,6 +58,9 @@ private:
     struct Impl;
     std::unique_ptr<Impl> impl;
 };
+
+Connection makeConnection(const std::string &connectionString);
+Connection *makeConnectionPtr(const std::string &connectionString);
 
 }
 #endif // SQLITEWRAPPER_SQLITEWRAPPER_H

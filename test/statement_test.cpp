@@ -12,7 +12,7 @@ class Statement : public Test
 protected:
     void SetUp()
     {
-        conn.reset(new SqliteWrapper::Connection(":memory:"));
+        conn.reset(SqliteWrapper::makeConnectionPtr(":memory:"));
         conn->exec("CREATE TABLE all_types "
                    "(c_int INT, c_float FLOAT, c_text TEXT, c_blob BLOB)");
         conn->exec("INSERT INTO all_types "

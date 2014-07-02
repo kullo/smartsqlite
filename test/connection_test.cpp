@@ -7,7 +7,26 @@
 
 using namespace testing;
 
-TEST(Connection, canMove)
+
+TEST(MakeConnection, shouldFailWhenOpeningFileInNonexistingFolder)
+{
+    EXPECT_THROW(SqliteWrapper::makeConnection("/does/not/exist"),
+                 SqliteWrapper::Exception);
+}
+
+TEST(MakeConnection, shouldOpenInMemoryDatabase)
+{
+    SqliteWrapper::makeConnection(":memory:");
+}
+
+
+class Connection : public Test
+{
+protected:
+    SqliteWrapper::Connection conn = SqliteWrapper::makeConnection(":memory:");
+};
+
+TEST_F(Connection, canMove)
 {
     EXPECT_THAT((std::is_move_constructible<SqliteWrapper::Connection>::value),
                 Eq(true));
@@ -15,7 +34,7 @@ TEST(Connection, canMove)
                 Eq(true));
 }
 
-TEST(Connection, cannotCopy)
+TEST_F(Connection, cannotCopy)
 {
     EXPECT_THAT((std::is_copy_constructible<SqliteWrapper::Connection>::value),
                 Eq(false));
@@ -23,116 +42,90 @@ TEST(Connection, cannotCopy)
                 Eq(false));
 }
 
-TEST(Connection, cannotOpenFileInNonexistingFolder)
+TEST_F(Connection, canSetBusyTimeout)
 {
-    EXPECT_THROW(SqliteWrapper::Connection("/does/not/exist"),
-                 SqliteWrapper::Exception);
-}
-
-TEST(Connection, canBeOpened)
-{
-    SqliteWrapper::Connection(":memory:");
-}
-
-TEST(Connection, canSetBusyTimeout)
-{
-    SqliteWrapper::Connection conn(":memory:");
     conn.setBusyTimeout(42);
 }
 
 static void traceFun(void *, const char *) {}
 
-TEST(Connection, canSetTracingCallback)
+TEST_F(Connection, canSetTracingCallback)
 {
-    SqliteWrapper::Connection conn(":memory:");
     conn.setTracingCallback(&traceFun);
 }
 
 static void profileFun(void *, const char *, std::uint64_t) {}
 
-TEST(Connection, canSetProfilingCallback)
+TEST_F(Connection, canSetProfilingCallback)
 {
-    SqliteWrapper::Connection conn(":memory:");
     conn.setProfilingCallback(&profileFun);
 }
 
-TEST(Connection, canPrepareStatement)
+TEST_F(Connection, canPrepareStatement)
 {
-    SqliteWrapper::Connection conn(":memory:");
     conn.prepare("PRAGMA user_version");
 }
 
-TEST(Connection, canExec)
+TEST_F(Connection, canExec)
 {
-    SqliteWrapper::Connection conn(":memory:");
     conn.exec("PRAGMA user_version = 42");
 }
 
-TEST(Connection, canBeginTransaction)
+TEST_F(Connection, canBeginTransaction)
 {
-    SqliteWrapper::Connection conn(":memory:");
     conn.beginTransaction();
 }
 
-TEST(Connection, canBeginImmediateTransaction)
+TEST_F(Connection, canBeginImmediateTransaction)
 {
-    SqliteWrapper::Connection conn(":memory:");
     conn.beginTransaction(SqliteWrapper::Immediate);
 }
 
-TEST(Connection, canBeginExclusiveTransaction)
+TEST_F(Connection, canBeginExclusiveTransaction)
 {
-    SqliteWrapper::Connection conn(":memory:");
     conn.beginTransaction(SqliteWrapper::Exclusive);
 }
 
-TEST(Connection, canCommitTransaction)
+TEST_F(Connection, canCommitTransaction)
 {
-    SqliteWrapper::Connection conn(":memory:");
     conn.beginTransaction();
     conn.commitTransaction();
 }
 
-TEST(Connection, canRollbackTransaction)
+TEST_F(Connection, canRollbackTransaction)
 {
-    SqliteWrapper::Connection conn(":memory:");
     conn.beginTransaction();
     conn.rollbackTransaction();
 }
 
-TEST(Connection, canSetSavepoint)
+TEST_F(Connection, canSetSavepoint)
 {
-    SqliteWrapper::Connection conn(":memory:");
     std::string savepoint = "abc123";
     conn.savepoint(savepoint);
 }
 
-TEST(Connection, canSetSavepointWithWeirdName)
+TEST_F(Connection, canSetSavepointWithWeirdName)
 {
-    SqliteWrapper::Connection conn(":memory:");
     std::string savepoint = "abc'123";
     conn.savepoint(savepoint);
 }
 
-TEST(Connection, canReleaseSavepoint)
+TEST_F(Connection, canReleaseSavepoint)
 {
-    SqliteWrapper::Connection conn(":memory:");
     std::string savepoint = "abc123";
     conn.savepoint(savepoint);
     conn.releaseSavepoint(savepoint);
 }
 
-TEST(Connection, canRollbackToSavepoint)
+TEST_F(Connection, canRollbackToSavepoint)
 {
-    SqliteWrapper::Connection conn(":memory:");
     std::string savepoint = "abc123";
     conn.savepoint(savepoint);
     conn.rollbackToSavepoint(savepoint);
 }
 
-TEST(Connection, canGetLastInsertRowId)
+TEST_F(Connection, canGetLastInsertRowId)
 {
-    SqliteWrapper::Connection conn(":memory:");
     conn.exec("CREATE TABLE foo (id INTEGER PRIMARY KEY);"
               "INSERT INTO foo VALUES (42)");
     EXPECT_THAT(conn.lastInsertRowId(), Eq(42));

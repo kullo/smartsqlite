@@ -15,12 +15,10 @@ struct Connection::Impl
     sqlite3 *conn = nullptr;
 };
 
-Connection::Connection(const std::string &connectionString)
+Connection::Connection(sqlite3 *conn)
     : impl(new Impl)
 {
-    checkResult(sqlite3_open(connectionString.c_str(), &(impl->conn)));
-    checkResult(sqlite3_extended_result_codes(impl->conn, 1),
-                impl->conn);
+    impl->conn = conn;
 }
 
 Connection::Connection(Connection &&other)
@@ -180,6 +178,19 @@ std::string Connection::escape(const std::string &original)
         }
     }
     return result.str();
+}
+
+Connection makeConnection(const std::string &connectionString)
+{
+    sqlite3 *conn;
+    checkResult(sqlite3_open(connectionString.c_str(), &conn));
+    checkResult(sqlite3_extended_result_codes(conn, 1), conn);
+    return Connection(conn);
+}
+
+Connection *makeConnectionPtr(const std::string &connectionString)
+{
+    return new Connection(makeConnection(connectionString));
 }
 
 }
