@@ -14,3 +14,6 @@ include_directories("include")
 
 # tests
 add_subdirectory("test")
+
+enable_testing()
+add_test(all_tests test/${PROJECT_NAME}_tests)

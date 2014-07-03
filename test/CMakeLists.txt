@@ -11,6 +11,3 @@ if(NOT MINGW)
 endif()
 
 target_link_libraries(${PROJECT_NAME}_tests sqlitewrapper gmock gmock_main ${extra_link_libraries})
-
-enable_testing()
-add_test(all_tests ${PROJECT_NAME}_tests)
