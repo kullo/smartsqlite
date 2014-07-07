@@ -10,5 +10,5 @@ MAKE=make
 cd ..
 mkdir -p "$BUILD_DIR"
 cd "$BUILD_DIR"
-"$CMAKE" "$SOURCE_DIR"
-"$MAKE"
+$CMAKE "$SOURCE_DIR"
+$MAKE
