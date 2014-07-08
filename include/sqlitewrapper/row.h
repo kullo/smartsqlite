@@ -15,12 +15,6 @@ namespace SqliteWrapper {
 
 class RowIterator;
 
-class CStringComparator
-{
-public:
-    bool operator()(const char *lhs, const char *rhs) const;
-};
-
 class Row
 {
 public:
@@ -82,7 +76,7 @@ private:
 
     sqlite3_stmt *m_stmt = nullptr;
     int m_columns = 0;
-    mutable std::map<const char *, int, CStringComparator> m_columnNames;
+    mutable std::map<std::string, int> m_columnNames;
 
     friend class RowIterator;
 };

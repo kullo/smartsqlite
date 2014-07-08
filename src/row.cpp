@@ -9,11 +9,6 @@
 
 namespace SqliteWrapper {
 
-bool CStringComparator::operator()(const char *lhs, const char *rhs) const
-{
-    return std::strcmp(lhs, rhs);
-}
-
 RowIterator::RowIterator(sqlite3 *conn, sqlite3_stmt *stmt, bool done)
     : m_conn(conn), m_stmt(stmt), m_done(done), m_row(stmt)
 {
