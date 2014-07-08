@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <vector>
 
+#include "sqlitewrapper/exceptions.h"
 #include "sqlitewrapper/sqlite3.h"
 
 namespace SqliteWrapper {
@@ -41,6 +42,11 @@ Statement &Statement::bindNull(int pos)
 {
     checkResult(sqlite3_bind_null(impl->stmt, pos + 1), impl->conn);
     return *this;
+}
+
+Statement &Statement::bindNull(const char *parameter)
+{
+    return bindNull(getParameterPos(parameter));
 }
 
 bool Statement::hasResults()
@@ -89,6 +95,13 @@ void Statement::reset()
 sqlite3_stmt *Statement::statementHandle() const
 {
     return impl->stmt;
+}
+
+int Statement::getParameterPos(const char *name)
+{
+    int pos = sqlite3_bind_parameter_index(impl->stmt, name);
+    if (!pos) throw ParameterUnknown(name);
+    return pos - 1;
 }
 
 }

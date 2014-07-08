@@ -17,6 +17,12 @@ protected:
     std::string m_message;
 };
 
+class ParameterUnknown : public Exception
+{
+public:
+    ParameterUnknown(const std::string &parameter);
+};
+
 class SqliteException : public Exception
 {
 public:

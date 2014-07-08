@@ -15,6 +15,13 @@ const char *Exception::what() const throw()
     return m_message.c_str();
 }
 
+ParameterUnknown::ParameterUnknown(const std::string &parameter)
+    : Exception(
+          std::string("Parameter not found in query: ") +
+          parameter)
+{
+}
+
 SqliteException::SqliteException(int resultCode)
     : Exception(
           resultToResultName(resultCode) +

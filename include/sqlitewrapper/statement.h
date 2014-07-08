@@ -51,7 +51,15 @@ public:
         return bind(pos, value.value());
     }
 
+    // bind by parameter name instead of position
+    template <typename ...T>
+    Statement &bind(const char *name, const T&... values)
+    {
+        return bind(getParameterPos(name), values...);
+    }
+
     Statement &bindNull(int pos);
+    Statement &bindNull(const char *parameter);
 
     bool hasResults();
     RowIterator begin();
@@ -64,6 +72,7 @@ public:
 
 private:
     sqlite3_stmt *statementHandle() const;
+    int getParameterPos(const char *name);
 
     bool alreadyExecuted = false;
 

@@ -209,6 +209,22 @@ TEST_F(Statement, canBindNonNullNullables)
     stmt.bind(pos++, SqliteWrapper::Nullable<std::vector<unsigned char>>(exampleBlob()));
 }
 
+TEST_F(Statement, canBindNullByName)
+{
+    SqliteWrapper::Statement stmt = conn->prepare(
+                "SELECT * FROM all_types "
+                "WHERE c_int = :answer");
+    stmt.bindNull(":answer");
+}
+
+TEST_F(Statement, canBindIntByName)
+{
+    SqliteWrapper::Statement stmt = conn->prepare(
+                "SELECT * FROM all_types "
+                "WHERE c_int = :answer");
+    stmt.bind(":answer", 42);
+}
+
 TEST_F(Statement, canCheckWhetherStatementHasResults)
 {
     SqliteWrapper::Statement stmt = makeSelect();
