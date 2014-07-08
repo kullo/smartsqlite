@@ -1,5 +1,6 @@
 #include "sqlitewrapper/row.h"
 
+#include <cstring>
 #include <vector>
 
 #include "sqlitewrapper/exceptions.h"
@@ -7,6 +8,11 @@
 #include "sqlitewrapper/util.h"
 
 namespace SqliteWrapper {
+
+bool CStringComparator::operator()(const char *lhs, const char *rhs) const
+{
+    return std::strcmp(lhs, rhs);
+}
 
 RowIterator::RowIterator(sqlite3 *conn, sqlite3_stmt *stmt, bool done)
     : m_conn(conn), m_stmt(stmt), m_done(done), m_row(stmt)
@@ -70,7 +76,26 @@ void Row::checkPosRange(int pos) const
 {
     if (pos < 0 || pos >= m_columns)
     {
-        throw Exception("Column out of range");
+        throw ColumnUnknown(pos);
+    }
+}
+
+int Row::getPosByName(const char *column) const
+{
+    if (m_columnNames.empty())
+    {
+        for (int i = 0; i < m_columns; ++i)
+        {
+            m_columnNames[sqlite3_column_name(m_stmt, i)] = i;
+        }
+    }
+    try
+    {
+        return m_columnNames.at(column);
+    }
+    catch (std::out_of_range)
+    {
+        throw ColumnUnknown(column);
     }
 }
 

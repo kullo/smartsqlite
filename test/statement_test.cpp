@@ -397,3 +397,16 @@ TEST_F(Statement, canGetNonNullNullables)
     EXPECT_THAT(iter->getNullable<std::vector<unsigned char>>(3),
                 Eq(SqliteWrapper::Nullable<std::vector<unsigned char>>(exampleBlob())));
 }
+
+TEST_F(Statement, canGetIntByName)
+{
+    SqliteWrapper::Statement stmt = makeSelectAll();
+    EXPECT_THAT(stmt.begin()->get<int>("c_int"), Eq(42));
+}
+
+TEST_F(Statement, canGetNullableIntByName)
+{
+    SqliteWrapper::Statement stmt = makeSelectAll();
+    EXPECT_THAT(stmt.begin()->getNullable<int>("c_int"),
+                Eq(SqliteWrapper::Nullable<int>(42)));
+}

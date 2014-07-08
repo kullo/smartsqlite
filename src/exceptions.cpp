@@ -22,6 +22,20 @@ ParameterUnknown::ParameterUnknown(const std::string &parameter)
 {
 }
 
+ColumnUnknown::ColumnUnknown(int &columnPos)
+    : Exception(
+          std::string("Column not found in result: ") +
+          std::to_string(columnPos))
+{
+}
+
+ColumnUnknown::ColumnUnknown(const std::string &columnName)
+    : Exception(
+          std::string("Column not found in result: ") +
+          columnName)
+{
+}
+
 SqliteException::SqliteException(int resultCode)
     : Exception(
           resultToResultName(resultCode) +

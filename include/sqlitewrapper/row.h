@@ -2,6 +2,7 @@
 #define SQLITEWRAPPER_ROW_H
 
 #include <iterator>
+#include <map>
 #include <vector>
 
 #include "extractor.h"
@@ -13,6 +14,12 @@ struct sqlite3_stmt;
 namespace SqliteWrapper {
 
 class RowIterator;
+
+class CStringComparator
+{
+public:
+    bool operator()(const char *lhs, const char *rhs) const;
+};
 
 class Row
 {
@@ -49,6 +56,12 @@ public:
     }
 
     template <typename T>
+    T get(const char *column) const
+    {
+        return get<T>(getPosByName(column));
+    }
+
+    template <typename T>
     Nullable<T> getNullable(int pos) const
     {
         checkPosRange(pos);
@@ -56,12 +69,20 @@ public:
         return Nullable<T>(get<T>(pos));
     }
 
+    template <typename T>
+    Nullable<T> getNullable(const char *column) const
+    {
+        return getNullable<T>(getPosByName(column));
+    }
+
 private:
     void setColumns(int columns);
     void checkPosRange(int pos) const;
+    int getPosByName(const char *column) const;
 
     sqlite3_stmt *m_stmt = nullptr;
     int m_columns = 0;
+    mutable std::map<const char *, int, CStringComparator> m_columnNames;
 
     friend class RowIterator;
 };

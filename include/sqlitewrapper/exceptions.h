@@ -23,6 +23,13 @@ public:
     ParameterUnknown(const std::string &parameter);
 };
 
+class ColumnUnknown : public Exception
+{
+public:
+    ColumnUnknown(int &columnPos);
+    ColumnUnknown(const std::string &columnName);
+};
+
 class SqliteException : public Exception
 {
 public:
