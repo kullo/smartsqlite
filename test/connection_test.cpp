@@ -34,6 +34,7 @@ TEST_F(Connection, canMove)
                 Eq(true));
 }
 
+#ifndef _MSC_VER
 TEST_F(Connection, cannotCopy)
 {
     EXPECT_THAT((std::is_copy_constructible<SqliteWrapper::Connection>::value),
@@ -41,6 +42,7 @@ TEST_F(Connection, cannotCopy)
     EXPECT_THAT((std::is_copy_assignable<SqliteWrapper::Connection>::value),
                 Eq(false));
 }
+#endif
 
 TEST_F(Connection, canSetBusyTimeout)
 {

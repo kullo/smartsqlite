@@ -36,10 +36,10 @@ public:
     }
 
     // handle all other types by specializations of the Binder template
-    template <typename... T>
-    Statement &bind(int pos, const T&... values)
+    template <typename T, typename std::enable_if<!(std::is_integral<T>::value || std::is_floating_point<T>::value)>::type* = nullptr>
+    Statement &bind(int pos, const T& values)
     {
-        checkResult(Binder<T...>::bind(statementHandle(), pos, values...));
+        checkResult(Binder<T>::bind(statementHandle(), pos, values));
         return *this;
     }
 
@@ -50,13 +50,23 @@ public:
         if (value.isNull()) return bindNull(pos);
         return bind(pos, value.value());
     }
+    // ... and once again for MSVC++ 2013
+    template <typename T>
+    Statement &bindNullable(int pos, const Nullable<T> &value)
+    {
+        if (value.isNull()) return bindNull(pos);
+        return bind(pos, value.value());
+    }
 
     // bind by parameter name instead of position
-    template <typename ...T>
-    Statement &bind(const char *name, const T&... values)
+    template <typename T>
+    Statement &bind(const char *name, const T& values)
     {
-        return bind(getParameterPos(name), values...);
+        return bind(getParameterPos(name), values);
     }
+
+    Statement &bindRawBlob(int pos, void *value, std::size_t size);
+    Statement &bindRawBlob(const char *name, void *value, std::size_t size);
 
     Statement &bindNull(int pos);
     Statement &bindNull(const char *parameter);

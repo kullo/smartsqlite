@@ -1,11 +1,7 @@
 set(INCLUDE_DIR "../include")
 include_directories(${INCLUDE_DIR})
 
-if(APPLE)
-  set_source_files_properties(sqlite3.c PROPERTIES COMPILE_FLAGS "-O2 -DHAVE_USLEEP=1 -g -D_FORTIFY_SOURCE=0")
-else()
-  set_source_files_properties(sqlite3.c PROPERTIES COMPILE_FLAGS "-O2 -DHAVE_USLEEP=1 -g")
-endif()
+set_source_files_properties(sqlite3.c PROPERTIES COMPILE_FLAGS "-DHAVE_USLEEP=1")
 
 set(PUBLIC_HEADERS_DIR "${INCLUDE_DIR}/sqlitewrapper")
 set(PUBLIC_HEADERS

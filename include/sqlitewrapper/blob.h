@@ -1,6 +1,7 @@
 #ifndef SQLITEWRAPPER_BLOB_H
 #define SQLITEWRAPPER_BLOB_H
 
+#include <cstdint>
 #include <memory>
 
 struct sqlite3;

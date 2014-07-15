@@ -6,7 +6,7 @@ add_executable(${PROJECT_NAME}_tests
 )
 
 set(extra_link_libraries)
-if(NOT MINGW)
+if(NOT WIN32)
     list(APPEND extra_link_libraries dl)
 endif()
 

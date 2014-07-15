@@ -72,6 +72,7 @@ TEST_F(Statement, canMove)
                 Eq(true));
 }
 
+#ifndef _MSC_VER
 TEST_F(Statement, cannotCopy)
 {
     EXPECT_THAT((std::is_copy_constructible<SqliteWrapper::Statement>::value),
@@ -79,6 +80,7 @@ TEST_F(Statement, cannotCopy)
     EXPECT_THAT((std::is_copy_assignable<SqliteWrapper::Statement>::value),
                 Eq(false));
 }
+#endif
 
 TEST_F(Statement, canClearBindings)
 {
@@ -182,7 +184,7 @@ TEST_F(Statement, canBindBlobFromByteVector)
 TEST_F(Statement, canBindBlobFromPointer)
 {
     std::vector<unsigned char> value = {42, 23, 5};
-    makeSelect().bind(0, static_cast<void*>(value.data()), value.size());
+    makeSelect().bindRawBlob(0, static_cast<void*>(value.data()), value.size());
 }
 
 TEST_F(Statement, canBindNullNullables)
@@ -191,10 +193,10 @@ TEST_F(Statement, canBindNullNullables)
                 "INSERT INTO all_types "
                 "VALUES (?, ?, ?, ?)");
     int pos = 0;
-    stmt.bind(pos++, SqliteWrapper::Nullable<int>());
-    stmt.bind(pos++, SqliteWrapper::Nullable<double>());
-    stmt.bind(pos++, SqliteWrapper::Nullable<std::string>());
-    stmt.bind(pos++, SqliteWrapper::Nullable<std::vector<unsigned char>>());
+    stmt.bindNullable(pos++, SqliteWrapper::Nullable<int>());
+    stmt.bindNullable(pos++, SqliteWrapper::Nullable<double>());
+    stmt.bindNullable(pos++, SqliteWrapper::Nullable<std::string>());
+    stmt.bindNullable(pos++, SqliteWrapper::Nullable<std::vector<unsigned char>>());
 }
 
 TEST_F(Statement, canBindNonNullNullables)
@@ -203,10 +205,10 @@ TEST_F(Statement, canBindNonNullNullables)
                 "INSERT INTO all_types "
                 "VALUES (?, ?, ?, ?)");
     int pos = 0;
-    stmt.bind(pos++, SqliteWrapper::Nullable<int>(23));
-    stmt.bind(pos++, SqliteWrapper::Nullable<double>(3.14));
-    stmt.bind(pos++, SqliteWrapper::Nullable<std::string>("Hello, world."));
-    stmt.bind(pos++, SqliteWrapper::Nullable<std::vector<unsigned char>>(exampleBlob()));
+    stmt.bindNullable(pos++, SqliteWrapper::Nullable<int>(23));
+    stmt.bindNullable(pos++, SqliteWrapper::Nullable<double>(3.14));
+    stmt.bindNullable(pos++, SqliteWrapper::Nullable<std::string>("Hello, world."));
+    stmt.bindNullable(pos++, SqliteWrapper::Nullable<std::vector<unsigned char>>(exampleBlob()));
 }
 
 TEST_F(Statement, canBindNullByName)

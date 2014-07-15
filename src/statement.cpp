@@ -38,6 +38,17 @@ Statement::~Statement()
     sqlite3_finalize(impl->stmt);
 }
 
+Statement &Statement::bindRawBlob(int pos, void *value, std::size_t size)
+{
+    checkResult(NativeBinder::bindBlob(statementHandle(), pos, value, size));
+    return *this;
+}
+
+Statement &Statement::bindRawBlob(const char *name, void *value, std::size_t size)
+{
+    return bindRawBlob(getParameterPos(name), value, size);
+}
+
 Statement &Statement::bindNull(int pos)
 {
     checkResult(sqlite3_bind_null(impl->stmt, pos + 1), impl->conn);

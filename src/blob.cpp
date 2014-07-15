@@ -1,5 +1,7 @@
 #include "sqlitewrapper/blob.h"
 
+#include <algorithm>
+
 #include "sqlitewrapper/sqlite3.h"
 #include "sqlitewrapper/util.h"
 
