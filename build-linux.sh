@@ -5,7 +5,8 @@ set -v  # verbose, echo all commands
 SOURCE_DIR=$(pwd)
 BUILD_DIR=build-sqlitewrapper
 CMAKE=cmake
-MAKE=make
+JOBS=`nproc`
+MAKE="make --jobs=$JOBS"
 
 cd ..
 mkdir -p "$BUILD_DIR"
