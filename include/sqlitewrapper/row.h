@@ -27,7 +27,7 @@ public:
     T get(int pos) const
     {
         checkPosRange(pos);
-        return NativeExtractor::extractLongLong(m_stmt, pos);
+        return static_cast<T>(NativeExtractor::extractLongLong(m_stmt, pos));
     }
 
     // extractor for floating point types
@@ -35,7 +35,7 @@ public:
     T get(int pos) const
     {
         checkPosRange(pos);
-        return NativeExtractor::extractDouble(m_stmt, pos);
+        return static_cast<T>(NativeExtractor::extractDouble(m_stmt, pos));
     }
 
     // enabled only if T is _not_ numeric (so the previous specializations are not enabled)
