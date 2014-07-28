@@ -1,5 +1,5 @@
 set SOURCE_DIR=%CD%
-set BUILD_DIR="../build-sqlitewrapper"
+set BUILD_DIR=../build-sqlitewrapper
 set CMAKE_COMMAND=cmake.exe
 set MAKE_COMMAND=C:\Qt\Tools\QtCreator\bin\jom.exe /J 2
 
