@@ -1,2 +1,5 @@
 *~
 /*.user
+
+# build script tmp files
+*.tmp
