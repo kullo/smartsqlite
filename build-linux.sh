@@ -6,6 +6,7 @@ SOURCE_DIR=$(pwd)
 BUILD_DIR="../build-sqlitewrapper"
 CMAKE=cmake
 JOBS=`nproc`
+echo $JOBS
 MAKE="make --jobs=$JOBS"
 
 
