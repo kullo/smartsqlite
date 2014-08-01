@@ -6,8 +6,12 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
     set(CMAKE_CXX_FLAGS "-std=c++11 -O2 -g ${CMAKE_CXX_FLAGS}")
 
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O2 -g")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c99 -O2 -g")
     set(CMAKE_CXX_FLAGS "-std=c++11 -O2 -g ${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -Wformat=2 -Wlogical-op -Wmissing-include-dirs -Wnon-virtual-dtor -Woverloaded-virtual -Wswitch-default -Wuninitialized")
+
+    # Hardening
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fstack-protector -pie -fPIE -Wformat -Wformat-security -D_FORTIFY_SOURCE=2 -Wl,-z,relro,-z,now")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fstack-protector -pie -fPIE -Wformat -Wformat-security -D_FORTIFY_SOURCE=2 -Wl,-z,relro,-z,now")
 
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     # use shared MSVC++ runtime, see http://www.cmake.org/Wiki/CMake_FAQ#Dynamic_Replace
