@@ -1,4 +1,4 @@
-# version: 1
+# version: 2
 import os
 import glob
 import hashlib
@@ -17,6 +17,7 @@ def find_in(path):
     out = []
     out += glob.glob(path + "/*.pro")
     out += glob.glob(path + "/CMakeLists.txt")
+    out += glob.glob(path + "/Info.plist")
     subs = get_subdirs(path) - exlude_dirs
     for s in subs:
         out += find_in(os.path.join(path, s))
