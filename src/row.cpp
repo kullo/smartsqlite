@@ -9,8 +9,8 @@
 
 namespace SqliteWrapper {
 
-RowIterator::RowIterator(sqlite3 *conn, sqlite3_stmt *stmt, bool done)
-    : m_conn(conn), m_stmt(stmt), m_done(done), m_row(stmt)
+RowIterator::RowIterator(sqlite3 *conn, sqlite3_stmt *stmt, Done done)
+    : m_conn(conn), m_stmt(stmt), m_done(done == Done::True), m_row(stmt)
 {
 }
 

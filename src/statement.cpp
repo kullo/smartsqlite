@@ -67,7 +67,7 @@ bool Statement::hasResults()
 
 RowIterator Statement::begin()
 {
-    auto iter = RowIterator(impl->conn, impl->stmt, false);
+    auto iter = RowIterator(impl->conn, impl->stmt, RowIterator::Done::False);
     if (!alreadyExecuted)
     {
         // execute statement on first call to begin()
@@ -79,7 +79,7 @@ RowIterator Statement::begin()
 
 RowIterator Statement::end()
 {
-    return RowIterator(impl->conn, impl->stmt, true);
+    return RowIterator(impl->conn, impl->stmt, RowIterator::Done::True);
 }
 
 void Statement::execWithoutResult()

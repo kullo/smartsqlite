@@ -84,7 +84,9 @@ private:
 class RowIterator : public std::iterator<std::input_iterator_tag, Row, void>
 {
 public:
-    RowIterator(sqlite3 *conn, sqlite3_stmt *stmt, bool done);
+    enum struct Done {False, True};
+
+    RowIterator(sqlite3 *conn, sqlite3_stmt *stmt, Done done);
     bool operator==(const RowIterator &rhs) const;
     bool operator!=(const RowIterator &rhs) const;
     RowIterator &operator++();
