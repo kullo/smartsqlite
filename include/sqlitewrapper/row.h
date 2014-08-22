@@ -27,6 +27,11 @@ public:
     T get(int pos) const
     {
         checkPosRange(pos);
+
+        // MSVC complains about a potential performance penalty for assigning an int to a bool
+        #ifdef _MSC_VER
+            #pragma warning(suppress: 4800)
+        #endif
         return static_cast<T>(NativeExtractor::extractLongLong(m_stmt, pos));
     }
 
