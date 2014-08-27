@@ -27,7 +27,8 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 endif()
 
 if(APPLE)
-  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D_FORTIFY_SOURCE=0")
+  # for compatibility during linking with code built with qmake, choose the same settings that qmake chooses
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mmacosx-version-min=10.7")
 endif()
 
 # Google Mock / Google Test
