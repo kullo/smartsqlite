@@ -1,5 +1,6 @@
 *~
 /*.user
+CMakeLists.txt.user.*
 
 # build script tmp files
 *.tmp
