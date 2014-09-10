@@ -36,7 +36,7 @@ RowIterator &RowIterator::operator++()
         m_done = true;
         break;
     default:
-        checkResult(result, m_conn);
+        CHECK_RESULT_STMT(result, m_conn, m_stmt);
     }
     m_row.setColumns(sqlite3_column_count(m_stmt));
     return *this;

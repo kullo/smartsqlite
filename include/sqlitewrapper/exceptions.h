@@ -33,8 +33,8 @@ public:
 class SqliteException : public Exception
 {
 public:
-    SqliteException(int resultCode);
-    SqliteException(int resultCode, const std::string &message);
+    SqliteException(const std::string &func, int resultCode);
+    SqliteException(const std::string &func, int resultCode, const std::string &message);
 };
 
 }

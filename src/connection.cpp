@@ -40,7 +40,7 @@ Connection::~Connection()
 
 void Connection::setBusyTimeout(int ms)
 {
-    checkResult(sqlite3_busy_timeout(impl->conn, ms), impl->conn);
+    CHECK_RESULT_CONN(sqlite3_busy_timeout(impl->conn, ms), impl->conn);
 }
 
 void *Connection::setTracingCallback(TracingCallback *callback, void *extraArg)
@@ -62,8 +62,8 @@ Statement Connection::prepare(const std::string &sql)
     const char *tail;
     // size + 1 can be passed because c_str() is known to be null-terminated.
     // This will cause SQLite not to copy the input.
-    checkResult(sqlite3_prepare_v2(impl->conn, sql.c_str(), sql.size() + 1, &stmtPtr, &tail),
-                impl->conn);
+    CHECK_RESULT_CONN(sqlite3_prepare_v2(impl->conn, sql.c_str(), sql.size() + 1, &stmtPtr, &tail),
+                      impl->conn);
     Statement stmt(impl->conn, stmtPtr);
 
     if (tail != nullptr && tail[0] != '\0')
@@ -82,11 +82,11 @@ void Connection::exec(const std::string &sql)
     std::unique_ptr<char, void(*)(void*)> errmsgSafe(errmsg, sqlite3_free);
     if (errmsgSafe)
     {
-        checkResult(result, errmsgSafe.get());
+        CHECK_RESULT_MSG(result, std::string(errmsgSafe.get()) + "\nSQL: " + sql);
     }
     else
     {
-        checkResult(result);
+        CHECK_RESULT(result);
     }
 }
 
@@ -149,7 +149,7 @@ Blob Connection::openBlob(
         Blob::Flags flags)
 {
     sqlite3_blob *blob;
-    checkResult(
+    CHECK_RESULT_CONN(
                 sqlite3_blob_open(
                     impl->conn,
                     db.c_str(),
@@ -183,8 +183,8 @@ std::string Connection::escape(const std::string &original)
 Connection makeConnection(const std::string &connectionString)
 {
     sqlite3 *conn;
-    checkResult(sqlite3_open(connectionString.c_str(), &conn));
-    checkResult(sqlite3_extended_result_codes(conn, 1), conn);
+    CHECK_RESULT(sqlite3_open(connectionString.c_str(), &conn));
+    CHECK_RESULT_CONN(sqlite3_extended_result_codes(conn, 1), conn);
     return Connection(conn);
 }
 

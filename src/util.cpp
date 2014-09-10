@@ -5,25 +5,30 @@
 
 namespace SqliteWrapper {
 
-void checkResult(int result)
+void checkResult(const std::string &func, int result)
 {
     if (result == SQLITE_OK) return;
 
-    throw SqliteException(result);
+    throw SqliteException(func, result);
 }
 
-void checkResult(int result, sqlite3 *conn)
+void checkResult(const std::string &func, int result, sqlite3 *conn, sqlite3_stmt *stmt)
 {
     if (result == SQLITE_OK) return;
 
-    throw SqliteException(result, sqlite3_errmsg(conn));
+    std::string errmsg = sqlite3_errmsg(conn);
+    if (stmt)
+    {
+        errmsg += "\nSQL: " + std::string(sqlite3_sql(stmt));
+    }
+    throw SqliteException(func, result, errmsg);
 }
 
-void checkResult(int result, const std::string &message)
+void checkResult(const std::string &func, int result, const std::string &message)
 {
     if (result == SQLITE_OK) return;
 
-    throw SqliteException(result, message);
+    throw SqliteException(func, result, message);
 }
 
 }

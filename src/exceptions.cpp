@@ -36,16 +36,18 @@ ColumnUnknown::ColumnUnknown(const std::string &columnName)
 {
 }
 
-SqliteException::SqliteException(int resultCode)
+SqliteException::SqliteException(const std::string &func, int resultCode)
     : Exception(
+          std::string("[") + func + "] " +
           resultToResultName(resultCode) +
           " (" + sqlite3_errstr(resultCode) + ")"
           )
 {
 }
 
-SqliteException::SqliteException(int resultCode, const std::string &message)
+SqliteException::SqliteException(const std::string &func, int resultCode, const std::string &message)
     : Exception(
+          std::string("[") + func + "] " +
           resultToResultName(resultCode) +
           " (" + sqlite3_errstr(resultCode) + "): " +
           message

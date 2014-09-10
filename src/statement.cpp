@@ -40,7 +40,7 @@ Statement::~Statement()
 
 Statement &Statement::bindRawBlob(int pos, void *value, std::size_t size)
 {
-    checkResult(NativeBinder::bindBlob(statementHandle(), pos, value, size));
+    CHECK_RESULT(NativeBinder::bindBlob(statementHandle(), pos, value, size));
     return *this;
 }
 
@@ -51,7 +51,7 @@ Statement &Statement::bindRawBlob(const char *name, void *value, std::size_t siz
 
 Statement &Statement::bindNull(int pos)
 {
-    checkResult(sqlite3_bind_null(impl->stmt, pos + 1), impl->conn);
+    CHECK_RESULT_CONN(sqlite3_bind_null(impl->stmt, pos + 1), impl->conn);
     return *this;
 }
 
@@ -94,13 +94,13 @@ Row Statement::execWithSingleResult()
 
 void Statement::clearBindings()
 {
-    checkResult(sqlite3_clear_bindings(impl->stmt), impl->conn);
+    CHECK_RESULT_CONN(sqlite3_clear_bindings(impl->stmt), impl->conn);
 }
 
 void Statement::reset()
 {
     alreadyExecuted = false;
-    checkResult(sqlite3_reset(impl->stmt), impl->conn);
+    CHECK_RESULT_CONN(sqlite3_reset(impl->stmt), impl->conn);
 }
 
 sqlite3_stmt *Statement::statementHandle() const

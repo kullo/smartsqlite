@@ -40,7 +40,7 @@ Blob::~Blob()
 
 void Blob::moveToRow(std::int64_t rowid)
 {
-    checkResult(sqlite3_blob_reopen(impl->blob, rowid), impl->conn);
+    CHECK_RESULT_CONN(sqlite3_blob_reopen(impl->blob, rowid), impl->conn);
     impl->size = sqlite3_blob_bytes(impl->blob);
 }
 
@@ -58,14 +58,14 @@ size_t Blob::getAccessSize(size_t bufferSize, size_t offset) const
 size_t Blob::read(void *buffer, size_t size, size_t offset) const
 {
     size_t bytesToRead = getAccessSize(size, offset);
-    checkResult(sqlite3_blob_read(impl->blob, buffer, bytesToRead, offset), impl->conn);
+    CHECK_RESULT_CONN(sqlite3_blob_read(impl->blob, buffer, bytesToRead, offset), impl->conn);
     return bytesToRead;
 }
 
 size_t Blob::write(const void *buffer, size_t size, size_t offset)
 {
     size_t bytesToWrite = getAccessSize(size, offset);
-    checkResult(sqlite3_blob_write(impl->blob, buffer, bytesToWrite, offset), impl->conn);
+    CHECK_RESULT_CONN(sqlite3_blob_write(impl->blob, buffer, bytesToWrite, offset), impl->conn);
     return bytesToWrite;
 }
 
