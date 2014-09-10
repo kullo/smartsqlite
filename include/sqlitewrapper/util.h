@@ -3,6 +3,10 @@
 
 #include <string>
 
+#ifdef _MSC_VER
+#define __func__ __FUNCTION__
+#endif
+
 struct sqlite3;
 struct sqlite3_stmt;
 
