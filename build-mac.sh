@@ -1,4 +1,5 @@
 #!/bin/bash
+
 set -e  # exit immediately on error
 set -v  # verbose, echo all commands
 
@@ -10,7 +11,7 @@ MAKE_COMMAND="make -j2"
 export PATH="/usr/local/bin:$PATH"
 
 if ! python3 projectfiles_unchanged.py ; then
-  echo ".pro files changed. Removing build directory '$BUILD_DIR'"
+  echo "Project files changed. Removing build directory '$BUILD_DIR'"
   rm -r "$BUILD_DIR" || true
 fi
 

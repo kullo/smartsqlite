@@ -1,4 +1,5 @@
 #!/bin/bash
+
 set -e  # exit immediately on error
 set -v  # verbose, echo all commands
 
@@ -6,12 +7,11 @@ SOURCE_DIR=$(pwd)
 BUILD_DIR="../build-sqlitewrapper"
 CMAKE=cmake
 JOBS=`nproc`
-echo $JOBS
+echo "Parallel make jobs: $JOBS"
 MAKE="make --jobs=$JOBS"
 
-
 if ! python3 projectfiles_unchanged.py ; then
-  echo ".pro files changed. Removing build directory '$BUILD_DIR'"
+  echo "Project files changed. Removing build directory '$BUILD_DIR'"
   rm -r "$BUILD_DIR" || true
 fi
 
