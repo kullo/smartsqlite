@@ -68,12 +68,11 @@ bool Statement::hasResults()
 RowIterator Statement::begin()
 {
     auto iter = RowIterator(impl->conn, impl->stmt, RowIterator::Done::False);
-    if (!alreadyExecuted)
-    {
-        // execute statement on first call to begin()
-        ++iter;
-        alreadyExecuted = true;
-    }
+
+    if (alreadyExecuted) throw Exception("Statement::begin() can only be called once, it's an InputIterator");
+
+    alreadyExecuted = true;
+    ++iter;
     return iter;
 }
 
