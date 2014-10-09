@@ -3,6 +3,7 @@
 #include <type_traits>
 
 #include "sqlitewrapper/connection.h"
+#include "sqlitewrapper/exceptions.h"
 #include "sqlitewrapper/nullable.h"
 
 using namespace testing;
@@ -250,6 +251,21 @@ TEST_F(Statement, canStepThroughEmptyResult)
         ++counter;
     }
     EXPECT_THAT(counter, Eq(0));
+}
+
+TEST_F(Statement, execWithoutResultThrowsOnResultsNull)
+{
+    SqliteWrapper::Statement stmt = makeSelectAllNull();
+
+    EXPECT_THROW(stmt.execWithoutResult(), SqliteWrapper::QueryReturnedRows);
+}
+
+TEST_F(Statement, execWithoutResultThrowsOnResultsNonNull)
+{
+    SqliteWrapper::Statement stmt = makeSelect();
+    stmt.bind(0, 42);
+
+    EXPECT_THROW(stmt.execWithoutResult(), SqliteWrapper::QueryReturnedRows);
 }
 
 TEST_F(Statement, canExecWithoutResult)

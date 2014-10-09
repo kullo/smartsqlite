@@ -36,6 +36,11 @@ ColumnUnknown::ColumnUnknown(const std::string &columnName)
 {
 }
 
+QueryReturnedRows::QueryReturnedRows()
+    : Exception(std::string("The query shouldn't have returned rows, but it did."))
+{
+}
+
 SqliteException::SqliteException(const std::string &func, int resultCode)
     : Exception(
           std::string("[") + func + "] " +

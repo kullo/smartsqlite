@@ -83,7 +83,7 @@ RowIterator Statement::end()
 
 void Statement::execWithoutResult()
 {
-    begin();
+    if (begin() != end()) throw QueryReturnedRows();
 }
 
 Row Statement::execWithSingleResult()

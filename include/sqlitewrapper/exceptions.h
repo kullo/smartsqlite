@@ -30,6 +30,12 @@ public:
     ColumnUnknown(const std::string &columnName);
 };
 
+class QueryReturnedRows : public Exception
+{
+public:
+    QueryReturnedRows();
+};
+
 class SqliteException : public Exception
 {
 public:
