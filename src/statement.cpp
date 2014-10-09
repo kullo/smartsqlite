@@ -88,7 +88,9 @@ void Statement::execWithoutResult()
 
 Row Statement::execWithSingleResult()
 {
-    return *begin();
+    auto first = begin();
+    if (first == end()) throw QueryReturnedNoRows();
+    return *first;
 }
 
 void Statement::clearBindings()

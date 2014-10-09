@@ -36,6 +36,12 @@ public:
     QueryReturnedRows();
 };
 
+class QueryReturnedNoRows : public Exception
+{
+public:
+    QueryReturnedNoRows();
+};
+
 class SqliteException : public Exception
 {
 public:

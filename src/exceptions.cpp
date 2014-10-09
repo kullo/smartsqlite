@@ -41,6 +41,11 @@ QueryReturnedRows::QueryReturnedRows()
 {
 }
 
+QueryReturnedNoRows::QueryReturnedNoRows()
+    : Exception(std::string("The query should have returned a row, but it didn't."))
+{
+}
+
 SqliteException::SqliteException(const std::string &func, int resultCode)
     : Exception(
           std::string("[") + func + "] " +

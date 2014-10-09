@@ -290,6 +290,14 @@ TEST_F(Statement, canStepThroughNonemptyResult)
     EXPECT_THAT(counter, Eq(1));
 }
 
+TEST_F(Statement, execWithSingleResultThrowsOnZeroResults)
+{
+    SqliteWrapper::Statement stmt = makeSelect();
+    stmt.bind(0, 23);
+
+    EXPECT_THROW(stmt.execWithSingleResult(), SqliteWrapper::QueryReturnedNoRows);
+}
+
 TEST_F(Statement, canExecWithSingleResult)
 {
     SqliteWrapper::Statement stmt = makeSelect();
