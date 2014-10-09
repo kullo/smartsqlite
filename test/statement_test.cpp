@@ -255,7 +255,7 @@ TEST_F(Statement, canStepThroughEmptyResult)
 TEST_F(Statement, canExecWithoutResult)
 {
     SqliteWrapper::Statement stmt = makeSelect();
-    stmt.bindNull(0);
+    stmt.bind(0, 23);
 
     stmt.execWithoutResult();
 }
