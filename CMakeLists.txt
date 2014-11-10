@@ -28,7 +28,7 @@ endif()
 
 if(APPLE)
   # for compatibility during linking with code built with qmake, choose the same settings that qmake chooses
-  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mmacosx-version-min=10.7")
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -stdlib=libc++ -mmacosx-version-min=10.7")
 endif()
 
 # Google Mock / Google Test
