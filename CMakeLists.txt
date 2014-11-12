@@ -27,8 +27,8 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 endif()
 
 if(APPLE)
-  # for compatibility during linking with code built with qmake, choose the same settings that qmake chooses
-  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -stdlib=libc++ -mmacosx-version-min=10.9")
+    set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -mmacosx-version-min=10.9")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mmacosx-version-min=10.9 -stdlib=libc++")
 endif()
 
 # Google Mock / Google Test

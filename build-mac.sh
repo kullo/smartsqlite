@@ -3,6 +3,8 @@
 set -e  # exit immediately on error
 set -v  # verbose, echo all commands
 
+export SDKROOT=macosx10.9
+
 SOURCE_DIR=$(pwd)
 BUILD_DIR="../build-sqlitewrapper"
 CMAKE_COMMAND=cmake
