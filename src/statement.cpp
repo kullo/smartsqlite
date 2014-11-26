@@ -12,6 +12,7 @@ struct Statement::Impl
 {
     sqlite3 *conn = nullptr;
     sqlite3_stmt *stmt = nullptr;
+    bool alreadyExecuted = false;
 };
 
 Statement::Statement(sqlite3 *conn, sqlite3_stmt *stmt)
@@ -69,9 +70,9 @@ RowIterator Statement::begin()
 {
     auto iter = RowIterator(impl->conn, impl->stmt, RowIterator::Done::False);
 
-    if (alreadyExecuted) throw Exception("Statement::begin() can only be called once, it's an InputIterator");
+    if (impl->alreadyExecuted) throw Exception("Statement::begin() can only be called once, it's an InputIterator");
 
-    alreadyExecuted = true;
+    impl->alreadyExecuted = true;
     ++iter;
     return iter;
 }
@@ -100,7 +101,7 @@ void Statement::clearBindings()
 
 void Statement::reset()
 {
-    alreadyExecuted = false;
+    impl->alreadyExecuted = false;
     CHECK_RESULT_CONN(sqlite3_reset(impl->stmt), impl->conn);
 }
 

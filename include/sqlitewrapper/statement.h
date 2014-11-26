@@ -84,8 +84,6 @@ private:
     sqlite3_stmt *statementHandle() const;
     int getParameterPos(const char *name);
 
-    bool alreadyExecuted = false;
-
     struct Impl;
     std::unique_ptr<Impl> impl;
 };

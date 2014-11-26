@@ -228,6 +228,28 @@ TEST_F(Statement, canBindIntByName)
     stmt.bind(":answer", 42);
 }
 
+TEST_F(Statement, beginThrowsOnRepeatedInvocation)
+{
+    SqliteWrapper::Statement stmt = makeSelectAll();
+    stmt.begin();
+    EXPECT_THROW(stmt.begin(), SqliteWrapper::Exception);
+}
+
+TEST_F(Statement, operatorEqualsSwapsExecutedStatus)
+{
+    SqliteWrapper::Statement stmt = makeSelectAll();
+    stmt.begin();
+
+    // overwrite executed stmt with not executed stmt: should pass
+    stmt = makeSelectAll();
+    stmt.begin();
+
+    // overwrite non-executed stmt with executed stmt: should fail
+    SqliteWrapper::Statement stmt2 = makeSelectAll();
+    stmt2 = std::move(stmt);
+    EXPECT_THROW(stmt2.begin(), SqliteWrapper::Exception);
+}
+
 TEST_F(Statement, canCheckWhetherStatementHasResults)
 {
     SqliteWrapper::Statement stmt = makeSelect();
