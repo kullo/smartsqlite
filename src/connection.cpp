@@ -10,15 +10,25 @@
 
 namespace SqliteWrapper {
 
+static void sqlite3Deleter(sqlite3 *ptr)
+{
+    sqlite3_close_v2(ptr);
+}
+
 struct Connection::Impl
 {
-    sqlite3 *conn = nullptr;
+    std::unique_ptr<sqlite3, Sqlite3Deleter*> conn;
+
+    Impl()
+        : conn(nullptr, sqlite3Deleter)
+    {
+    }
 };
 
-Connection::Connection(sqlite3 *conn)
+Connection::Connection(std::unique_ptr<sqlite3, Sqlite3Deleter*> &&conn)
     : impl(new Impl)
 {
-    impl->conn = conn;
+    impl->conn = std::move(conn);
 }
 
 Connection::Connection(Connection &&other)
@@ -35,23 +45,22 @@ Connection &Connection::operator=(Connection &&rhs)
 
 Connection::~Connection()
 {
-    sqlite3_close(impl->conn);
 }
 
 void Connection::setBusyTimeout(int ms)
 {
-    CHECK_RESULT_CONN(sqlite3_busy_timeout(impl->conn, ms), impl->conn);
+    CHECK_RESULT_CONN(sqlite3_busy_timeout(impl->conn.get(), ms), impl->conn.get());
 }
 
 void *Connection::setTracingCallback(TracingCallback *callback, void *extraArg)
 {
-    return sqlite3_trace(impl->conn, callback, extraArg);
+    return sqlite3_trace(impl->conn.get(), callback, extraArg);
 }
 
 void *Connection::setProfilingCallback(ProfilingCallback *callback, void *extraArg)
 {
     return sqlite3_profile(
-                impl->conn,
+                impl->conn.get(),
                 reinterpret_cast<void(*)(void *, const char *, sqlite3_uint64)>(callback),
                 extraArg);
 }
@@ -62,9 +71,9 @@ Statement Connection::prepare(const std::string &sql)
     const char *tail;
     // size + 1 can be passed because c_str() is known to be null-terminated.
     // This will cause SQLite not to copy the input.
-    CHECK_RESULT_CONN(sqlite3_prepare_v2(impl->conn, sql.c_str(), sql.size() + 1, &stmtPtr, &tail),
-                      impl->conn);
-    Statement stmt(impl->conn, stmtPtr);
+    CHECK_RESULT_CONN(sqlite3_prepare_v2(impl->conn.get(), sql.c_str(), sql.size() + 1, &stmtPtr, &tail),
+                      impl->conn.get());
+    Statement stmt(impl->conn.get(), stmtPtr);
 
     if (tail != nullptr && tail[0] != '\0')
     {
@@ -77,7 +86,7 @@ Statement Connection::prepare(const std::string &sql)
 void Connection::exec(const std::string &sql)
 {
     char *errmsg;
-    int result = sqlite3_exec(impl->conn, sql.c_str(), nullptr, nullptr, &errmsg);
+    int result = sqlite3_exec(impl->conn.get(), sql.c_str(), nullptr, nullptr, &errmsg);
 
     std::unique_ptr<char, void(*)(void*)> errmsgSafe(errmsg, sqlite3_free);
     if (errmsgSafe)
@@ -138,7 +147,7 @@ void Connection::rollbackToSavepoint(const std::string &name)
 
 std::int64_t Connection::lastInsertRowId() const
 {
-    return sqlite3_last_insert_rowid(impl->conn);
+    return sqlite3_last_insert_rowid(impl->conn.get());
 }
 
 Blob Connection::openBlob(
@@ -151,15 +160,15 @@ Blob Connection::openBlob(
     sqlite3_blob *blob;
     CHECK_RESULT_CONN(
                 sqlite3_blob_open(
-                    impl->conn,
+                    impl->conn.get(),
                     db.c_str(),
                     table.c_str(),
                     column.c_str(),
                     rowid,
                     flags,
                     &blob),
-                impl->conn);
-    return Blob(impl->conn, blob);
+                impl->conn.get());
+    return Blob(impl->conn.get(), blob);
 }
 
 std::string Connection::escape(const std::string &original)
@@ -182,15 +191,18 @@ std::string Connection::escape(const std::string &original)
 
 Connection makeConnection(const std::string &connectionString)
 {
-    sqlite3 *conn;
-    CHECK_RESULT(sqlite3_open(connectionString.c_str(), &conn));
-    CHECK_RESULT_CONN(sqlite3_extended_result_codes(conn, 1), conn);
-    return Connection(conn);
+    sqlite3 *rawConn = nullptr;
+    auto result = sqlite3_open(connectionString.c_str(), &rawConn);
+    std::unique_ptr<sqlite3, Sqlite3Deleter*> conn(rawConn, sqlite3Deleter);
+    CHECK_RESULT(result);
+
+    CHECK_RESULT_CONN(sqlite3_extended_result_codes(conn.get(), 1), conn.get());
+    return Connection(std::move(conn));
 }
 
-Connection *makeConnectionPtr(const std::string &connectionString)
+std::unique_ptr<Connection> makeConnectionPtr(const std::string &connectionString)
 {
-    return new Connection(makeConnection(connectionString));
+    return std::unique_ptr<Connection>(new Connection(makeConnection(connectionString)));
 }
 
 }

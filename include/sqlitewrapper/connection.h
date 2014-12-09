@@ -20,11 +20,12 @@ enum TransactionType
 
 typedef void(TracingCallback)(void *extraArg, const char *sql);
 typedef void(ProfilingCallback)(void *extraArg, const char *sql, std::uint64_t nanos);
+typedef void(Sqlite3Deleter)(sqlite3*);
 
 class Connection
 {
 public:
-    explicit Connection(sqlite3 *conn);
+    explicit Connection(std::unique_ptr<sqlite3, Sqlite3Deleter*> &&conn);
     Connection(Connection &&other);
     Connection &operator=(Connection &&rhs);
     ~Connection();
@@ -60,7 +61,7 @@ private:
 };
 
 Connection makeConnection(const std::string &connectionString);
-Connection *makeConnectionPtr(const std::string &connectionString);
+std::unique_ptr<Connection> makeConnectionPtr(const std::string &connectionString);
 
 }
 #endif // SQLITEWRAPPER_SQLITEWRAPPER_H

@@ -12,7 +12,7 @@ class Blob : public Test
 protected:
     void SetUp()
     {
-        conn.reset(SqliteWrapper::makeConnectionPtr(":memory:"));
+        conn = SqliteWrapper::makeConnectionPtr(":memory:");
         conn->exec("CREATE TABLE blobs (data BLOB)");
 
         conn->exec("INSERT INTO blobs VALUES (zeroblob(42))");
