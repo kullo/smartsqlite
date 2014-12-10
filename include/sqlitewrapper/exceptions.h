@@ -1,5 +1,4 @@
-#ifndef SQLITEWRAPPER_EXCEPTIONS_H
-#define SQLITEWRAPPER_EXCEPTIONS_H
+#pragma once
 
 #include <exception>
 #include <string>
@@ -50,4 +49,3 @@ public:
 };
 
 }
-#endif // SQLITEWRAPPER_EXCEPTIONS_H

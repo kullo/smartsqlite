@@ -1,5 +1,4 @@
-#ifndef SQLITEWRAPPER_SQLITEWRAPPER_H
-#define SQLITEWRAPPER_SQLITEWRAPPER_H
+#pragma once
 
 #include <memory>
 #include <string>
@@ -64,4 +63,3 @@ Connection makeConnection(const std::string &connectionString);
 std::unique_ptr<Connection> makeConnectionPtr(const std::string &connectionString);
 
 }
-#endif // SQLITEWRAPPER_SQLITEWRAPPER_H

@@ -1,5 +1,4 @@
-#ifndef SQLITEWRAPPER_RESULT_NAMES_H
-#define SQLITEWRAPPER_RESULT_NAMES_H
+#pragma once
 
 #include <string>
 
@@ -107,4 +106,3 @@ namespace SqliteWrapper {
         }
     }
 }
-#endif // SQLITEWRAPPER_RESULT_NAMES_H

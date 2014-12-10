@@ -1,5 +1,4 @@
-#ifndef SQLITEWRAPPER_UTIL_H
-#define SQLITEWRAPPER_UTIL_H
+#pragma once
 
 #include <string>
 
@@ -29,4 +28,3 @@ void checkResult(const std::string &func, int result, sqlite3 *conn, sqlite3_stm
 void checkResult(const std::string &func, int result, const std::string &message);
 
 }
-#endif // SQLITEWRAPPER_UTIL_H

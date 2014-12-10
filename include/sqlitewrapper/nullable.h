@@ -1,5 +1,4 @@
-#ifndef SQLITEWRAPPER_NULLABLE_H
-#define SQLITEWRAPPER_NULLABLE_H
+#pragma once
 
 namespace SqliteWrapper {
 
@@ -54,4 +53,3 @@ private:
 };
 
 }
-#endif // SQLITEWRAPPER_NULLABLE_H

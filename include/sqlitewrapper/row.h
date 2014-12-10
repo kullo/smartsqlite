@@ -1,5 +1,4 @@
-#ifndef SQLITEWRAPPER_ROW_H
-#define SQLITEWRAPPER_ROW_H
+#pragma once
 
 #include <iterator>
 #include <map>
@@ -106,4 +105,3 @@ private:
 };
 
 }
-#endif // SQLITEWRAPPER_ROW_H

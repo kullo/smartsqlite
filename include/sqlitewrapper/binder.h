@@ -1,5 +1,4 @@
-#ifndef SQLITEWRAPPER_BINDER_H
-#define SQLITEWRAPPER_BINDER_H
+#pragma once
 
 #include <string>
 #include <vector>
@@ -56,4 +55,3 @@ public:
 };
 
 }
-#endif // SQLITEWRAPPER_BINDER_H

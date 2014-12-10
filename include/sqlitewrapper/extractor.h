@@ -1,5 +1,4 @@
-#ifndef SQLITEWRAPPER_EXTRACTOR_H
-#define SQLITEWRAPPER_EXTRACTOR_H
+#pragma once
 
 #include <string>
 #include <vector>
@@ -46,4 +45,3 @@ public:
 };
 
 }
-#endif // SQLITEWRAPPER_EXTRACTOR_H

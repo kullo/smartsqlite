@@ -1,5 +1,4 @@
-#ifndef SQLITEWRAPPER_BLOB_H
-#define SQLITEWRAPPER_BLOB_H
+#pragma once
 
 #include <cstdint>
 #include <memory>
@@ -32,4 +31,3 @@ private:
 };
 
 }
-#endif // SQLITEWRAPPER_BLOB_H
