@@ -67,9 +67,16 @@ TEST(ScopedTransaction, commitEndsTransaction)
 TEST(ScopedTransaction, commitCancelsRollback)
 {
     auto conn = makeConnection();
+    setUserVersion(conn, 42);
+    int version = 23;
     {
         SqliteWrapper::ScopedTransaction tx(conn);
         tx.commit();
+
+        conn->beginTransaction();
+        setUserVersion(conn, version);
     }
-    // dtor would throw if commit() didn't cancel the rollback
+
+    // user_version would be 42 if ~ScopedTransaction would rollback
+    EXPECT_THAT(getUserVersion(conn), Eq(version));
 }

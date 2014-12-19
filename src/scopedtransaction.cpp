@@ -14,7 +14,13 @@ ScopedTransaction::ScopedTransaction(
 
 ScopedTransaction::~ScopedTransaction()
 {
-    if (!committed_) conn_->rollbackTransaction();
+    try {
+        if (!committed_) conn_->rollbackTransaction();
+    }
+    catch (...)
+    {
+        // silence exception; dtor mustn't throw
+    }
 }
 
 void ScopedTransaction::commit()
