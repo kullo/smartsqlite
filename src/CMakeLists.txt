@@ -12,6 +12,7 @@ set(PUBLIC_HEADERS
     ${PUBLIC_HEADERS_DIR}/extractor.h
     ${PUBLIC_HEADERS_DIR}/nullable.h
     ${PUBLIC_HEADERS_DIR}/row.h
+    ${PUBLIC_HEADERS_DIR}/scopedtransaction.h
     ${PUBLIC_HEADERS_DIR}/sqlite3.h
     ${PUBLIC_HEADERS_DIR}/statement.h
     ${PUBLIC_HEADERS_DIR}/util.h
@@ -33,6 +34,7 @@ add_library(sqlitewrapper
     extractor.cpp
     row.cpp
     util.cpp
+    scopedtransaction.cpp
     statement.cpp
     version.cpp
 )
