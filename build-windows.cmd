@@ -1,7 +1,7 @@
 set SOURCE_DIR=%CD%
 set BUILD_DIR=../build-sqlitewrapper
 set CMAKE_COMMAND=cmake.exe
-set MAKE_COMMAND=C:\Qt\Tools\QtCreator\bin\jom.exe /J 2
+set MAKE_COMMAND=C:\Qt-Installation\Tools\QtCreator\bin\jom.exe /J 2
 
 call "C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\Tools\VsDevCmd.bat"
 
@@ -16,7 +16,7 @@ cd "%BUILD_DIR%" || goto error
 %MAKE_COMMAND% || goto error
 
 cd "%SOURCE_DIR%"
-exit /b 0
+goto :EOF
 
 :error
 cd "%SOURCE_DIR%"
