@@ -41,26 +41,26 @@ TEST_F(Blob, canOpen)
 TEST_F(Blob, canGetSize)
 {
     auto blob = open(rowidZero);
-    EXPECT_THAT(blob.size(), Eq(42));
+    EXPECT_THAT(blob.size(), Eq(42U));
 
     blob = open(rowidNonzero);
-    EXPECT_THAT(blob.size(), Eq(8));
+    EXPECT_THAT(blob.size(), Eq(8U));
 }
 
 TEST_F(Blob, canMoveToRow)
 {
     auto blob = open(rowidZero);
-    EXPECT_THAT(blob.size(), Eq(42));
+    EXPECT_THAT(blob.size(), Eq(42U));
 
     blob.moveToRow(rowidNonzero);
-    EXPECT_THAT(blob.size(), Eq(8));
+    EXPECT_THAT(blob.size(), Eq(8U));
 }
 
 TEST_F(Blob, read)
 {
     auto blob = open(rowidNonzero);
     std::array<std::uint8_t, 8> buf;
-    EXPECT_THAT(blob.read(buf.data(), buf.size()), Eq(8));
+    EXPECT_THAT(blob.read(buf.data(), buf.size()), Eq(8U));
 
     std::array<std::uint8_t, 8> expected = {
         0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef
@@ -72,7 +72,7 @@ TEST_F(Blob, readWithOffset)
 {
     auto blob = open(rowidNonzero);
     std::array<std::uint8_t, 8> buf;
-    EXPECT_THAT(blob.read(buf.data(), buf.size(), 2), Eq(6));
+    EXPECT_THAT(blob.read(buf.data(), buf.size(), 2), Eq(6U));
 
     // the last two elements are uninitialized
     buf[6] = 0x13;
@@ -111,7 +111,7 @@ TEST_F(Blob, readWithLargerBuffer)
 {
     auto blob = open(rowidNonzero);
     std::array<std::uint8_t, 10> buf;
-    EXPECT_THAT(blob.read(buf.data(), buf.size()), Eq(8));
+    EXPECT_THAT(blob.read(buf.data(), buf.size()), Eq(8U));
 
     // the last two elements are uninitialized
     buf[8] = 0x13;
@@ -126,7 +126,7 @@ TEST_F(Blob, readWithOffsetAndLargerBuffer)
 {
     auto blob = open(rowidNonzero);
     std::array<std::uint8_t, 10> buf;
-    EXPECT_THAT(blob.read(buf.data(), buf.size(), 2), Eq(6));
+    EXPECT_THAT(blob.read(buf.data(), buf.size(), 2), Eq(6U));
 
     // the last two elements are uninitialized
     buf[6] = 0x13;
@@ -145,9 +145,9 @@ TEST_F(Blob, write)
     std::array<std::uint8_t, 8> original = {
         0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef
     };
-    EXPECT_THAT(blob.write(original.data(), original.size()), Eq(8));
+    EXPECT_THAT(blob.write(original.data(), original.size()), Eq(8U));
 
     std::array<std::uint8_t, 8> readData;
-    EXPECT_THAT(blob.read(readData.data(), readData.size()), Eq(8));
+    EXPECT_THAT(blob.read(readData.data(), readData.size()), Eq(8U));
     EXPECT_THAT(readData, Eq(original));
 }
