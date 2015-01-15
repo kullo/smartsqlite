@@ -54,13 +54,13 @@ namespace SqliteWrapper {
 template<typename T>
 void PrintTo(const Nullable<T> &nullable, std::ostream *os)
 {
-    if (nullable.isNull())
+    if (!nullable)
     {
         *os << "Nullable()";
     }
     else
     {
-        *os << "Nullable(" << ::testing::PrintToString(nullable.value()) << ")";
+        *os << "Nullable(" << ::testing::PrintToString(*nullable) << ")";
     }
 }
 }

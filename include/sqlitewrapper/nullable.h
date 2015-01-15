@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cassert>
+
 namespace SqliteWrapper {
 
 template <typename T>
@@ -11,7 +13,7 @@ public:
     {
     }
 
-    Nullable(const T &value)
+    explicit Nullable(const T &value)
         : m_isNull(false), m_value(value)
     {
     }
@@ -26,25 +28,27 @@ public:
         return !(*this == rhs);
     }
 
-    bool isNull() const
+    explicit operator bool() const
     {
-        return m_isNull;
+        return !m_isNull;
+    }
+
+    const T &operator*() const
+    {
+        assert(!m_isNull);
+        return m_value;
+    }
+
+    void setValue(const T &value)
+    {
+        m_isNull = false;
+        m_value = value;
     }
 
     void setNull()
     {
         m_isNull = true;
         m_value = T();
-    }
-
-    T value() const
-    {
-        return m_value;
-    }
-
-    void setValue(const T &value)
-    {
-        m_value = value;
     }
 
 private:

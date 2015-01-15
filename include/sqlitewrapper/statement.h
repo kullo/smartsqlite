@@ -46,15 +46,15 @@ public:
     template <typename T>
     Statement &bind(int pos, const Nullable<T> &value)
     {
-        if (value.isNull()) return bindNull(pos);
+        if (!value) return bindNull(pos);
         return bind(pos, value.value());
     }
     // ... and once again for MSVC++ 2013
     template <typename T>
     Statement &bindNullable(int pos, const Nullable<T> &value)
     {
-        if (value.isNull()) return bindNull(pos);
-        return bind(pos, value.value());
+        if (!value) return bindNull(pos);
+        return bind(pos, *value);
     }
 
     // bind by parameter name instead of position
