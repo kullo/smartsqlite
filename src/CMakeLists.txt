@@ -1,7 +1,10 @@
 set(INCLUDE_DIR "../include")
 include_directories(${INCLUDE_DIR})
 
-set_source_files_properties(sqlite3.c PROPERTIES COMPILE_FLAGS "-DHAVE_USLEEP=1 -DSQLITE_USE_URI=1")
+set_source_files_properties(sqlite3.c
+    PROPERTIES
+    COMPILE_FLAGS
+    "-DHAVE_USLEEP=1 -DSQLITE_USE_URI=1 -DSQLITE_ENABLE_API_ARMOR")
 
 set(PUBLIC_HEADERS_DIR "${INCLUDE_DIR}/sqlitewrapper")
 set(PUBLIC_HEADERS
