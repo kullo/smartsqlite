@@ -6,7 +6,7 @@ set -v  # verbose, echo all commands
 SOURCE_DIR=$(pwd)
 BUILD_DIR="../build-sqlitewrapper"
 CMAKE=cmake
-JOBS=`nproc`
+JOBS=$(nproc)
 echo "Parallel make jobs: $JOBS"
 MAKE="make --jobs=$JOBS"
 

@@ -1,6 +1,5 @@
 #!/bin/bash
 
-QMAKE="qmake"
 BUILD_DIR="../build-sqlitewrapper-coverage"
 LCOV_CAPTURE_ARGS="--directory src"
 QUIET="--quiet"
@@ -20,7 +19,7 @@ cd ${BUILD_DIR}
 cmake -DCMAKE_C_FLAGS="--coverage" -DCMAKE_CXX_FLAGS="--coverage" ../sqlitewrapper
 
 echo "Running make..."
-make --jobs ${CORES} $QUIET
+make --jobs "${CORES}" $QUIET
 
 # delete old data
 find . -name "*.gcda" -delete
