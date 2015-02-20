@@ -1,6 +1,8 @@
+set BUILD_DIR=../build-sqlitewrapper
+set CMAKE_BUILD_TYPE=Release
+
 for /f %%c in ('wmic cpu get NumberOfCores ^| findstr [0-9]') do set "CORES=%%c"
 set SOURCE_DIR=%CD%
-set BUILD_DIR=../build-sqlitewrapper
 set CMAKE_COMMAND=cmake.exe
 set MAKE_COMMAND=C:\Qt-Installation\Tools\QtCreator\bin\jom.exe /J %CORES%
 
@@ -13,7 +15,7 @@ if %ERRORLEVEL% NEQ 0 (
 
 if not exist "%BUILD_DIR%" mkdir "%BUILD_DIR%"
 cd "%BUILD_DIR%" || goto error
-%CMAKE_COMMAND% -DCMAKE_BUILD_TYPE=Release -G "NMake Makefiles" "%SOURCE_DIR%" || goto error
+%CMAKE_COMMAND% -DCMAKE_BUILD_TYPE=%CMAKE_BUILD_TYPE% -G "NMake Makefiles" "%SOURCE_DIR%" || goto error
 %MAKE_COMMAND% || goto error
 
 cd "%SOURCE_DIR%"
