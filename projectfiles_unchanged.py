@@ -1,4 +1,10 @@
-# version: 2
+#!/usr/bin/env python3
+#
+# This script is used on Linux, OS X and Windows.
+# Python 3 required.
+# Returns 0 if project files are unchanged and 1 else.
+#
+# Script version: 3
 import os
 import glob
 import hashlib
@@ -6,6 +12,7 @@ import sys
 
 matches = []
 
+tmp_file = "projectfiles.md5.tmp"
 exlude_dirs = set(['.git', 'docs'])
 
 def get_subdirs(path):
@@ -33,13 +40,13 @@ for pro in pros:
     hasher.update(s.encode('utf8'))
 
 current = hasher.hexdigest()
-if os.path.isfile("projectfiles.md5.tmp"):
-    with open("projectfiles.md5.tmp") as f: old = f.read()
+if os.path.isfile(tmp_file):
+    with open(tmp_file) as f: old = f.read()
 else:
     old = ""
 
 if current.strip() == old.strip():
     sys.exit(0)
 else:
-    with open("projectfiles.md5.tmp", "w") as f: print(current, file=f)
+    with open(tmp_file, "w") as f: print(current, file=f)
     sys.exit(1)
