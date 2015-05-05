@@ -4,7 +4,7 @@
 # Python 3 required.
 # Returns 0 if project files are unchanged and 1 else.
 #
-# Script version: 3
+# Script version: 4
 import os
 import glob
 import hashlib
@@ -23,6 +23,7 @@ def find_in(path):
     # print(path)
     out = []
     out += glob.glob(path + "/*.pro")
+    out += glob.glob(path + "/*.pri")
     out += glob.glob(path + "/CMakeLists.txt")
     out += glob.glob(path + "/Info.plist")
     subs = get_subdirs(path) - exlude_dirs
