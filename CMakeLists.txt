@@ -50,10 +50,8 @@ file(GLOB_RECURSE SMARTSQLITE_HEADERS_RELATIVE RELATIVE
 
 set(SMARTSQLITE_HEADERS_BINARY "")
 foreach (H ${SMARTSQLITE_HEADERS_RELATIVE})
-    #message(${H})
     set(HEADER_SRC ${CMAKE_SOURCE_DIR}/include/smartsqlite/${H})
     set(HEADER_BIN ${CMAKE_BINARY_DIR}/include/smartsqlite/${H})
-    message(${HEADER_SRC} -> ${HEADER_BIN})
     LIST(APPEND SMARTSQLITE_HEADERS_BINARY ${HEADER_BIN})
 
     add_custom_command(OUTPUT ${HEADER_BIN}
