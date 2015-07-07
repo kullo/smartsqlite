@@ -43,6 +43,27 @@ include_directories("${gmock_SOURCE_DIR}/include" "${gtest_SOURCE_DIR}/include")
 add_subdirectory("src")
 include_directories("include")
 
+# Begin: Copy smartsqlite headers into build (called 'binary' in CMAKE slang) directory
+file(GLOB_RECURSE SMARTSQLITE_HEADERS_RELATIVE RELATIVE
+     "${CMAKE_SOURCE_DIR}/include/smartsqlite"
+     "include/smartsqlite/*.h")
+
+set(SMARTSQLITE_HEADERS_BINARY "")
+foreach (H ${SMARTSQLITE_HEADERS_RELATIVE})
+    #message(${H})
+    set(HEADER_SRC ${CMAKE_SOURCE_DIR}/include/smartsqlite/${H})
+    set(HEADER_BIN ${CMAKE_BINARY_DIR}/include/smartsqlite/${H})
+    message(${HEADER_SRC} -> ${HEADER_BIN})
+    LIST(APPEND SMARTSQLITE_HEADERS_BINARY ${HEADER_BIN})
+
+    add_custom_command(OUTPUT ${HEADER_BIN}
+                       COMMAND cmake -E copy_if_different ${HEADER_SRC} ${HEADER_BIN}
+                       DEPENDS ${HEADER_SRC})
+endforeach()
+
+add_custom_target(copy_headers_smartsqlite ALL DEPENDS ${SMARTSQLITE_HEADERS_BINARY})
+# End: Copy smartsqlite headers
+
 # tests
 add_subdirectory("test")
 
