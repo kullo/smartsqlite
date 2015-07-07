@@ -3,7 +3,7 @@
 #include <exception>
 #include <string>
 
-namespace SqliteWrapper {
+namespace SmartSqlite {
 
 class Exception : public std::exception
 {

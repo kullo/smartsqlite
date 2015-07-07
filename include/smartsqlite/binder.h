@@ -5,7 +5,7 @@
 
 struct sqlite3_stmt;
 
-namespace SqliteWrapper {
+namespace SmartSqlite {
 
 class NativeBinder
 {

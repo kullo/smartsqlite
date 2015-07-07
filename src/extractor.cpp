@@ -1,8 +1,8 @@
-#include "sqlitewrapper/extractor.h"
+#include "smartsqlite/extractor.h"
 
-#include "sqlitewrapper/sqlite3.h"
+#include "smartsqlite/sqlite3.h"
 
-namespace SqliteWrapper {
+namespace SmartSqlite {
 
 long long NativeExtractor::extractLongLong(sqlite3_stmt *stmt, int pos)
 {

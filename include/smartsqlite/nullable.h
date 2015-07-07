@@ -2,7 +2,7 @@
 
 #include <cassert>
 
-namespace SqliteWrapper {
+namespace SmartSqlite {
 
 template <typename T>
 class Nullable

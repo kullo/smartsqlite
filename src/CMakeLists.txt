@@ -6,7 +6,7 @@ set_source_files_properties(sqlite3.c
     COMPILE_FLAGS
     "-DHAVE_USLEEP=1 -DSQLITE_USE_URI=1 -DSQLITE_ENABLE_API_ARMOR")
 
-set(PUBLIC_HEADERS_DIR "${INCLUDE_DIR}/sqlitewrapper")
+set(PUBLIC_HEADERS_DIR "${INCLUDE_DIR}/smartsqlite")
 set(PUBLIC_HEADERS
     ${PUBLIC_HEADERS_DIR}/binder.h
     ${PUBLIC_HEADERS_DIR}/blob.h
@@ -26,7 +26,7 @@ set(PRIVATE_HEADERS
     result_names.h
 )
 
-add_library(sqlitewrapper
+add_library(smartsqlite
     ${PUBLIC_HEADERS}
     ${PRIVATE_HEADERS}
     sqlite3.c

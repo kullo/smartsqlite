@@ -1,22 +1,22 @@
 #include <gmock/gmock.h>
 
-#include "sqlitewrapper/nullable.h"
+#include "smartsqlite/nullable.h"
 
 using namespace testing;
 
 TEST(Nullable, isNullWhenDefaultConstructed)
 {
-    EXPECT_THAT(bool(SqliteWrapper::Nullable<int>()), Eq(false));
+    EXPECT_THAT(bool(SmartSqlite::Nullable<int>()), Eq(false));
 }
 
 TEST(Nullable, isNotNullWhenConstructedWithValue)
 {
-    EXPECT_THAT(bool(SqliteWrapper::Nullable<int>(42)), Eq(true));
+    EXPECT_THAT(bool(SmartSqlite::Nullable<int>(42)), Eq(true));
 }
 
 TEST(Nullable, canBeSetToNull)
 {
-    SqliteWrapper::Nullable<int> answer(42);
+    SmartSqlite::Nullable<int> answer(42);
     ASSERT_THAT(bool(answer), Eq(true));
 
     answer.setNull();
@@ -25,7 +25,7 @@ TEST(Nullable, canBeSetToNull)
 
 TEST(Nullable, canBeSetToValue)
 {
-    SqliteWrapper::Nullable<int> answer;
+    SmartSqlite::Nullable<int> answer;
     ASSERT_THAT(bool(answer), Eq(false));
 
     answer.setValue(42);

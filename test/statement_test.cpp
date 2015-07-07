@@ -2,9 +2,9 @@
 #include <ostream>
 #include <type_traits>
 
-#include "sqlitewrapper/connection.h"
-#include "sqlitewrapper/exceptions.h"
-#include "sqlitewrapper/nullable.h"
+#include "smartsqlite/connection.h"
+#include "smartsqlite/exceptions.h"
+#include "smartsqlite/nullable.h"
 
 using namespace testing;
 
@@ -13,7 +13,7 @@ class Statement : public Test
 protected:
     void SetUp()
     {
-        conn = SqliteWrapper::makeConnectionPtr(":memory:");
+        conn = SmartSqlite::makeConnectionPtr(":memory:");
         conn->exec("CREATE TABLE all_types "
                    "(c_int INT, c_float FLOAT, c_text TEXT, c_blob BLOB)");
         conn->exec("INSERT INTO all_types "
@@ -22,17 +22,17 @@ protected:
                    "VALUES (NULL, NULL, NULL, NULL)");
     }
 
-    SqliteWrapper::Statement makeSelect() const
+    SmartSqlite::Statement makeSelect() const
     {
         return conn->prepare("SELECT c_text FROM all_types WHERE c_int = ?");
     }
 
-    SqliteWrapper::Statement makeSelectAll() const
+    SmartSqlite::Statement makeSelectAll() const
     {
         return conn->prepare("SELECT * FROM all_types WHERE c_int IS NOT NULL");
     }
 
-    SqliteWrapper::Statement makeSelectAllNull() const
+    SmartSqlite::Statement makeSelectAllNull() const
     {
         return conn->prepare("SELECT * FROM all_types WHERE c_int IS NULL");
     }
@@ -47,10 +47,10 @@ protected:
         return data;
     }
 
-    std::unique_ptr<SqliteWrapper::Connection> conn;
+    std::unique_ptr<SmartSqlite::Connection> conn;
 };
 
-namespace SqliteWrapper {
+namespace SmartSqlite {
 template<typename T>
 void PrintTo(const Nullable<T> &nullable, std::ostream *os)
 {
@@ -67,18 +67,18 @@ void PrintTo(const Nullable<T> &nullable, std::ostream *os)
 
 TEST_F(Statement, canMove)
 {
-    EXPECT_THAT((std::is_move_constructible<SqliteWrapper::Statement>::value),
+    EXPECT_THAT((std::is_move_constructible<SmartSqlite::Statement>::value),
                 Eq(true));
-    EXPECT_THAT((std::is_move_assignable<SqliteWrapper::Statement>::value),
+    EXPECT_THAT((std::is_move_assignable<SmartSqlite::Statement>::value),
                 Eq(true));
 }
 
 #ifndef _MSC_VER
 TEST_F(Statement, cannotCopy)
 {
-    EXPECT_THAT((std::is_copy_constructible<SqliteWrapper::Statement>::value),
+    EXPECT_THAT((std::is_copy_constructible<SmartSqlite::Statement>::value),
                 Eq(false));
-    EXPECT_THAT((std::is_copy_assignable<SqliteWrapper::Statement>::value),
+    EXPECT_THAT((std::is_copy_assignable<SmartSqlite::Statement>::value),
                 Eq(false));
 }
 #endif
@@ -190,31 +190,31 @@ TEST_F(Statement, canBindBlobFromPointer)
 
 TEST_F(Statement, canBindNullNullables)
 {
-    SqliteWrapper::Statement stmt = conn->prepare(
+    SmartSqlite::Statement stmt = conn->prepare(
                 "INSERT INTO all_types "
                 "VALUES (?, ?, ?, ?)");
     int pos = 0;
-    stmt.bindNullable(pos++, SqliteWrapper::Nullable<int>());
-    stmt.bindNullable(pos++, SqliteWrapper::Nullable<double>());
-    stmt.bindNullable(pos++, SqliteWrapper::Nullable<std::string>());
-    stmt.bindNullable(pos++, SqliteWrapper::Nullable<std::vector<unsigned char>>());
+    stmt.bindNullable(pos++, SmartSqlite::Nullable<int>());
+    stmt.bindNullable(pos++, SmartSqlite::Nullable<double>());
+    stmt.bindNullable(pos++, SmartSqlite::Nullable<std::string>());
+    stmt.bindNullable(pos++, SmartSqlite::Nullable<std::vector<unsigned char>>());
 }
 
 TEST_F(Statement, canBindNonNullNullables)
 {
-    SqliteWrapper::Statement stmt = conn->prepare(
+    SmartSqlite::Statement stmt = conn->prepare(
                 "INSERT INTO all_types "
                 "VALUES (?, ?, ?, ?)");
     int pos = 0;
-    stmt.bindNullable(pos++, SqliteWrapper::Nullable<int>(23));
-    stmt.bindNullable(pos++, SqliteWrapper::Nullable<double>(3.14));
-    stmt.bindNullable(pos++, SqliteWrapper::Nullable<std::string>("Hello, world."));
-    stmt.bindNullable(pos++, SqliteWrapper::Nullable<std::vector<unsigned char>>(exampleBlob()));
+    stmt.bindNullable(pos++, SmartSqlite::Nullable<int>(23));
+    stmt.bindNullable(pos++, SmartSqlite::Nullable<double>(3.14));
+    stmt.bindNullable(pos++, SmartSqlite::Nullable<std::string>("Hello, world."));
+    stmt.bindNullable(pos++, SmartSqlite::Nullable<std::vector<unsigned char>>(exampleBlob()));
 }
 
 TEST_F(Statement, canBindNullByName)
 {
-    SqliteWrapper::Statement stmt = conn->prepare(
+    SmartSqlite::Statement stmt = conn->prepare(
                 "SELECT * FROM all_types "
                 "WHERE c_int = :answer");
     stmt.bindNull(":answer");
@@ -222,7 +222,7 @@ TEST_F(Statement, canBindNullByName)
 
 TEST_F(Statement, canBindIntByName)
 {
-    SqliteWrapper::Statement stmt = conn->prepare(
+    SmartSqlite::Statement stmt = conn->prepare(
                 "SELECT * FROM all_types "
                 "WHERE c_int = :answer");
     stmt.bind(":answer", 42);
@@ -230,14 +230,14 @@ TEST_F(Statement, canBindIntByName)
 
 TEST_F(Statement, beginThrowsOnRepeatedInvocation)
 {
-    SqliteWrapper::Statement stmt = makeSelectAll();
+    SmartSqlite::Statement stmt = makeSelectAll();
     stmt.begin();
-    EXPECT_THROW(stmt.begin(), SqliteWrapper::Exception);
+    EXPECT_THROW(stmt.begin(), SmartSqlite::Exception);
 }
 
 TEST_F(Statement, operatorEqualsSwapsExecutedStatus)
 {
-    SqliteWrapper::Statement stmt = makeSelectAll();
+    SmartSqlite::Statement stmt = makeSelectAll();
     stmt.begin();
 
     // overwrite executed stmt with not executed stmt: should pass
@@ -245,14 +245,14 @@ TEST_F(Statement, operatorEqualsSwapsExecutedStatus)
     stmt.begin();
 
     // overwrite non-executed stmt with executed stmt: should fail
-    SqliteWrapper::Statement stmt2 = makeSelectAll();
+    SmartSqlite::Statement stmt2 = makeSelectAll();
     stmt2 = std::move(stmt);
-    EXPECT_THROW(stmt2.begin(), SqliteWrapper::Exception);
+    EXPECT_THROW(stmt2.begin(), SmartSqlite::Exception);
 }
 
 TEST_F(Statement, canCheckWhetherStatementHasResults)
 {
-    SqliteWrapper::Statement stmt = makeSelect();
+    SmartSqlite::Statement stmt = makeSelect();
     stmt.bindNull(0);
     EXPECT_THAT(stmt.hasResults(), Eq(false));
 
@@ -264,7 +264,7 @@ TEST_F(Statement, canCheckWhetherStatementHasResults)
 
 TEST_F(Statement, canStepThroughEmptyResult)
 {
-    SqliteWrapper::Statement stmt = makeSelect();
+    SmartSqlite::Statement stmt = makeSelect();
     stmt.bindNull(0);
 
     int counter = 0;
@@ -277,22 +277,22 @@ TEST_F(Statement, canStepThroughEmptyResult)
 
 TEST_F(Statement, execWithoutResultThrowsOnResultsNull)
 {
-    SqliteWrapper::Statement stmt = makeSelectAllNull();
+    SmartSqlite::Statement stmt = makeSelectAllNull();
 
-    EXPECT_THROW(stmt.execWithoutResult(), SqliteWrapper::QueryReturnedRows);
+    EXPECT_THROW(stmt.execWithoutResult(), SmartSqlite::QueryReturnedRows);
 }
 
 TEST_F(Statement, execWithoutResultThrowsOnResultsNonNull)
 {
-    SqliteWrapper::Statement stmt = makeSelect();
+    SmartSqlite::Statement stmt = makeSelect();
     stmt.bind(0, 42);
 
-    EXPECT_THROW(stmt.execWithoutResult(), SqliteWrapper::QueryReturnedRows);
+    EXPECT_THROW(stmt.execWithoutResult(), SmartSqlite::QueryReturnedRows);
 }
 
 TEST_F(Statement, canExecWithoutResult)
 {
-    SqliteWrapper::Statement stmt = makeSelect();
+    SmartSqlite::Statement stmt = makeSelect();
     stmt.bind(0, 23);
 
     stmt.execWithoutResult();
@@ -300,7 +300,7 @@ TEST_F(Statement, canExecWithoutResult)
 
 TEST_F(Statement, canStepThroughNonemptyResult)
 {
-    SqliteWrapper::Statement stmt = makeSelect();
+    SmartSqlite::Statement stmt = makeSelect();
     stmt.bind(0, 42);
 
     int counter = 0;
@@ -314,15 +314,15 @@ TEST_F(Statement, canStepThroughNonemptyResult)
 
 TEST_F(Statement, execWithSingleResultThrowsOnZeroResults)
 {
-    SqliteWrapper::Statement stmt = makeSelect();
+    SmartSqlite::Statement stmt = makeSelect();
     stmt.bind(0, 23);
 
-    EXPECT_THROW(stmt.execWithSingleResult(), SqliteWrapper::QueryReturnedNoRows);
+    EXPECT_THROW(stmt.execWithSingleResult(), SmartSqlite::QueryReturnedNoRows);
 }
 
 TEST_F(Statement, canExecWithSingleResult)
 {
-    SqliteWrapper::Statement stmt = makeSelect();
+    SmartSqlite::Statement stmt = makeSelect();
     stmt.bind(0, 42);
 
     auto result = stmt.execWithSingleResult();
@@ -331,130 +331,130 @@ TEST_F(Statement, canExecWithSingleResult)
 
 TEST_F(Statement, canGetBool)
 {
-    SqliteWrapper::Statement stmt = makeSelectAll();
+    SmartSqlite::Statement stmt = makeSelectAll();
     EXPECT_THAT(stmt.begin()->get<bool>(0), Eq(true));
 }
 
 TEST_F(Statement, canGetInt8)
 {
-    SqliteWrapper::Statement stmt = makeSelectAll();
+    SmartSqlite::Statement stmt = makeSelectAll();
     EXPECT_THAT(stmt.begin()->get<std::int8_t>(0), Eq(42));
 }
 
 TEST_F(Statement, canGetUInt8)
 {
-    SqliteWrapper::Statement stmt = makeSelectAll();
+    SmartSqlite::Statement stmt = makeSelectAll();
     EXPECT_THAT(stmt.begin()->get<std::uint8_t>(0), Eq(42U));
 }
 
 TEST_F(Statement, canGetInt16)
 {
-    SqliteWrapper::Statement stmt = makeSelectAll();
+    SmartSqlite::Statement stmt = makeSelectAll();
     EXPECT_THAT(stmt.begin()->get<std::int16_t>(0), Eq(42));
 }
 
 TEST_F(Statement, canGetUInt16)
 {
-    SqliteWrapper::Statement stmt = makeSelectAll();
+    SmartSqlite::Statement stmt = makeSelectAll();
     EXPECT_THAT(stmt.begin()->get<std::uint16_t>(0), Eq(42U));
 }
 
 TEST_F(Statement, canGetInt32)
 {
-    SqliteWrapper::Statement stmt = makeSelectAll();
+    SmartSqlite::Statement stmt = makeSelectAll();
     EXPECT_THAT(stmt.begin()->get<std::int32_t>(0), Eq(42));
 }
 
 TEST_F(Statement, canGetUInt32)
 {
-    SqliteWrapper::Statement stmt = makeSelectAll();
+    SmartSqlite::Statement stmt = makeSelectAll();
     EXPECT_THAT(stmt.begin()->get<std::uint32_t>(0), Eq(42U));
 }
 
 TEST_F(Statement, canGetInt64)
 {
-    SqliteWrapper::Statement stmt = makeSelectAll();
+    SmartSqlite::Statement stmt = makeSelectAll();
     EXPECT_THAT(stmt.begin()->get<std::int64_t>(0), Eq(42));
 }
 
 TEST_F(Statement, canGetUInt64)
 {
-    SqliteWrapper::Statement stmt = makeSelectAll();
+    SmartSqlite::Statement stmt = makeSelectAll();
     EXPECT_THAT(stmt.begin()->get<std::uint64_t>(0), Eq(42U));
 }
 
 TEST_F(Statement, canGetSizeT)
 {
-    SqliteWrapper::Statement stmt = makeSelectAll();
+    SmartSqlite::Statement stmt = makeSelectAll();
     EXPECT_THAT(stmt.begin()->get<std::size_t>(0), Eq(42U));
 }
 
 TEST_F(Statement, canGetFloat)
 {
-    SqliteWrapper::Statement stmt = makeSelectAll();
+    SmartSqlite::Statement stmt = makeSelectAll();
     EXPECT_THAT(stmt.begin()->get<float>(1), FloatEq(2.0));
 }
 
 TEST_F(Statement, canGetDouble)
 {
-    SqliteWrapper::Statement stmt = makeSelectAll();
+    SmartSqlite::Statement stmt = makeSelectAll();
     EXPECT_THAT(stmt.begin()->get<double>(1), DoubleEq(2.0));
 }
 
 TEST_F(Statement, canGetString)
 {
-    SqliteWrapper::Statement stmt = makeSelectAll();
+    SmartSqlite::Statement stmt = makeSelectAll();
     EXPECT_THAT(stmt.begin()->get<std::string>(2), Eq(std::string("6*7")));
 }
 
 TEST_F(Statement, canGetBlob)
 {
-    SqliteWrapper::Statement stmt = makeSelectAll();
+    SmartSqlite::Statement stmt = makeSelectAll();
     EXPECT_THAT(stmt.begin()->get<std::vector<unsigned char>>(3),
                 Eq(exampleBlob()));
 }
 
 TEST_F(Statement, canGetNullNullables)
 {
-    SqliteWrapper::Statement stmt = makeSelectAllNull();
+    SmartSqlite::Statement stmt = makeSelectAllNull();
     auto iter = stmt.begin();
     EXPECT_THAT(iter->getNullable<int>(0),
-                Eq(SqliteWrapper::Nullable<int>()));
+                Eq(SmartSqlite::Nullable<int>()));
     EXPECT_THAT(iter->getNullable<std::int64_t>(0),
-                Eq(SqliteWrapper::Nullable<std::int64_t>()));
+                Eq(SmartSqlite::Nullable<std::int64_t>()));
     EXPECT_THAT(iter->getNullable<double>(1),
-                Eq(SqliteWrapper::Nullable<double>()));
+                Eq(SmartSqlite::Nullable<double>()));
     EXPECT_THAT(iter->getNullable<std::string>(2),
-                Eq(SqliteWrapper::Nullable<std::string>()));
+                Eq(SmartSqlite::Nullable<std::string>()));
     EXPECT_THAT(iter->getNullable<std::vector<unsigned char>>(3),
-                Eq(SqliteWrapper::Nullable<std::vector<unsigned char>>()));
+                Eq(SmartSqlite::Nullable<std::vector<unsigned char>>()));
 }
 
 TEST_F(Statement, canGetNonNullNullables)
 {
-    SqliteWrapper::Statement stmt = makeSelectAll();
+    SmartSqlite::Statement stmt = makeSelectAll();
     auto iter = stmt.begin();
     EXPECT_THAT(iter->getNullable<int>(0),
-                Eq(SqliteWrapper::Nullable<int>(42)));
+                Eq(SmartSqlite::Nullable<int>(42)));
     EXPECT_THAT(iter->getNullable<std::int64_t>(0),
-                Eq(SqliteWrapper::Nullable<std::int64_t>(42)));
+                Eq(SmartSqlite::Nullable<std::int64_t>(42)));
     EXPECT_THAT(iter->getNullable<double>(1),
-                Eq(SqliteWrapper::Nullable<double>(2.0)));
+                Eq(SmartSqlite::Nullable<double>(2.0)));
     EXPECT_THAT(iter->getNullable<std::string>(2),
-                Eq(SqliteWrapper::Nullable<std::string>("6*7")));
+                Eq(SmartSqlite::Nullable<std::string>("6*7")));
     EXPECT_THAT(iter->getNullable<std::vector<unsigned char>>(3),
-                Eq(SqliteWrapper::Nullable<std::vector<unsigned char>>(exampleBlob())));
+                Eq(SmartSqlite::Nullable<std::vector<unsigned char>>(exampleBlob())));
 }
 
 TEST_F(Statement, canGetIntByName)
 {
-    SqliteWrapper::Statement stmt = makeSelectAll();
+    SmartSqlite::Statement stmt = makeSelectAll();
     EXPECT_THAT(stmt.begin()->get<int>("c_int"), Eq(42));
 }
 
 TEST_F(Statement, canGetNullableIntByName)
 {
-    SqliteWrapper::Statement stmt = makeSelectAll();
+    SmartSqlite::Statement stmt = makeSelectAll();
     EXPECT_THAT(stmt.begin()->getNullable<int>("c_int"),
-                Eq(SqliteWrapper::Nullable<int>(42)));
+                Eq(SmartSqlite::Nullable<int>(42)));
 }

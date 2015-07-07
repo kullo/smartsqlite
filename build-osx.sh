@@ -6,7 +6,7 @@ set -v  # verbose, echo all commands
 export SDKROOT=macosx10.9
 
 SOURCE_DIR=$(pwd)
-BUILD_DIR="../build-sqlitewrapper"
+BUILD_DIR="../build-smartsqlite"
 CMAKE_COMMAND=cmake
 MAKE_COMMAND="make -j2"
 

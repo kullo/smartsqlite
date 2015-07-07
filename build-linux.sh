@@ -4,7 +4,7 @@ set -e  # exit immediately on error
 set -v  # verbose, echo all commands
 
 SOURCE_DIR=$(pwd)
-BUILD_DIR="../build-sqlitewrapper"
+BUILD_DIR="../build-smartsqlite"
 CMAKE=cmake
 JOBS=$(nproc)
 echo "Parallel make jobs: $JOBS"

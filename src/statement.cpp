@@ -1,12 +1,12 @@
-#include "sqlitewrapper/statement.h"
+#include "smartsqlite/statement.h"
 
 #include <cstdint>
 #include <vector>
 
-#include "sqlitewrapper/exceptions.h"
-#include "sqlitewrapper/sqlite3.h"
+#include "smartsqlite/exceptions.h"
+#include "smartsqlite/sqlite3.h"
 
-namespace SqliteWrapper {
+namespace SmartSqlite {
 
 struct Statement::Impl
 {

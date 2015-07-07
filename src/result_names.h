@@ -2,9 +2,9 @@
 
 #include <string>
 
-#include "sqlitewrapper/sqlite3.h"
+#include "smartsqlite/sqlite3.h"
 
-namespace SqliteWrapper {
+namespace SmartSqlite {
     inline std::string resultToResultName(int result)
     {
         switch (result)

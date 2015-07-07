@@ -1,10 +1,10 @@
-#include "sqlitewrapper/version.h"
+#include "smartsqlite/version.h"
 
 #include <cstring>
 
-#include "sqlitewrapper/sqlite3.h"
+#include "smartsqlite/sqlite3.h"
 
-namespace SqliteWrapper {
+namespace SmartSqlite {
 
 std::string sqliteVersion()
 {

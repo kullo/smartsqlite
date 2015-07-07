@@ -1,14 +1,14 @@
-#include "sqlitewrapper/connection.h"
+#include "smartsqlite/connection.h"
 
 #include <cassert>
 #include <memory>
 #include <sstream>
 
-#include "sqlitewrapper/exceptions.h"
-#include "sqlitewrapper/sqlite3.h"
-#include "sqlitewrapper/util.h"
+#include "smartsqlite/exceptions.h"
+#include "smartsqlite/sqlite3.h"
+#include "smartsqlite/util.h"
 
-namespace SqliteWrapper {
+namespace SmartSqlite {
 
 static void sqlite3Deleter(sqlite3 *ptr)
 {

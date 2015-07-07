@@ -12,4 +12,4 @@ if(NOT WIN32)
     list(APPEND extra_link_libraries dl)
 endif()
 
-target_link_libraries(${PROJECT_NAME}_tests sqlitewrapper gmock gmock_main ${extra_link_libraries})
+target_link_libraries(${PROJECT_NAME}_tests smartsqlite gmock gmock_main ${extra_link_libraries})

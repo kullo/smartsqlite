@@ -1,11 +1,11 @@
-#include "sqlitewrapper/blob.h"
+#include "smartsqlite/blob.h"
 
 #include <algorithm>
 
-#include "sqlitewrapper/sqlite3.h"
-#include "sqlitewrapper/util.h"
+#include "smartsqlite/sqlite3.h"
+#include "smartsqlite/util.h"
 
-namespace SqliteWrapper {
+namespace SmartSqlite {
 
 struct Blob::Impl
 {

@@ -8,7 +8,7 @@
 
 struct sqlite3;
 
-namespace SqliteWrapper {
+namespace SmartSqlite {
 
 enum TransactionType
 {

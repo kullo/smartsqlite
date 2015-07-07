@@ -1,9 +1,9 @@
-#include "sqlitewrapper/exceptions.h"
+#include "smartsqlite/exceptions.h"
 
 #include "result_names.h"
-#include "sqlitewrapper/sqlite3.h"
+#include "smartsqlite/sqlite3.h"
 
-namespace SqliteWrapper {
+namespace SmartSqlite {
 
 Exception::Exception(const std::string &message) throw()
     : m_message(message)

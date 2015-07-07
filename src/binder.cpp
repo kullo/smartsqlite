@@ -1,8 +1,8 @@
-#include "sqlitewrapper/binder.h"
+#include "smartsqlite/binder.h"
 
-#include "sqlitewrapper/sqlite3.h"
+#include "smartsqlite/sqlite3.h"
 
-namespace SqliteWrapper {
+namespace SmartSqlite {
 
 int NativeBinder::bindLongLong(sqlite3_stmt *stmt, int pos, long long value)
 {

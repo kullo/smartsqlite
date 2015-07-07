@@ -2,9 +2,9 @@
 
 #include <memory>
 
-#include "sqlitewrapper/connection.h"
+#include "smartsqlite/connection.h"
 
-namespace SqliteWrapper {
+namespace SmartSqlite {
 
 class ScopedTransaction
 {

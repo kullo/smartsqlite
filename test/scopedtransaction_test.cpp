@@ -1,17 +1,17 @@
 #include <memory>
 #include <gmock/gmock.h>
 
-#include "sqlitewrapper/connection.h"
-#include "sqlitewrapper/exceptions.h"
-#include "sqlitewrapper/scopedtransaction.h"
+#include "smartsqlite/connection.h"
+#include "smartsqlite/exceptions.h"
+#include "smartsqlite/scopedtransaction.h"
 
 using namespace testing;
-using ConnPtr = std::shared_ptr<SqliteWrapper::Connection>;
+using ConnPtr = std::shared_ptr<SmartSqlite::Connection>;
 
 static ConnPtr makeConnection()
 {
-    return std::make_shared<SqliteWrapper::Connection>(
-                SqliteWrapper::makeConnection(":memory:"));
+    return std::make_shared<SmartSqlite::Connection>(
+                SmartSqlite::makeConnection(":memory:"));
 }
 
 static int getUserVersion(ConnPtr conn)
@@ -28,16 +28,16 @@ static void setUserVersion(ConnPtr conn, int version)
 
 TEST(ScopedTransaction, ctorDoesntThrow)
 {
-    SqliteWrapper::ScopedTransaction tx(makeConnection());
+    SmartSqlite::ScopedTransaction tx(makeConnection());
 }
 
 TEST(ScopedTransaction, ctorBeginsTransaction)
 {
     auto conn = makeConnection();
-    SqliteWrapper::ScopedTransaction tx(conn);
+    SmartSqlite::ScopedTransaction tx(conn);
     (void)tx;
 
-    EXPECT_THROW(conn->beginTransaction(), SqliteWrapper::SqliteException);
+    EXPECT_THROW(conn->beginTransaction(), SmartSqlite::SqliteException);
 }
 
 TEST(ScopedTransaction, dtorRollsBack)
@@ -46,7 +46,7 @@ TEST(ScopedTransaction, dtorRollsBack)
     int origVersion = 23;
     conn->exec("PRAGMA user_version = " + std::to_string(origVersion));
     {
-        SqliteWrapper::ScopedTransaction tx(conn);
+        SmartSqlite::ScopedTransaction tx(conn);
         (void)tx;
         setUserVersion(conn, 42);
     }
@@ -57,7 +57,7 @@ TEST(ScopedTransaction, dtorRollsBack)
 TEST(ScopedTransaction, commitEndsTransaction)
 {
     auto conn = makeConnection();
-    SqliteWrapper::ScopedTransaction tx(conn);
+    SmartSqlite::ScopedTransaction tx(conn);
     tx.commit();
 
     // would throw if commit didn't end the transaction
@@ -70,7 +70,7 @@ TEST(ScopedTransaction, commitCancelsRollback)
     setUserVersion(conn, 42);
     int version = 23;
     {
-        SqliteWrapper::ScopedTransaction tx(conn);
+        SmartSqlite::ScopedTransaction tx(conn);
         tx.commit();
 
         conn->beginTransaction();

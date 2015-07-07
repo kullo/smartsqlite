@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8)
-project(sqlitewrapper)
+project(smartsqlite)
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O2 -g")
@@ -39,7 +39,7 @@ endif()
 add_subdirectory("lib/gmock")
 include_directories("${gmock_SOURCE_DIR}/include" "${gtest_SOURCE_DIR}/include")
 
-# sqlitewrapper
+# smartsqlite
 add_subdirectory("src")
 include_directories("include")
 

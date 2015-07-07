@@ -2,44 +2,44 @@
 #include <gmock/gmock.h>
 #include <type_traits>
 
-#include "sqlitewrapper/connection.h"
-#include "sqlitewrapper/exceptions.h"
+#include "smartsqlite/connection.h"
+#include "smartsqlite/exceptions.h"
 
 using namespace testing;
 
 
 TEST(MakeConnection, shouldFailWhenOpeningFileInNonexistingFolder)
 {
-    EXPECT_THROW(SqliteWrapper::makeConnection("/does/not/exist"),
-                 SqliteWrapper::Exception);
+    EXPECT_THROW(SmartSqlite::makeConnection("/does/not/exist"),
+                 SmartSqlite::Exception);
 }
 
 TEST(MakeConnection, shouldOpenInMemoryDatabase)
 {
-    SqliteWrapper::makeConnection(":memory:");
+    SmartSqlite::makeConnection(":memory:");
 }
 
 
 class Connection : public Test
 {
 protected:
-    SqliteWrapper::Connection conn = SqliteWrapper::makeConnection(":memory:");
+    SmartSqlite::Connection conn = SmartSqlite::makeConnection(":memory:");
 };
 
 TEST_F(Connection, canMove)
 {
-    EXPECT_THAT((std::is_move_constructible<SqliteWrapper::Connection>::value),
+    EXPECT_THAT((std::is_move_constructible<SmartSqlite::Connection>::value),
                 Eq(true));
-    EXPECT_THAT((std::is_move_assignable<SqliteWrapper::Connection>::value),
+    EXPECT_THAT((std::is_move_assignable<SmartSqlite::Connection>::value),
                 Eq(true));
 }
 
 #ifndef _MSC_VER
 TEST_F(Connection, cannotCopy)
 {
-    EXPECT_THAT((std::is_copy_constructible<SqliteWrapper::Connection>::value),
+    EXPECT_THAT((std::is_copy_constructible<SmartSqlite::Connection>::value),
                 Eq(false));
-    EXPECT_THAT((std::is_copy_assignable<SqliteWrapper::Connection>::value),
+    EXPECT_THAT((std::is_copy_assignable<SmartSqlite::Connection>::value),
                 Eq(false));
 }
 #endif
@@ -80,12 +80,12 @@ TEST_F(Connection, canBeginTransaction)
 
 TEST_F(Connection, canBeginImmediateTransaction)
 {
-    conn.beginTransaction(SqliteWrapper::Immediate);
+    conn.beginTransaction(SmartSqlite::Immediate);
 }
 
 TEST_F(Connection, canBeginExclusiveTransaction)
 {
-    conn.beginTransaction(SqliteWrapper::Exclusive);
+    conn.beginTransaction(SmartSqlite::Exclusive);
 }
 
 TEST_F(Connection, canCommitTransaction)

@@ -1,4 +1,4 @@
-set BUILD_DIR=../build-sqlitewrapper-debug
+set BUILD_DIR=../build-smartsqlite-debug
 set CMAKE_BUILD_TYPE=Debug
 
 for /f %%c in ('wmic cpu get NumberOfCores ^| findstr [0-9]') do set "CORES=%%c"

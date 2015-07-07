@@ -8,7 +8,7 @@
 #include "row.h"
 #include "util.h"
 
-namespace SqliteWrapper {
+namespace SmartSqlite {
 
 class Statement
 {

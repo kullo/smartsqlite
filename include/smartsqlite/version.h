@@ -2,7 +2,7 @@
 
 #include <string>
 
-namespace SqliteWrapper {
+namespace SmartSqlite {
     std::string sqliteVersion();
     bool checkVersion();
 }

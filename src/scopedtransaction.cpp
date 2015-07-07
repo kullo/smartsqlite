@@ -1,11 +1,11 @@
-#include "sqlitewrapper/scopedtransaction.h"
+#include "smartsqlite/scopedtransaction.h"
 
 #include <iostream>
 
-namespace SqliteWrapper {
+namespace SmartSqlite {
 
 ScopedTransaction::ScopedTransaction(
-        std::shared_ptr<SqliteWrapper::Connection> conn,
+        std::shared_ptr<SmartSqlite::Connection> conn,
         TransactionType type)
     : conn_(conn)
 {

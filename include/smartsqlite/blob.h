@@ -6,7 +6,7 @@
 struct sqlite3;
 struct sqlite3_blob;
 
-namespace SqliteWrapper {
+namespace SmartSqlite {
 
 class Blob
 {

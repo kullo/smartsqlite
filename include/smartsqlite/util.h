@@ -10,18 +10,18 @@ struct sqlite3;
 struct sqlite3_stmt;
 
 #define CHECK_RESULT(result) \
-    SqliteWrapper::checkResult(__func__, (result))
+    SmartSqlite::checkResult(__func__, (result))
 
 #define CHECK_RESULT_CONN(result, conn) \
-    SqliteWrapper::checkResult(__func__, (result), (conn))
+    SmartSqlite::checkResult(__func__, (result), (conn))
 
 #define CHECK_RESULT_STMT(result, conn, stmt) \
-    SqliteWrapper::checkResult(__func__, (result), (conn), (stmt))
+    SmartSqlite::checkResult(__func__, (result), (conn), (stmt))
 
 #define CHECK_RESULT_MSG(result, message) \
-    SqliteWrapper::checkResult(__func__, (result), (message))
+    SmartSqlite::checkResult(__func__, (result), (message))
 
-namespace SqliteWrapper {
+namespace SmartSqlite {
 
 void checkResult(const std::string &func, int result);
 void checkResult(const std::string &func, int result, sqlite3 *conn, sqlite3_stmt *stmt = nullptr);

@@ -1,13 +1,13 @@
-#include "sqlitewrapper/row.h"
+#include "smartsqlite/row.h"
 
 #include <cstring>
 #include <vector>
 
-#include "sqlitewrapper/exceptions.h"
-#include "sqlitewrapper/sqlite3.h"
-#include "sqlitewrapper/util.h"
+#include "smartsqlite/exceptions.h"
+#include "smartsqlite/sqlite3.h"
+#include "smartsqlite/util.h"
 
-namespace SqliteWrapper {
+namespace SmartSqlite {
 
 RowIterator::RowIterator(sqlite3 *conn, sqlite3_stmt *stmt, Done done)
     : m_conn(conn), m_stmt(stmt), m_done(done == Done::True), m_row(stmt)

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-BUILD_DIR="../build-sqlitewrapper-coverage"
+BUILD_DIR="../build-smartsqlite-coverage"
 LCOV_CAPTURE_ARGS="--directory src"
 QUIET="--quiet"
 
@@ -16,7 +16,7 @@ CORES=$(nproc)
 # build
 mkdir -p ${BUILD_DIR}
 cd ${BUILD_DIR}
-cmake -DCMAKE_C_FLAGS="--coverage" -DCMAKE_CXX_FLAGS="--coverage" ../sqlitewrapper
+cmake -DCMAKE_C_FLAGS="--coverage" -DCMAKE_CXX_FLAGS="--coverage" ../smartsqlite
 
 echo "Running make..."
 make --jobs "${CORES}" $QUIET
@@ -29,7 +29,7 @@ rm coverage_*.info || true
 lcov --capture --initial --output-file coverage_base.info $LCOV_CAPTURE_ARGS $QUIET
 
 # run tests
-test/sqlitewrapper_tests
+test/smartsqlite_tests
 
 # collect stats
 lcov --capture --output-file coverage_test.info $LCOV_CAPTURE_ARGS $QUIET

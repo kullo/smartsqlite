@@ -2,8 +2,8 @@
 #include <gmock/gmock.h>
 #include <memory>
 
-#include "sqlitewrapper/blob.h"
-#include "sqlitewrapper/connection.h"
+#include "smartsqlite/blob.h"
+#include "smartsqlite/connection.h"
 
 using namespace testing;
 
@@ -12,7 +12,7 @@ class Blob : public Test
 protected:
     void SetUp()
     {
-        conn = SqliteWrapper::makeConnectionPtr(":memory:");
+        conn = SmartSqlite::makeConnectionPtr(":memory:");
         conn->exec("CREATE TABLE blobs (data BLOB)");
 
         conn->exec("INSERT INTO blobs VALUES (zeroblob(42))");
@@ -22,14 +22,14 @@ protected:
         rowidNonzero = conn->lastInsertRowId();
     }
 
-    SqliteWrapper::Blob open(
+    SmartSqlite::Blob open(
             std::int64_t rowid,
-            SqliteWrapper::Blob::Flags flags = SqliteWrapper::Blob::READONLY)
+            SmartSqlite::Blob::Flags flags = SmartSqlite::Blob::READONLY)
     {
         return conn->openBlob("main", "blobs", "data", rowid, flags);
     }
 
-    std::unique_ptr<SqliteWrapper::Connection> conn;
+    std::unique_ptr<SmartSqlite::Connection> conn;
     std::int64_t rowidZero, rowidNonzero;
 };
 
@@ -141,7 +141,7 @@ TEST_F(Blob, readWithOffsetAndLargerBuffer)
 
 TEST_F(Blob, write)
 {
-    auto blob = open(rowidNonzero, SqliteWrapper::Blob::READWRITE);
+    auto blob = open(rowidNonzero, SmartSqlite::Blob::READWRITE);
     std::array<std::uint8_t, 8> original = {
         0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef
     };

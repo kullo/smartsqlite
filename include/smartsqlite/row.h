@@ -10,7 +10,7 @@
 struct sqlite3;
 struct sqlite3_stmt;
 
-namespace SqliteWrapper {
+namespace SmartSqlite {
 
 class RowIterator;
 

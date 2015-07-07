@@ -1,9 +1,9 @@
-#include "sqlitewrapper/util.h"
+#include "smartsqlite/util.h"
 
-#include "sqlitewrapper/exceptions.h"
-#include "sqlitewrapper/sqlite3.h"
+#include "smartsqlite/exceptions.h"
+#include "smartsqlite/sqlite3.h"
 
-namespace SqliteWrapper {
+namespace SmartSqlite {
 
 void checkResult(const std::string &func, int result)
 {
