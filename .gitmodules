@@ -3,4 +3,4 @@
 	url = https://chromium.googlesource.com/external/googlemock
 [submodule "lib/gtest"]
 	path = lib/gtest
-	url = https://chromium.googlesource.com/external/googletest
+	url = https://github.com/kullo/googletest
