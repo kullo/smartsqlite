@@ -13,6 +13,7 @@ set(PUBLIC_HEADERS
     ${PUBLIC_HEADERS_DIR}/connection.h
     ${PUBLIC_HEADERS_DIR}/exceptions.h
     ${PUBLIC_HEADERS_DIR}/extractor.h
+    ${PUBLIC_HEADERS_DIR}/logging.h
     ${PUBLIC_HEADERS_DIR}/nullable.h
     ${PUBLIC_HEADERS_DIR}/row.h
     ${PUBLIC_HEADERS_DIR}/scopedtransaction.h
@@ -35,6 +36,7 @@ add_library(smartsqlite
     connection.cpp
     exceptions.cpp
     extractor.cpp
+    logging.cpp
     row.cpp
     util.cpp
     scopedtransaction.cpp
