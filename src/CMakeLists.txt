@@ -43,3 +43,7 @@ add_library(smartsqlite
     statement.cpp
     version.cpp
 )
+
+if(UNIX)
+	target_link_libraries(smartsqlite INTERFACE dl)
+endif()
