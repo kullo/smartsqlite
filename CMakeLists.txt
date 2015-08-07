@@ -18,14 +18,6 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 # we need to support CMake 2.8. Therefore, we append a space on both sides,
 # which disables automatic expansion.
 elseif ("${CMAKE_CXX_COMPILER_ID} " STREQUAL "MSVC ")
-    # use shared MSVC++ runtime, see http://www.cmake.org/Wiki/CMake_FAQ#Dynamic_Replace
-    foreach(flag_var
-            CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
-            CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
-       if(${flag_var} MATCHES "/MT")
-          string(REGEX REPLACE "/MT" "/MD" ${flag_var} "${${flag_var}}")
-       endif()
-    endforeach()
     # force gtest to use shared MSVC++ runtime
     set(gtest_force_shared_crt ON)
 endif()
