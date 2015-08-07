@@ -1,5 +1,4 @@
 set(INCLUDE_DIR "../include")
-include_directories(${INCLUDE_DIR})
 
 set_source_files_properties(sqlite3.c
     PROPERTIES
@@ -43,6 +42,7 @@ add_library(smartsqlite
     statement.cpp
     version.cpp
 )
+target_include_directories(smartsqlite PUBLIC ${INCLUDE_DIR})
 
 if(UNIX)
 	target_link_libraries(smartsqlite INTERFACE dl)
