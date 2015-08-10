@@ -11,6 +11,12 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL GNU)
         COMPILE_FLAGS
         "-Wno-cast-qual -Wno-missing-field-initializers -Wno-switch-default"
     )
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL Clang)
+    set_source_files_properties(sqlite3.c
+        PROPERTIES
+        COMPILE_FLAGS
+        "-Wno-parentheses-equality -Wno-unused-value"
+    )
 endif()
 
 set(PUBLIC_HEADERS_DIR "${INCLUDE_DIR}/smartsqlite")
