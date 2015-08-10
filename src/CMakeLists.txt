@@ -2,8 +2,16 @@ set(INCLUDE_DIR "../include")
 
 set_source_files_properties(sqlite3.c
     PROPERTIES
-    COMPILE_FLAGS
-    "-DHAVE_USLEEP=1 -DSQLITE_USE_URI=1 -DSQLITE_ENABLE_API_ARMOR")
+    COMPILE_DEFINITIONS
+    "HAVE_USLEEP=1;SQLITE_USE_URI=1;SQLITE_ENABLE_API_ARMOR"
+)
+if(CMAKE_CXX_COMPILER_ID STREQUAL GNU)
+    set_source_files_properties(sqlite3.c
+        PROPERTIES
+        COMPILE_FLAGS
+        "-Wno-cast-qual -Wno-missing-field-initializers -Wno-switch-default"
+    )
+endif()
 
 set(PUBLIC_HEADERS_DIR "${INCLUDE_DIR}/smartsqlite")
 set(PUBLIC_HEADERS
