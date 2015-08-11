@@ -9,7 +9,7 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL GNU)
     set_source_files_properties(sqlite3.c
         PROPERTIES
         COMPILE_FLAGS
-        "-Wno-cast-qual -Wno-missing-field-initializers -Wno-switch-default"
+        "-Wno-array-bounds -Wno-cast-qual -Wno-missing-field-initializers -Wno-switch-default"
     )
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL Clang)
     set_source_files_properties(sqlite3.c
@@ -59,5 +59,5 @@ add_library(smartsqlite
 target_include_directories(smartsqlite PUBLIC ${INCLUDE_DIR})
 
 if(UNIX)
-	target_link_libraries(smartsqlite INTERFACE dl)
+    target_link_libraries(smartsqlite PUBLIC dl)
 endif()
