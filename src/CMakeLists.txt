@@ -61,3 +61,10 @@ target_include_directories(smartsqlite PUBLIC ${INCLUDE_DIR})
 if(UNIX)
     target_link_libraries(smartsqlite PUBLIC dl)
 endif()
+
+install(TARGETS smartsqlite ARCHIVE DESTINATION lib)
+install(
+    DIRECTORY ${PUBLIC_HEADERS_DIR}
+    DESTINATION include
+    FILES_MATCHING PATTERN "*.h"
+)
