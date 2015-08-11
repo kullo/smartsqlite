@@ -1,4 +1,4 @@
-add_executable(${PROJECT_NAME}_tests
+add_executable(smartsqlite_tests
     blob_test.cpp
     connection_test.cpp
     logging_test.cpp
@@ -13,4 +13,4 @@ if(NOT WIN32)
     list(APPEND extra_link_libraries dl)
 endif()
 
-target_link_libraries(${PROJECT_NAME}_tests smartsqlite gmock gmock_main ${extra_link_libraries})
+target_link_libraries(smartsqlite_tests smartsqlite gmock gmock_main ${extra_link_libraries})
