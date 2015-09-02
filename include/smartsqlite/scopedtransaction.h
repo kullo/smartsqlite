@@ -6,7 +6,7 @@
 
 namespace SmartSqlite {
 
-class ScopedTransaction
+class ScopedTransaction final
 {
 public:
     explicit ScopedTransaction(
@@ -14,10 +14,15 @@ public:
             TransactionType type = Deferred);
     ~ScopedTransaction();
     void commit();
+    void rollback();
 
 private:
+    // ScopedTransaction is not copyable
+    ScopedTransaction(const ScopedTransaction &) = delete;
+    ScopedTransaction &operator=(const ScopedTransaction &) = delete;
+
     std::shared_ptr<Connection> conn_;
-    bool committed_ = false;
+    bool finished_ = false;
 };
 
 }

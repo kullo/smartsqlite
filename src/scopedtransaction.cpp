@@ -15,7 +15,7 @@ ScopedTransaction::ScopedTransaction(
 ScopedTransaction::~ScopedTransaction()
 {
     try {
-        if (!committed_) conn_->rollbackTransaction();
+        if (!finished_) conn_->rollbackTransaction();
     }
     catch (...)
     {
@@ -25,8 +25,14 @@ ScopedTransaction::~ScopedTransaction()
 
 void ScopedTransaction::commit()
 {
-    committed_ = true;
+    finished_ = true;
     conn_->commitTransaction();
+}
+
+void ScopedTransaction::rollback()
+{
+    finished_ = true;
+    conn_->rollbackTransaction();
 }
 
 }
