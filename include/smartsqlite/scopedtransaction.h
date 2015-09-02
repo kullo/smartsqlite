@@ -12,6 +12,8 @@ public:
     explicit ScopedTransaction(
             std::shared_ptr<Connection> conn,
             TransactionType type = Deferred);
+    ScopedTransaction(ScopedTransaction &&other);
+    ScopedTransaction &operator=(ScopedTransaction &&rhs);
     ~ScopedTransaction();
     void commit();
     void rollback();

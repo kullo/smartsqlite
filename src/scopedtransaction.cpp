@@ -12,6 +12,27 @@ ScopedTransaction::ScopedTransaction(
     conn_->beginTransaction(type);
 }
 
+ScopedTransaction::ScopedTransaction(ScopedTransaction &&other)
+    : conn_(std::move(other.conn_))
+    , finished_(other.finished_)
+{
+    other.finished_ = true;
+}
+
+ScopedTransaction &ScopedTransaction::operator=(ScopedTransaction &&rhs)
+{
+    // clean up this instance
+    this->~ScopedTransaction();
+
+    // move state from rhs
+    conn_ = std::move(rhs.conn_);
+    finished_ = rhs.finished_;
+
+    // prevent rollback during destruction of rhs
+    rhs.finished_ = true;
+    return *this;
+}
+
 ScopedTransaction::~ScopedTransaction()
 {
     try {
