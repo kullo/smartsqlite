@@ -16,13 +16,14 @@ ScopedTransaction::ScopedTransaction(ScopedTransaction &&other)
     : conn_(std::move(other.conn_))
     , finished_(other.finished_)
 {
+    // prevent dtor of other from doing anything
     other.finished_ = true;
 }
 
 ScopedTransaction &ScopedTransaction::operator=(ScopedTransaction &&rhs)
 {
     // clean up this instance
-    this->~ScopedTransaction();
+    rollbackIfNotFinished();
 
     // move state from rhs
     conn_ = std::move(rhs.conn_);
@@ -33,7 +34,7 @@ ScopedTransaction &ScopedTransaction::operator=(ScopedTransaction &&rhs)
     return *this;
 }
 
-ScopedTransaction::~ScopedTransaction()
+void ScopedTransaction::rollbackIfNotFinished()
 {
     try {
         if (!finished_) conn_->rollbackTransaction();
@@ -42,6 +43,11 @@ ScopedTransaction::~ScopedTransaction()
     {
         // silence exception; dtor mustn't throw
     }
+}
+
+ScopedTransaction::~ScopedTransaction()
+{
+    rollbackIfNotFinished();
 }
 
 void ScopedTransaction::commit()

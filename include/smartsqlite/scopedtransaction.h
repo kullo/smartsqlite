@@ -23,6 +23,8 @@ private:
     ScopedTransaction(const ScopedTransaction &) = delete;
     ScopedTransaction &operator=(const ScopedTransaction &) = delete;
 
+    void rollbackIfNotFinished();
+
     std::shared_ptr<Connection> conn_;
     bool finished_ = false;
 };
