@@ -80,3 +80,26 @@ TEST(ScopedTransaction, commitCancelsRollback)
     // user_version would be 42 if ~ScopedTransaction would rollback
     EXPECT_THAT(getUserVersion(conn), Eq(version));
 }
+
+TEST(ScopedTransaction, rollbackEndsTransaction)
+{
+    auto conn = makeConnection();
+    SmartSqlite::ScopedTransaction tx(conn);
+    tx.rollback();
+
+    // would throw if commit didn't end the transaction
+    conn->beginTransaction();
+}
+
+TEST(ScopedTransaction, rollbackRollsBackChanges)
+{
+    auto conn = makeConnection();
+    setUserVersion(conn, 23);
+
+    SmartSqlite::ScopedTransaction tx(conn);
+    setUserVersion(conn, 42);
+    ASSERT_THAT(getUserVersion(conn), Eq(42));
+    tx.rollback();
+
+    EXPECT_THAT(getUserVersion(conn), Eq(23));
+}
