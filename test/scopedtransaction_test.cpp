@@ -44,7 +44,7 @@ TEST(ScopedTransaction, dtorRollsBack)
 {
     auto conn = makeConnection();
     int origVersion = 23;
-    conn->exec("PRAGMA user_version = " + std::to_string(origVersion));
+    setUserVersion(conn, origVersion);
     {
         SmartSqlite::ScopedTransaction tx(conn);
         (void)tx;
