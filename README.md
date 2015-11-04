@@ -1,23 +1,58 @@
 SmartSqlite
 =============
 
-A C++11 wrapper around SQLite3.
+SmartSqlite is a C++11 wrapper around SQLite3.
+We call it "smart" because of the consistent use of smart pointers.
 
-Using from Qt Creator
----------------------
-
-* open CMakeLists.txt in Qt Creator
-* set the build directory to `build-smartsqlite`
-* choose the Unix generator (Windows: MinGW generator)
+A copy of SQLite is shipped with this library,
+thanks [Richard](https://www.sqlite.org/crew.html)!
 
 
-Using from the shell
---------------------
+Get started
+-----------
 
-* `cd` to the directory where you want to build the libs
-* `cmake /path/to/smartsqlite`
-* `make`
-* run `test/smartsqlite_tests`
+```
+$ git clone --recursive https://github.com/kullo/smartsqlite.git
+$ cmake .
+$ make
+$ ctest
+```
+
+
+Versions
+----------------
+
+SmartSqlite has a linear versioning and the API might break at any time.
+
+Version     | SQLite version | Changes in SmartSqlite
+----------- | -------------- | ----------------------
+v1          | 3.9.2          | Initial version.
+
+
+Compiler support
+----------------
+
+* GCC 4.8+
+* Clang 3.4+
+* MSVC 2013+
+
+
+Contibutions
+----------------
+
+Contibutions respecting the library's license
+are highly welcome via Github issues and pull requests.
+
+
+Users
+----------------
+
+This library is used by
+
+* [Kullo](https://www.kullo.net/) on Windows, Linux, OS X, Android and iOS.
+
+Please add yourself the the list using PRs.
+
 
 License
 -------
