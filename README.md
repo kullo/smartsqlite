@@ -26,7 +26,7 @@ SmartSqlite has a linear versioning and the API might break at any time.
 
 Version     | SQLite version | Changes in SmartSqlite
 ----------- | -------------- | ----------------------
-v1          | 3.9.2          | Initial version.
+v1          | 3.9.2          | Initial version
 
 
 Compiler support
@@ -47,11 +47,11 @@ are highly welcome via Github issues and pull requests.
 Users
 ----------------
 
-This library is used by
+This library is used by:
 
-* [Kullo](https://www.kullo.net/) on Windows, Linux, OS X, Android and iOS.
+* [Kullo](https://www.kullo.net/) (Windows, Linux, OS X, Android and iOS)
 
-Please add yourself the the list using PRs.
+Please add yourself to the list using PRs.
 
 
 License
