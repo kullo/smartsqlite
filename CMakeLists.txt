@@ -1,4 +1,8 @@
-cmake_minimum_required(VERSION 2.8)  # version provided by Ubuntu 14.04: 2.8.12
+cmake_minimum_required(VERSION 2.8.11)
+# version provided by Ubuntu 14.04: 2.8.12
+# default version on Travis: 2.8.7
+# version necessary for target_include_directories: 2.8.11
+
 project(smartsqlite)
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
