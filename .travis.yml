@@ -1,0 +1,25 @@
+language: cpp
+
+compiler:
+  - clang
+  - gcc
+
+env:
+  - BUILD_TYPE=Debug
+  - BUILD_TYPE=Release
+
+addons:
+  apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    packages:
+    - g++-4.8
+
+script:
+  - if [ "$CXX" = "g++" ]; then export CXX="/usr/bin/g++-4.8"; fi
+  - if [ "$CC" = "gcc" ]; then export CXX="/usr/bin/gcc-4.8"; fi
+  - $CXX --version
+  - $CC --version
+  - cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE
+  - make
+  - ctest
