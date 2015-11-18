@@ -1,0 +1,4 @@
+SmartSqlite has been contributed to by the following people (in alphabetic order):
+
+Daniel Seither (Kullo GmbH)
+Simon Warta (Kullo GmbH)
