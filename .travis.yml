@@ -17,7 +17,7 @@ addons:
 
 script:
   - if [ "$CXX" = "g++" ]; then export CXX="/usr/bin/g++-4.8"; fi
-  - if [ "$CC" = "gcc" ]; then export CXX="/usr/bin/gcc-4.8"; fi
+  - if [ "$CC" = "gcc" ]; then export CC="/usr/bin/gcc-4.8"; fi
   - $CXX --version
   - $CC --version
   - cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE
