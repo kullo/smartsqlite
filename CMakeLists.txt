@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.12)  # version provided by Ubuntu 14.04
+cmake_minimum_required(VERSION 2.8)  # version provided by Ubuntu 14.04: 2.8.12
 project(smartsqlite)
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
