@@ -58,8 +58,7 @@ License
 -------
 
 ```
-Copyright 2014–2015 Daniel Seither (Kullo GmbH)
-          2014–2015 Simon Warta (Kullo GmbH)
+Copyright 2014–2015 The SmartSqlite contributors (see NOTICE.txt)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
