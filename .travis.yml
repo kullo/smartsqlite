@@ -4,10 +4,6 @@ compiler:
   - clang
   - gcc
 
-env:
-  - BUILD_TYPE=Debug
-  - BUILD_TYPE=Release
-
 addons:
   apt:
     sources:
@@ -23,6 +19,6 @@ script:
   - $CXX --version
   - $CC --version
   - cmake --version
-  - cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE
+  - cmake
   - make
   - ctest
