@@ -19,6 +19,6 @@ script:
   - $CXX --version
   - $CC --version
   - cmake --version
-  - cmake
+  - cmake .
   - make
   - ctest
