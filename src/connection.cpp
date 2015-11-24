@@ -40,6 +40,18 @@ struct Connection::Impl
     }
 };
 
+Connection::Connection(const std::string &connectionString)
+    : impl(new Impl)
+{
+    sqlite3 *rawConn = nullptr;
+    auto result = sqlite3_open(connectionString.c_str(), &rawConn);
+    std::unique_ptr<sqlite3, Sqlite3Deleter*> conn(rawConn, sqlite3Deleter);
+    CHECK_RESULT(result);
+
+    CHECK_RESULT_CONN(sqlite3_extended_result_codes(conn.get(), 1), conn.get());
+    impl->conn = std::move(conn);
+}
+
 Connection::Connection(std::unique_ptr<sqlite3, Sqlite3Deleter*> &&conn)
     : impl(new Impl)
 {
@@ -202,22 +214,6 @@ std::string Connection::escape(const std::string &original)
         }
     }
     return result.str();
-}
-
-Connection makeConnection(const std::string &connectionString)
-{
-    sqlite3 *rawConn = nullptr;
-    auto result = sqlite3_open(connectionString.c_str(), &rawConn);
-    std::unique_ptr<sqlite3, Sqlite3Deleter*> conn(rawConn, sqlite3Deleter);
-    CHECK_RESULT(result);
-
-    CHECK_RESULT_CONN(sqlite3_extended_result_codes(conn.get(), 1), conn.get());
-    return Connection(std::move(conn));
-}
-
-std::unique_ptr<Connection> makeConnectionPtr(const std::string &connectionString)
-{
-    return std::unique_ptr<Connection>(new Connection(makeConnection(connectionString)));
 }
 
 }

@@ -26,30 +26,34 @@ using namespace testing;
 class Statement : public Test
 {
 protected:
+    Statement()
+        : conn(":memory:")
+    {
+    }
+
     void SetUp()
     {
-        conn = SmartSqlite::makeConnectionPtr(":memory:");
-        conn->exec("CREATE TABLE all_types "
-                   "(c_int INT, c_float FLOAT, c_text TEXT, c_blob BLOB)");
-        conn->exec("INSERT INTO all_types "
-                   "VALUES (42, 2.0, '6*7', x'deadbeef')");
-        conn->exec("INSERT INTO all_types "
-                   "VALUES (NULL, NULL, NULL, NULL)");
+        conn.exec("CREATE TABLE all_types "
+                  "(c_int INT, c_float FLOAT, c_text TEXT, c_blob BLOB)");
+        conn.exec("INSERT INTO all_types "
+                  "VALUES (42, 2.0, '6*7', x'deadbeef')");
+        conn.exec("INSERT INTO all_types "
+                  "VALUES (NULL, NULL, NULL, NULL)");
     }
 
-    SmartSqlite::Statement makeSelect() const
+    SmartSqlite::Statement makeSelect()
     {
-        return conn->prepare("SELECT c_text FROM all_types WHERE c_int = ?");
+        return conn.prepare("SELECT c_text FROM all_types WHERE c_int = ?");
     }
 
-    SmartSqlite::Statement makeSelectAll() const
+    SmartSqlite::Statement makeSelectAll()
     {
-        return conn->prepare("SELECT * FROM all_types WHERE c_int IS NOT NULL");
+        return conn.prepare("SELECT * FROM all_types WHERE c_int IS NOT NULL");
     }
 
-    SmartSqlite::Statement makeSelectAllNull() const
+    SmartSqlite::Statement makeSelectAllNull()
     {
-        return conn->prepare("SELECT * FROM all_types WHERE c_int IS NULL");
+        return conn.prepare("SELECT * FROM all_types WHERE c_int IS NULL");
     }
 
     std::vector<unsigned char> exampleBlob() const
@@ -62,7 +66,7 @@ protected:
         return data;
     }
 
-    std::unique_ptr<SmartSqlite::Connection> conn;
+    SmartSqlite::Connection conn;
 };
 
 namespace SmartSqlite {
@@ -205,7 +209,7 @@ TEST_F(Statement, canBindBlobFromPointer)
 
 TEST_F(Statement, canBindNullNullables)
 {
-    SmartSqlite::Statement stmt = conn->prepare(
+    SmartSqlite::Statement stmt = conn.prepare(
                 "INSERT INTO all_types "
                 "VALUES (?, ?, ?, ?)");
     int pos = 0;
@@ -217,7 +221,7 @@ TEST_F(Statement, canBindNullNullables)
 
 TEST_F(Statement, canBindNonNullNullables)
 {
-    SmartSqlite::Statement stmt = conn->prepare(
+    SmartSqlite::Statement stmt = conn.prepare(
                 "INSERT INTO all_types "
                 "VALUES (?, ?, ?, ?)");
     int pos = 0;
@@ -229,7 +233,7 @@ TEST_F(Statement, canBindNonNullNullables)
 
 TEST_F(Statement, canBindNullByName)
 {
-    SmartSqlite::Statement stmt = conn->prepare(
+    SmartSqlite::Statement stmt = conn.prepare(
                 "SELECT * FROM all_types "
                 "WHERE c_int = :answer");
     stmt.bindNull(":answer");
@@ -237,7 +241,7 @@ TEST_F(Statement, canBindNullByName)
 
 TEST_F(Statement, canBindIntByName)
 {
-    SmartSqlite::Statement stmt = conn->prepare(
+    SmartSqlite::Statement stmt = conn.prepare(
                 "SELECT * FROM all_types "
                 "WHERE c_int = :answer");
     stmt.bind(":answer", 42);

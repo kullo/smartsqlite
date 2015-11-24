@@ -25,8 +25,7 @@ using ConnPtr = std::shared_ptr<SmartSqlite::Connection>;
 
 static ConnPtr makeConnection()
 {
-    return std::make_shared<SmartSqlite::Connection>(
-                SmartSqlite::makeConnection(":memory:"));
+    return std::make_shared<SmartSqlite::Connection>(":memory:");
 }
 
 static int getUserVersion(ConnPtr conn)

@@ -22,26 +22,18 @@
 
 using namespace testing;
 
-
-TEST(MakeConnection, shouldFailWhenOpeningFileInNonexistingFolder)
+TEST(ConnectionConstructor, shouldFailWhenOpeningFileInNonexistingFolder)
 {
-    EXPECT_THROW(SmartSqlite::makeConnection("/does/not/exist"),
+    EXPECT_THROW(SmartSqlite::Connection("/does/not/exist"),
                  SmartSqlite::Exception);
 }
 
-TEST(MakeConnection, shouldOpenInMemoryDatabase)
+TEST(ConnectionConstructor, constructInMemoryDatabase)
 {
-    SmartSqlite::makeConnection(":memory:");
+    SmartSqlite::Connection(":memory:");
 }
 
-
-class Connection : public Test
-{
-protected:
-    SmartSqlite::Connection conn = SmartSqlite::makeConnection(":memory:");
-};
-
-TEST_F(Connection, canMove)
+TEST(ConnectionConstructor, canMove)
 {
     EXPECT_THAT((std::is_move_constructible<SmartSqlite::Connection>::value),
                 Eq(true));
@@ -50,7 +42,7 @@ TEST_F(Connection, canMove)
 }
 
 #ifndef _MSC_VER
-TEST_F(Connection, cannotCopy)
+TEST(ConnectionConstructor, cannotCopy)
 {
     EXPECT_THAT((std::is_copy_constructible<SmartSqlite::Connection>::value),
                 Eq(false));
@@ -58,6 +50,12 @@ TEST_F(Connection, cannotCopy)
                 Eq(false));
 }
 #endif
+
+class Connection : public Test
+{
+protected:
+    SmartSqlite::Connection conn = SmartSqlite::Connection(":memory:");
+};
 
 TEST_F(Connection, canSetBusyTimeout)
 {

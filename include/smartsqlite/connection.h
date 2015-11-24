@@ -39,6 +39,7 @@ typedef void(Sqlite3Deleter)(sqlite3*);
 class Connection
 {
 public:
+    Connection(const std::string &connectionString);
     explicit Connection(std::unique_ptr<sqlite3, Sqlite3Deleter*> &&conn);
     Connection(Connection &&other);
     Connection &operator=(Connection &&rhs);
@@ -73,8 +74,5 @@ private:
     struct Impl;
     std::unique_ptr<Impl> impl;
 };
-
-Connection makeConnection(const std::string &connectionString);
-std::unique_ptr<Connection> makeConnectionPtr(const std::string &connectionString);
 
 }
