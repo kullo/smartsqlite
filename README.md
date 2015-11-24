@@ -19,6 +19,40 @@ $ make
 $ ctest
 ```
 
+Sample code:
+
+```
+#include <iostream>
+
+#include <smartsqlite/connection.h>
+#include <smartsqlite/row.h>
+
+int main(int argc, char** argv)
+{
+    SmartSqlite::Connection conn(":memory:");
+    conn.exec("CREATE TABLE temparatures "
+              "(id INT, temperature FLOAT, city TEXT)");
+    conn.exec("INSERT INTO temparatures "
+              "VALUES (1, 2.1, 'Berlin')");
+    conn.exec("INSERT INTO temparatures "
+              "VALUES (2, 2.0, 'New York')");
+    conn.exec("INSERT INTO temparatures "
+              "VALUES (42, -1.8, 'Cape Town')");
+
+    SmartSqlite::Statement stm = conn.prepare(
+                "SELECT * FROM temparatures WHERE id >= :value");
+    stm.bind(":value", 2);
+    for (SmartSqlite::RowIterator itr = stm.begin(); itr != stm.end(); ++itr)
+    {
+        int id = itr->get<int>("id");
+        float temparature = itr->get<float>("temperature");
+        std::string city = itr->get<std::string>("city");
+        std::cout << "(" << id << ") " << city << ": " << temparature << std::endl;
+    }
+
+    return 0;
+}
+```
 
 Versions
 ----------------
