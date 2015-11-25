@@ -21,11 +21,30 @@ using namespace testing;
 
 TEST(Version, returnsVersion)
 {
+    std::string version = SmartSqlite::version();
+    EXPECT_THAT(version, Not(IsEmpty()));
+}
+
+TEST(Version, returnsVersionCode)
+{
+    auto version = SmartSqlite::versionCode();
+    EXPECT_THAT(version, Gt(0));
+}
+
+TEST(Version, versionEqualsVersionCode)
+{
+    auto version = SmartSqlite::version();
+    auto fromVersionCode = "v" + std::to_string(SmartSqlite::versionCode());
+    EXPECT_THAT(version, StrEq(fromVersionCode));
+}
+
+TEST(Version, returnsSqliteVersion)
+{
     std::string version = SmartSqlite::sqliteVersion();
     EXPECT_THAT(version, Not(IsEmpty()));
 }
 
-TEST(Version, versionCheckIsOk)
+TEST(Version, sqliteVersionCheckIsOk)
 {
-    EXPECT_THAT(SmartSqlite::checkVersion(), Eq(true));
+    EXPECT_THAT(SmartSqlite::checkSqliteVersion(), Eq(true));
 }

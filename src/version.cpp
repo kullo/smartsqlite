@@ -21,12 +21,27 @@
 
 namespace SmartSqlite {
 
+namespace {
+const auto SMARTSQLITE_VERSION_CODE = int{3};
+const auto SMARTSQLITE_VERSION_STRING = std::string{"v3"};
+}
+
+std::string version()
+{
+    return SMARTSQLITE_VERSION_STRING;
+}
+
+int versionCode()
+{
+    return SMARTSQLITE_VERSION_CODE;
+}
+
 std::string sqliteVersion()
 {
     return sqlite3_libversion();
 }
 
-bool checkVersion()
+bool checkSqliteVersion()
 {
     return
             (sqlite3_libversion_number() == SQLITE_VERSION_NUMBER) &&
