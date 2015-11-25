@@ -61,6 +61,7 @@ SmartSqlite has a linear versioning and the API might break at any time.
 
 Version     | SQLite version | Changes in SmartSqlite
 ----------- | -------------- | ----------------------
+v3          | 3.9.2          | Add version() and versionCode(); Rename checkVersion() to checkSqliteVersion()
 v2          | 3.9.2          | Replace factory functions makeConnection*() with string constructor
 v1          | 3.9.2          | Initial version
 
