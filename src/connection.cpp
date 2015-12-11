@@ -25,8 +25,6 @@
 
 namespace SmartSqlite {
 
-typedef void(Sqlite3Deleter)(sqlite3*);
-
 static void sqlite3Deleter(sqlite3 *ptr)
 {
     sqlite3_close_v2(ptr);
