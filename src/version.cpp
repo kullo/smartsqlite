@@ -22,8 +22,8 @@
 namespace SmartSqlite {
 
 namespace {
-const auto SMARTSQLITE_VERSION_CODE = int{3};
-const auto SMARTSQLITE_VERSION_STRING = std::string{"v3"};
+const auto SMARTSQLITE_VERSION_CODE = int{4};
+const auto SMARTSQLITE_VERSION_STRING = std::string{"v4"};
 }
 
 std::string version()
