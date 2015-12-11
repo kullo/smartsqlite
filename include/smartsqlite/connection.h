@@ -32,15 +32,14 @@ enum TransactionType
     Exclusive
 };
 
-typedef void(TracingCallback)(void *extraArg, const char *sql);
-typedef void(ProfilingCallback)(void *extraArg, const char *sql, std::uint64_t nanos);
-typedef void(Sqlite3Deleter)(sqlite3*);
+using TracingCallback = void(void *extraArg, const char *sql);
+using ProfilingCallback = void(void *extraArg, const char *sql, std::uint64_t nanos);
+using Sqlite3Deleter = void(sqlite3*);
 
 class Connection
 {
 public:
     Connection(const std::string &connectionString);
-    explicit Connection(std::unique_ptr<sqlite3, Sqlite3Deleter*> &&conn);
     Connection(Connection &&other);
     Connection &operator=(Connection &&rhs);
     ~Connection();
@@ -71,8 +70,7 @@ public:
 private:
     static std::string escape(const std::string &original);
 
-    struct Impl;
-    std::unique_ptr<Impl> impl;
+    std::unique_ptr<sqlite3, Sqlite3Deleter*> conn_;
 };
 
 }

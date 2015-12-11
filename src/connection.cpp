@@ -25,48 +25,33 @@
 
 namespace SmartSqlite {
 
+typedef void(Sqlite3Deleter)(sqlite3*);
+
 static void sqlite3Deleter(sqlite3 *ptr)
 {
     sqlite3_close_v2(ptr);
 }
 
-struct Connection::Impl
-{
-    std::unique_ptr<sqlite3, Sqlite3Deleter*> conn;
-
-    Impl()
-        : conn(nullptr, sqlite3Deleter)
-    {
-    }
-};
-
 Connection::Connection(const std::string &connectionString)
-    : impl(new Impl)
+    : conn_(nullptr, sqlite3Deleter)
 {
     sqlite3 *rawConn = nullptr;
     auto result = sqlite3_open(connectionString.c_str(), &rawConn);
-    std::unique_ptr<sqlite3, Sqlite3Deleter*> conn(rawConn, sqlite3Deleter);
+    conn_ = std::unique_ptr<sqlite3, Sqlite3Deleter*>(rawConn, sqlite3Deleter);
     CHECK_RESULT(result);
 
-    CHECK_RESULT_CONN(sqlite3_extended_result_codes(conn.get(), 1), conn.get());
-    impl->conn = std::move(conn);
-}
-
-Connection::Connection(std::unique_ptr<sqlite3, Sqlite3Deleter*> &&conn)
-    : impl(new Impl)
-{
-    impl->conn = std::move(conn);
+    CHECK_RESULT_CONN(sqlite3_extended_result_codes(conn_.get(), 1), conn_.get());
 }
 
 Connection::Connection(Connection &&other)
-    : impl(new Impl)
+    : conn_(nullptr, sqlite3Deleter)
 {
-    std::swap(impl, other.impl);
+    std::swap(conn_, other.conn_);
 }
 
 Connection &Connection::operator=(Connection &&rhs)
 {
-    std::swap(impl, rhs.impl);
+    std::swap(conn_, rhs.conn_);
     return *this;
 }
 
@@ -76,18 +61,18 @@ Connection::~Connection()
 
 void Connection::setBusyTimeout(int ms)
 {
-    CHECK_RESULT_CONN(sqlite3_busy_timeout(impl->conn.get(), ms), impl->conn.get());
+    CHECK_RESULT_CONN(sqlite3_busy_timeout(conn_.get(), ms), conn_.get());
 }
 
 void *Connection::setTracingCallback(TracingCallback *callback, void *extraArg)
 {
-    return sqlite3_trace(impl->conn.get(), callback, extraArg);
+    return sqlite3_trace(conn_.get(), callback, extraArg);
 }
 
 void *Connection::setProfilingCallback(ProfilingCallback *callback, void *extraArg)
 {
     return sqlite3_profile(
-                impl->conn.get(),
+                conn_.get(),
                 reinterpret_cast<void(*)(void *, const char *, sqlite3_uint64)>(callback),
                 extraArg);
 }
@@ -98,9 +83,9 @@ Statement Connection::prepare(const std::string &sql)
     const char *tail;
     // size + 1 can be passed because c_str() is known to be null-terminated.
     // This will cause SQLite not to copy the input.
-    CHECK_RESULT_CONN(sqlite3_prepare_v2(impl->conn.get(), sql.c_str(), sql.size() + 1, &stmtPtr, &tail),
-                      impl->conn.get());
-    Statement stmt(impl->conn.get(), stmtPtr);
+    CHECK_RESULT_CONN(sqlite3_prepare_v2(conn_.get(), sql.c_str(), sql.size() + 1, &stmtPtr, &tail),
+                      conn_.get());
+    Statement stmt(conn_.get(), stmtPtr);
 
     if (tail != nullptr && tail[0] != '\0')
     {
@@ -113,7 +98,7 @@ Statement Connection::prepare(const std::string &sql)
 void Connection::exec(const std::string &sql)
 {
     char *errmsg;
-    int result = sqlite3_exec(impl->conn.get(), sql.c_str(), nullptr, nullptr, &errmsg);
+    int result = sqlite3_exec(conn_.get(), sql.c_str(), nullptr, nullptr, &errmsg);
 
     std::unique_ptr<char, void(*)(void*)> errmsgSafe(errmsg, sqlite3_free);
     if (errmsgSafe)
@@ -174,7 +159,7 @@ void Connection::rollbackToSavepoint(const std::string &name)
 
 std::int64_t Connection::lastInsertRowId() const
 {
-    return sqlite3_last_insert_rowid(impl->conn.get());
+    return sqlite3_last_insert_rowid(conn_.get());
 }
 
 Blob Connection::openBlob(
@@ -187,15 +172,15 @@ Blob Connection::openBlob(
     sqlite3_blob *blob;
     CHECK_RESULT_CONN(
                 sqlite3_blob_open(
-                    impl->conn.get(),
+                    conn_.get(),
                     db.c_str(),
                     table.c_str(),
                     column.c_str(),
                     rowid,
                     flags,
                     &blob),
-                impl->conn.get());
-    return Blob(impl->conn.get(), blob);
+                conn_.get());
+    return Blob(conn_.get(), blob);
 }
 
 std::string Connection::escape(const std::string &original)
