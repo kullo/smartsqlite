@@ -34,7 +34,9 @@ enum TransactionType
 
 using TracingCallback = void(void *extraArg, const char *sql);
 using ProfilingCallback = void(void *extraArg, const char *sql, std::uint64_t nanos);
-using Sqlite3Deleter = void(sqlite3*);
+
+// MSVC 2013 doesn't like "using" in this case, so we resort to plain old typedef
+typedef void(Sqlite3Deleter)(sqlite3*);
 
 class Connection
 {
