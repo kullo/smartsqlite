@@ -16,6 +16,7 @@
 #include "smartsqlite/version.h"
 
 #include <cstring>
+#include <iostream>
 
 #include "smartsqlite/sqlite3.h"
 
@@ -43,10 +44,37 @@ std::string sqliteVersion()
 
 bool checkSqliteVersion()
 {
-    return
-            (sqlite3_libversion_number() == SQLITE_VERSION_NUMBER) &&
-            (std::strcmp(sqlite3_sourceid(), SQLITE_SOURCE_ID) == 0) &&
-            (std::strcmp(sqlite3_libversion(), SQLITE_VERSION) == 0);
+    auto logPrefix = "SmartSqlite version check failed: ";
+    bool success = true;
+
+    if (sqlite3_libversion_number() != SQLITE_VERSION_NUMBER)
+    {
+        success = false;
+        std::cerr << logPrefix
+                  << "sqlite3_libversion_number()==" << sqlite3_libversion_number()
+                  << ", SQLITE_VERSION_NUMBER==" << SQLITE_VERSION_NUMBER
+                  << std::endl;
+    }
+
+    if (std::strcmp(sqlite3_sourceid(), SQLITE_SOURCE_ID))
+    {
+        success = false;
+        std::cerr << logPrefix
+                  << "sqlite3_sourceid()==" << sqlite3_sourceid()
+                  << ", SQLITE_SOURCE_ID==" << SQLITE_SOURCE_ID
+                  << std::endl;
+    }
+
+    if (std::strcmp(sqlite3_libversion(), SQLITE_VERSION))
+    {
+        success = false;
+        std::cerr << logPrefix
+                  << "sqlite3_libversion()==" << sqlite3_libversion()
+                  << ", SQLITE_VERSION==" << SQLITE_VERSION
+                  << std::endl;
+    }
+
+    return success;
 }
 
 }
