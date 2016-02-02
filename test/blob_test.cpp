@@ -52,6 +52,30 @@ protected:
     std::int64_t rowidZero, rowidNonzero;
 };
 
+TEST_F(Blob, moveCtor)
+{
+    auto blob1 = open(rowidZero);
+
+    ASSERT_THAT(blob1.size(), Eq(42));
+
+    auto blob2 = std::move(blob1);
+
+    EXPECT_THAT(blob2.size(), Eq(42));
+}
+
+TEST_F(Blob, moveAssignment)
+{
+    auto blob1 = open(rowidZero);
+    auto blob2 = open(rowidNonzero);
+
+    ASSERT_THAT(blob1.size(), Eq(42));
+    ASSERT_THAT(blob2.size(), Eq(8));
+
+    blob1 = std::move(blob2);
+
+    EXPECT_THAT(blob1.size(), Eq(8));
+}
+
 TEST_F(Blob, canOpen)
 {
     open(rowidZero);

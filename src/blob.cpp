@@ -38,6 +38,7 @@ Blob::Blob(sqlite3 *conn, sqlite3_blob *blob)
 }
 
 Blob::Blob(Blob &&other)
+    : impl(new Impl)
 {
     std::swap(impl, other.impl);
 }
