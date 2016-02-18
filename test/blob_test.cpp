@@ -26,35 +26,35 @@ class Blob : public Test
 {
 protected:
     Blob()
-        : conn(":memory:")
+        : conn_(":memory:")
     {
     }
 
     void SetUp()
     {
-        conn.exec("CREATE TABLE blobs (data BLOB)");
+        conn_.exec("CREATE TABLE blobs (data BLOB)");
 
-        conn.exec("INSERT INTO blobs VALUES (zeroblob(42))");
-        rowidZero = conn.lastInsertRowId();
+        conn_.exec("INSERT INTO blobs VALUES (zeroblob(42))");
+        rowidZero_ = conn_.lastInsertRowId();
 
-        conn.exec("INSERT INTO blobs VALUES (x'0123456789abcdef')");
-        rowidNonzero = conn.lastInsertRowId();
+        conn_.exec("INSERT INTO blobs VALUES (x'0123456789abcdef')");
+        rowidNonzero_ = conn_.lastInsertRowId();
     }
 
     SmartSqlite::Blob open(
             std::int64_t rowid,
             SmartSqlite::Blob::Flags flags = SmartSqlite::Blob::READONLY)
     {
-        return conn.openBlob("main", "blobs", "data", rowid, flags);
+        return conn_.openBlob("main", "blobs", "data", rowid, flags);
     }
 
-    SmartSqlite::Connection conn;
-    std::int64_t rowidZero, rowidNonzero;
+    SmartSqlite::Connection conn_;
+    std::int64_t rowidZero_, rowidNonzero_;
 };
 
 TEST_F(Blob, moveCtor)
 {
-    auto blob1 = open(rowidZero);
+    auto blob1 = open(rowidZero_);
 
     ASSERT_THAT(blob1.size(), Eq(42));
 
@@ -65,8 +65,8 @@ TEST_F(Blob, moveCtor)
 
 TEST_F(Blob, moveAssignment)
 {
-    auto blob1 = open(rowidZero);
-    auto blob2 = open(rowidNonzero);
+    auto blob1 = open(rowidZero_);
+    auto blob2 = open(rowidNonzero_);
 
     ASSERT_THAT(blob1.size(), Eq(42));
     ASSERT_THAT(blob2.size(), Eq(8));
@@ -78,30 +78,30 @@ TEST_F(Blob, moveAssignment)
 
 TEST_F(Blob, canOpen)
 {
-    open(rowidZero);
+    open(rowidZero_);
 }
 
 TEST_F(Blob, canGetSize)
 {
-    auto blob = open(rowidZero);
+    auto blob = open(rowidZero_);
     EXPECT_THAT(blob.size(), Eq(42U));
 
-    blob = open(rowidNonzero);
+    blob = open(rowidNonzero_);
     EXPECT_THAT(blob.size(), Eq(8U));
 }
 
 TEST_F(Blob, canMoveToRow)
 {
-    auto blob = open(rowidZero);
+    auto blob = open(rowidZero_);
     EXPECT_THAT(blob.size(), Eq(42U));
 
-    blob.moveToRow(rowidNonzero);
+    blob.moveToRow(rowidNonzero_);
     EXPECT_THAT(blob.size(), Eq(8U));
 }
 
 TEST_F(Blob, read)
 {
-    auto blob = open(rowidNonzero);
+    auto blob = open(rowidNonzero_);
     std::array<std::uint8_t, 8> buf;
     EXPECT_THAT(blob.read(buf.data(), buf.size()), Eq(8U));
 
@@ -113,7 +113,7 @@ TEST_F(Blob, read)
 
 TEST_F(Blob, readWithOffset)
 {
-    auto blob = open(rowidNonzero);
+    auto blob = open(rowidNonzero_);
     std::array<std::uint8_t, 8> buf;
     EXPECT_THAT(blob.read(buf.data(), buf.size(), 2), Eq(6U));
 
@@ -128,7 +128,7 @@ TEST_F(Blob, readWithOffset)
 
 TEST_F(Blob, readWithSmallerBuffer)
 {
-    auto blob = open(rowidNonzero);
+    auto blob = open(rowidNonzero_);
     std::array<std::uint8_t, 4> buf;
     EXPECT_THAT(blob.read(buf.data(), buf.size()), Eq(buf.size()));
 
@@ -140,7 +140,7 @@ TEST_F(Blob, readWithSmallerBuffer)
 
 TEST_F(Blob, readWithOffsetAndSmallerBuffer)
 {
-    auto blob = open(rowidNonzero);
+    auto blob = open(rowidNonzero_);
     std::array<std::uint8_t, 4> buf;
     EXPECT_THAT(blob.read(buf.data(), buf.size(), 2), Eq(buf.size()));
 
@@ -152,7 +152,7 @@ TEST_F(Blob, readWithOffsetAndSmallerBuffer)
 
 TEST_F(Blob, readWithLargerBuffer)
 {
-    auto blob = open(rowidNonzero);
+    auto blob = open(rowidNonzero_);
     std::array<std::uint8_t, 10> buf;
     EXPECT_THAT(blob.read(buf.data(), buf.size()), Eq(8U));
 
@@ -167,7 +167,7 @@ TEST_F(Blob, readWithLargerBuffer)
 
 TEST_F(Blob, readWithOffsetAndLargerBuffer)
 {
-    auto blob = open(rowidNonzero);
+    auto blob = open(rowidNonzero_);
     std::array<std::uint8_t, 10> buf;
     EXPECT_THAT(blob.read(buf.data(), buf.size(), 2), Eq(6U));
 
@@ -184,7 +184,7 @@ TEST_F(Blob, readWithOffsetAndLargerBuffer)
 
 TEST_F(Blob, write)
 {
-    auto blob = open(rowidNonzero, SmartSqlite::Blob::READWRITE);
+    auto blob = open(rowidNonzero_, SmartSqlite::Blob::READWRITE);
     std::array<std::uint8_t, 8> original = {
         0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef
     };
