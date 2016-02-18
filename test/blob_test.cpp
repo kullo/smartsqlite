@@ -56,11 +56,11 @@ TEST_F(Blob, moveCtor)
 {
     auto blob1 = open(rowidZero_);
 
-    ASSERT_THAT(blob1.size(), Eq(42));
+    ASSERT_THAT(blob1.size(), Eq(42U));
 
     auto blob2 = std::move(blob1);
 
-    EXPECT_THAT(blob2.size(), Eq(42));
+    EXPECT_THAT(blob2.size(), Eq(42U));
 }
 
 TEST_F(Blob, moveAssignment)
@@ -68,12 +68,12 @@ TEST_F(Blob, moveAssignment)
     auto blob1 = open(rowidZero_);
     auto blob2 = open(rowidNonzero_);
 
-    ASSERT_THAT(blob1.size(), Eq(42));
-    ASSERT_THAT(blob2.size(), Eq(8));
+    ASSERT_THAT(blob1.size(), Eq(42U));
+    ASSERT_THAT(blob2.size(), Eq(8U));
 
     blob1 = std::move(blob2);
 
-    EXPECT_THAT(blob1.size(), Eq(8));
+    EXPECT_THAT(blob1.size(), Eq(8U));
 }
 
 TEST_F(Blob, canOpen)
