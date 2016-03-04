@@ -61,6 +61,7 @@ SmartSqlite has a linear versioning and the API might break at any time.
 
 Version     | SQLite version | Changes in SmartSqlite
 ----------- | -------------- | ----------------------
+v6          | 3.11.0         | Fix possible nullptr dereference in Blob
 v5          | 3.10.2         | –
 v4          | 3.9.2          | Update implementation of Connection
 v3          | 3.9.2          | Add version() and versionCode(); Rename checkVersion() to checkSqliteVersion()
