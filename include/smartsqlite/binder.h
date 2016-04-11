@@ -28,7 +28,7 @@ public:
     static int bindLongLong(sqlite3_stmt *stmt, int pos, long long value);
     static int bindDouble(sqlite3_stmt *stmt, int pos, double value);
     static int bindString(sqlite3_stmt *stmt, int pos, const std::string &value);
-    static int bindBlob(sqlite3_stmt *stmt, int pos, const void* const &data, size_t size);
+    static int bindBlob(sqlite3_stmt *stmt, int pos, const void *data, size_t size);
 };
 
 // extension point: specialize this to add support for custom types
