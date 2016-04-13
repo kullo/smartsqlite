@@ -99,13 +99,21 @@ RowIterator Statement::end()
 
 void Statement::execWithoutResult()
 {
-    if (begin() != end()) throw QueryReturnedRows();
+    if (begin() != end())
+    {
+        std::string sql = sqlite3_sql(impl->stmt);
+        throw QueryReturnedRows(sql);
+    }
 }
 
 Row Statement::execWithSingleResult()
 {
     auto first = begin();
-    if (first == end()) throw QueryReturnedNoRows();
+    if (first == end())
+    {
+        std::string sql = sqlite3_sql(impl->stmt);
+        throw QueryReturnedNoRows(sql);
+    }
     return *first;
 }
 

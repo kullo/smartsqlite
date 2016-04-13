@@ -20,8 +20,9 @@
 
 namespace SmartSqlite {
 
-Exception::Exception(const std::string &message) throw()
-    : m_message(message)
+Exception::Exception(const std::string &message, const std::string &sql) throw()
+    : m_message(message
+                + (!sql.empty() ? " SQL: '" + sql + "'" : ""))
 {
 }
 
@@ -51,13 +52,13 @@ ColumnUnknown::ColumnUnknown(const std::string &columnName)
 {
 }
 
-QueryReturnedRows::QueryReturnedRows()
-    : Exception(std::string("The query shouldn't have returned rows, but it did."))
+QueryReturnedRows::QueryReturnedRows(const std::string &sql)
+    : Exception("The query shouldn't have returned rows, but it did.", sql)
 {
 }
 
-QueryReturnedNoRows::QueryReturnedNoRows()
-    : Exception(std::string("The query should have returned a row, but it didn't."))
+QueryReturnedNoRows::QueryReturnedNoRows(const std::string &sql)
+    : Exception("The query should have returned a row, but it didn't.", sql)
 {
 }
 

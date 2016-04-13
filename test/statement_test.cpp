@@ -477,3 +477,37 @@ TEST_F(Statement, canGetNullableIntByName)
     EXPECT_THAT(stmt.begin()->getNullable<int>("c_int"),
                 Eq(SmartSqlite::Nullable<int>(42)));
 }
+
+TEST_F(Statement, execWithoutResultExceptionContainsSql)
+{
+    auto stmt = conn_.prepare("SELECT c_text FROM all_types WHERE c_int = 42");
+    std::string what;
+
+    try
+    {
+        stmt.execWithoutResult();
+    }
+    catch (SmartSqlite::QueryReturnedRows &ex)
+    {
+        what = ex.what();
+    }
+
+    EXPECT_THAT(what, HasSubstr("SELECT c_text FROM all_types WHERE c_int = 42"));
+}
+
+TEST_F(Statement, execWithSingleResultExceptionContainsSql)
+{
+    auto stmt = conn_.prepare("SELECT c_text FROM all_types WHERE c_int = 23");
+    std::string what;
+
+    try
+    {
+        stmt.execWithSingleResult();
+    }
+    catch (SmartSqlite::QueryReturnedNoRows &ex)
+    {
+        what = ex.what();
+    }
+
+    EXPECT_THAT(what, HasSubstr("SELECT c_text FROM all_types WHERE c_int = 23"));
+}

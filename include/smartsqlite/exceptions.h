@@ -23,7 +23,7 @@ namespace SmartSqlite {
 class Exception : public std::exception
 {
 public:
-    Exception(const std::string &message) throw();
+    Exception(const std::string &message, const std::string &sql = "") throw();
     virtual ~Exception() = default;
     virtual const char *what() const throw();
 
@@ -47,13 +47,13 @@ public:
 class QueryReturnedRows : public Exception
 {
 public:
-    QueryReturnedRows();
+    QueryReturnedRows(const std::string &sql = "");
 };
 
 class QueryReturnedNoRows : public Exception
 {
 public:
-    QueryReturnedNoRows();
+    QueryReturnedNoRows(const std::string &sql = "");
 };
 
 class SqliteException : public Exception
