@@ -61,6 +61,7 @@ SmartSqlite has a linear versioning and the API might break at any time.
 
 Version     | SQLite version | Changes in SmartSqlite
 ----------- | -------------- | ----------------------
+v9          | 3.12.1         | NativeBinder: Correctly bind empty strings and blobs; NativeBinder: Copy pointer instead of referencing it in bindBlob(); Add SQL statement text to some exception messages
 v8          | 3.12.0         | –
 v7          | 3.11.1         | –
 v6          | 3.11.0         | Fix possible nullptr dereference in Blob
