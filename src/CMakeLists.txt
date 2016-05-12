@@ -1,4 +1,4 @@
-set(INCLUDE_DIR "../include")
+set(INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../include")
 
 set_source_files_properties(sqlite3.c
     PROPERTIES
@@ -56,13 +56,18 @@ add_library(smartsqlite
     statement.cpp
     version.cpp
 )
-target_include_directories(smartsqlite PUBLIC ${INCLUDE_DIR})
+target_include_directories(smartsqlite PUBLIC $<BUILD_INTERFACE:${INCLUDE_DIR}>)
 
 if(UNIX)
     target_link_libraries(smartsqlite PUBLIC dl)
 endif()
 
-install(TARGETS smartsqlite ARCHIVE DESTINATION lib)
+install(TARGETS smartsqlite
+    EXPORT smartsqlite
+    ARCHIVE DESTINATION lib
+    INCLUDES DESTINATION include
+)
+install(EXPORT smartsqlite DESTINATION cmake)
 install(
     DIRECTORY ${PUBLIC_HEADERS_DIR}
     DESTINATION include
