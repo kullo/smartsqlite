@@ -9,7 +9,8 @@ add_executable(smartsqlite_tests
 )
 
 target_link_libraries(smartsqlite_tests
-    smartsqlite
-    gmock
-    gmock_main
+    PUBLIC
+        smartsqlite
+        gmock
+        gmock_main
 )

@@ -67,7 +67,7 @@ install(TARGETS smartsqlite
     ARCHIVE DESTINATION lib
     INCLUDES DESTINATION include
 )
-install(EXPORT smartsqlite DESTINATION cmake)
+install(EXPORT smartsqlite DESTINATION cmake/smartsqlite)
 install(
     DIRECTORY ${PUBLIC_HEADERS_DIR}
     DESTINATION include
