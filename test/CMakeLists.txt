@@ -8,11 +8,6 @@ add_executable(smartsqlite_tests
     version_test.cpp
 )
 
-set(extra_link_libraries)
-if(NOT WIN32)
-    list(APPEND extra_link_libraries dl)
-endif()
-
 target_link_libraries(smartsqlite_tests
     smartsqlite
     gmock
