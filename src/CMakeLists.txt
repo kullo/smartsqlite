@@ -58,6 +58,10 @@ add_library(smartsqlite
 )
 target_include_directories(smartsqlite PUBLIC $<BUILD_INTERFACE:${INCLUDE_DIR}>)
 
+# SQLite needs threading
+find_package(Threads)
+target_link_libraries(smartsqlite PUBLIC ${CMAKE_THREAD_LIBS_INIT})
+
 if(UNIX)
     target_link_libraries(smartsqlite PUBLIC dl)
 endif()
