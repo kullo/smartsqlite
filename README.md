@@ -7,7 +7,7 @@ We call it "smart" because of the consistent use of smart pointers.
 A copy of SQLite is shipped with this library,
 thanks [Richard](https://www.sqlite.org/crew.html)!
 
-[![Build Status](https://travis-ci.org/kullo/smartsqlite.svg)](https://travis-ci.org/kullo/smartsqlite)
+[![Build Status](https://travis-ci.org/kullo/smartsqlite.svg?branch=master)](https://travis-ci.org/kullo/smartsqlite)
 
 Get started
 -----------
