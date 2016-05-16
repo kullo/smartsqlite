@@ -8,11 +8,6 @@ project(smartsqlite)
 if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O2 -g")
     set(CMAKE_CXX_FLAGS "-std=c++11 -O2 -g ${CMAKE_CXX_FLAGS}")
-    # Use libc++ on Linux and OS X; use libstdc++ on Android.
-    # Clang on Linux defaults to libstdc++.
-    if(NOT ANDROID)
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
-    endif()
 
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c99 -O2 -g")
@@ -33,7 +28,7 @@ endif()
 
 if(APPLE)
     set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -mmacosx-version-min=10.9")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mmacosx-version-min=10.9")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mmacosx-version-min=10.9 -stdlib=libc++")
 endif()
 
 # Google Mock / Google Test
