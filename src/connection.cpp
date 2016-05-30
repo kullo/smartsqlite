@@ -160,6 +160,11 @@ std::int64_t Connection::lastInsertRowId() const
     return sqlite3_last_insert_rowid(conn_.get());
 }
 
+int Connection::changes() const
+{
+    return sqlite3_changes(conn_.get());
+}
+
 Blob Connection::openBlob(
         const std::string &db,
         const std::string &table,

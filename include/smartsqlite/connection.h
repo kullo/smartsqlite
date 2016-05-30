@@ -61,6 +61,7 @@ public:
     void rollbackToSavepoint(const std::string &name);
 
     std::int64_t lastInsertRowId() const;
+    int changes() const;
 
     Blob openBlob(
             const std::string &db,

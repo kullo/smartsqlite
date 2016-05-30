@@ -145,3 +145,14 @@ TEST_F(Connection, canGetLastInsertRowId)
               "INSERT INTO foo VALUES (42)");
     EXPECT_THAT(conn.lastInsertRowId(), Eq(42));
 }
+
+TEST_F(Connection, canGetChanges)
+{
+    EXPECT_THAT(conn.changes(), Eq(0));
+    conn.exec("CREATE TABLE foo (id INTEGER PRIMARY KEY, value INTEGER);"
+              "INSERT INTO foo VALUES (42, NULL)");
+    EXPECT_THAT(conn.changes(), Eq(1));
+    conn.exec("INSERT INTO foo VALUES (43, NULL);"
+              "UPDATE foo SET value = 23");
+    EXPECT_THAT(conn.changes(), Eq(2));
+}
