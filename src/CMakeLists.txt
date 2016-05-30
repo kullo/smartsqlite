@@ -29,6 +29,7 @@ set(PUBLIC_HEADERS
     ${PUBLIC_HEADERS_DIR}/logging.h
     ${PUBLIC_HEADERS_DIR}/nullable.h
     ${PUBLIC_HEADERS_DIR}/row.h
+    ${PUBLIC_HEADERS_DIR}/scopedsavepoint.h
     ${PUBLIC_HEADERS_DIR}/scopedtransaction.h
     ${PUBLIC_HEADERS_DIR}/sqlite3.h
     ${PUBLIC_HEADERS_DIR}/statement.h
@@ -52,6 +53,7 @@ add_library(smartsqlite
     logging.cpp
     row.cpp
     util.cpp
+    scopedsavepoint.cpp
     scopedtransaction.cpp
     statement.cpp
     version.cpp
