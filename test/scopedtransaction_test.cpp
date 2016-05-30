@@ -25,7 +25,7 @@ using namespace TestUtil;
 
 TEST(ScopedTransaction, ctorDoesntThrow)
 {
-    SmartSqlite::ScopedTransaction(makeConnection());
+    SmartSqlite::ScopedTransaction{makeConnection()};
 }
 
 TEST(ScopedTransaction, ctorBeginsTransaction)

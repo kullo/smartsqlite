@@ -30,7 +30,7 @@ std::string SP_NAME = "test_savepoint";
 
 TEST(ScopedSavepoint, ctorDoesntThrow)
 {
-    SmartSqlite::ScopedSavepoint(makeConnection(), SP_NAME);
+    SmartSqlite::ScopedSavepoint{makeConnection(), SP_NAME};
 }
 
 TEST(ScopedSavepoint, ctorSetsSavepoint)
