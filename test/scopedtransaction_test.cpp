@@ -13,36 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <memory>
 #include <gmock/gmock.h>
 
-#include "smartsqlite/connection.h"
 #include "smartsqlite/exceptions.h"
 #include "smartsqlite/scopedtransaction.h"
+#include "testutil.h"
 
 using namespace testing;
-using ConnPtr = std::shared_ptr<SmartSqlite::Connection>;
-
-static ConnPtr makeConnection()
-{
-    return std::make_shared<SmartSqlite::Connection>(":memory:");
-}
-
-static int getUserVersion(ConnPtr conn)
-{
-    auto stmt = conn->prepare("PRAGMA user_version");
-    return stmt.execWithSingleResult().get<int>(0);
-}
-
-static void setUserVersion(ConnPtr conn, int version)
-{
-    conn->exec("PRAGMA user_version = " + std::to_string(version));
-}
+using namespace TestUtil;
 
 
 TEST(ScopedTransaction, ctorDoesntThrow)
 {
-    SmartSqlite::ScopedTransaction tx(makeConnection());
+    SmartSqlite::ScopedTransaction(makeConnection());
 }
 
 TEST(ScopedTransaction, ctorBeginsTransaction)
