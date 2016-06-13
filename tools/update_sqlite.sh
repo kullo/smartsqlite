@@ -15,5 +15,5 @@ FILENAME="sqlite-amalgamation-$VERSION"
     unzip -o "$FILENAME.zip"
 )
 
-cp "./tmp/$FILENAME/sqlite3.c" ../src/
+cp "./tmp/$FILENAME/"{shell,sqlite3}.c ../src/
 cp "./tmp/$FILENAME/sqlite3.h" ../include/smartsqlite

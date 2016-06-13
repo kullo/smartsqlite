@@ -1,18 +1,18 @@
 set(INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../include")
 
-set_source_files_properties(sqlite3.c
+set_source_files_properties(sqlite3.c shell.c
     PROPERTIES
     COMPILE_DEFINITIONS
     "HAVE_USLEEP=1;SQLITE_USE_URI=1;SQLITE_ENABLE_API_ARMOR"
 )
 if(CMAKE_CXX_COMPILER_ID STREQUAL GNU)
-    set_source_files_properties(sqlite3.c
+    set_source_files_properties(sqlite3.c shell.c
         PROPERTIES
         COMPILE_FLAGS
         "-Wno-array-bounds -Wno-cast-qual -Wno-missing-field-initializers -Wno-switch-default"
     )
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL Clang)
-    set_source_files_properties(sqlite3.c
+    set_source_files_properties(sqlite3.c shell.c
         PROPERTIES
         COMPILE_FLAGS
         "-Wno-parentheses-equality -Wno-unused-value"
@@ -68,9 +68,14 @@ if(UNIX)
     target_link_libraries(smartsqlite PUBLIC dl)
 endif()
 
-install(TARGETS smartsqlite
+add_executable(sqlite3 shell.c)
+target_include_directories(sqlite3 PRIVATE ${INCLUDE_DIR}/smartsqlite)
+target_link_libraries(sqlite3 smartsqlite)
+
+install(TARGETS smartsqlite sqlite3
     EXPORT smartsqlite
     ARCHIVE DESTINATION lib
+    RUNTIME DESTINATION bin
     INCLUDES DESTINATION include
 )
 install(EXPORT smartsqlite DESTINATION cmake/smartsqlite)
