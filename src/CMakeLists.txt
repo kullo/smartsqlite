@@ -68,14 +68,19 @@ if(UNIX)
     target_link_libraries(smartsqlite PUBLIC dl)
 endif()
 
-add_executable(sqlite3 shell.c)
-target_include_directories(sqlite3 PRIVATE ${INCLUDE_DIR}/smartsqlite)
-target_link_libraries(sqlite3 smartsqlite)
+if(NOT IOS)
+    add_executable(sqlite3 shell.c)
+    target_include_directories(sqlite3 PRIVATE ${INCLUDE_DIR}/smartsqlite)
+    target_link_libraries(sqlite3 smartsqlite)
 
-install(TARGETS smartsqlite sqlite3
+    install(TARGETS sqlite3
+        RUNTIME DESTINATION bin
+    )
+endif()
+
+install(TARGETS smartsqlite
     EXPORT smartsqlite
     ARCHIVE DESTINATION lib
-    RUNTIME DESTINATION bin
     INCLUDES DESTINATION include
 )
 install(EXPORT smartsqlite DESTINATION cmake/smartsqlite)
