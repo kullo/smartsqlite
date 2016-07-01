@@ -1,64 +1,33 @@
-cmake_minimum_required(VERSION 2.8.11)
-# version provided by Ubuntu 14.04: 2.8.12
-# default version on Travis: 2.8.7
-# version necessary for target_include_directories: 2.8.11
+cmake_minimum_required(VERSION 2.8.12)  # version provided by Ubuntu 14.04
+
+if((NOT CMAKE_BUILD_TYPE) OR (CMAKE_BUILD_TYPE STREQUAL "Debug"))
+    set(install_prefix_suffix "-debug")
+else()
+    set(install_prefix_suffix "")
+endif()
+set(
+    CMAKE_INSTALL_PREFIX
+        "${CMAKE_CURRENT_BINARY_DIR}/../bin-smartsqlite${install_prefix_suffix}"
+    CACHE PATH "destination for make install"
+)
+
+if(NOT ("${CMAKE_VERSION}" VERSION_LESS "3.1"))
+    set(CMAKE_INSTALL_MESSAGE LAZY
+        CACHE STRING "Show messages during install? Lazy means only changed.")
+    set_property(CACHE CMAKE_INSTALL_MESSAGE
+        PROPERTY STRINGS "ALWAYS" "LAZY" "NEVER")
+endif()
 
 project(smartsqlite)
 
-if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O2 -g")
-    set(CMAKE_CXX_FLAGS "-std=c++11 -O2 -g ${CMAKE_CXX_FLAGS}")
-
-elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c99 -O2 -g")
-    set(CMAKE_CXX_FLAGS "-std=c++11 -O2 -g ${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -Wformat=2 -Wlogical-op -Wmissing-include-dirs -Wnon-virtual-dtor -Woverloaded-virtual -Wswitch-default -Wuninitialized")
-
-    # Hardening
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fstack-protector -pie -fPIE -Wformat -Wformat-security -D_FORTIFY_SOURCE=2 -Wl,-z,relro,-z,now")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fstack-protector -pie -fPIE -Wformat -Wformat-security -D_FORTIFY_SOURCE=2 -Wl,-z,relro,-z,now")
-
-# Workaround for CMake < 3.1: Variables such as 'MSVC' are expanded in 'if'
-# statements even if they are quoted. We can't enable the policy CMP0054 because
-# we need to support CMake 2.8. Therefore, we append a space on both sides,
-# which disables automatic expansion.
-elseif ("${CMAKE_CXX_COMPILER_ID} " STREQUAL "MSVC ")
-    # force gtest to use shared MSVC++ runtime
-    set(gtest_force_shared_crt ON)
-endif()
-
-if(APPLE)
-    set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -mmacosx-version-min=10.9")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mmacosx-version-min=10.9 -stdlib=libc++")
-endif()
+set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
+include(CompilerSettings)
 
 # Google Mock / Google Test
 add_subdirectory("lib/gmock")
 include_directories("${gmock_SOURCE_DIR}/include" "${gtest_SOURCE_DIR}/include")
 
-# smartsqlite
 add_subdirectory("src")
-include_directories("include")
-
-# Begin: Copy smartsqlite headers into build (called 'binary' in CMAKE slang) directory
-file(GLOB_RECURSE SMARTSQLITE_HEADERS_RELATIVE RELATIVE
-     "${CMAKE_SOURCE_DIR}/include/smartsqlite"
-     "include/smartsqlite/*.h")
-
-set(SMARTSQLITE_HEADERS_BINARY "")
-foreach (H ${SMARTSQLITE_HEADERS_RELATIVE})
-    set(HEADER_SRC ${CMAKE_SOURCE_DIR}/include/smartsqlite/${H})
-    set(HEADER_BIN ${CMAKE_BINARY_DIR}/include/smartsqlite/${H})
-    LIST(APPEND SMARTSQLITE_HEADERS_BINARY ${HEADER_BIN})
-
-    add_custom_command(OUTPUT ${HEADER_BIN}
-                       COMMAND cmake -E copy_if_different ${HEADER_SRC} ${HEADER_BIN}
-                       DEPENDS ${HEADER_SRC})
-endforeach()
-
-add_custom_target(copy_headers_smartsqlite ALL DEPENDS ${SMARTSQLITE_HEADERS_BINARY})
-# End: Copy smartsqlite headers
-
-# tests
 add_subdirectory("test")
 
 enable_testing()
