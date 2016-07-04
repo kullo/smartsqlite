@@ -1,3 +1,6 @@
+sudo: required # Added only to join beta (https://blog.travis-ci.com/2015-10-14-opening-up-ubuntu-trusty-beta/)
+dist: trusty
+
 language: cpp
 
 os:
@@ -8,23 +11,29 @@ compiler:
   - clang
   - gcc
 
+env:
+  matrix:
+    - STL=libstdc++
+    - STL=libc++
+
 matrix:
   exclude:
     - os: osx
       compiler: gcc
+    - compiler: gcc
+      env: STL=libc++
+    - compiler: clang
+      env: STL=libstdc++
 
 addons:
   apt:
-    sources:
-    - ubuntu-toolchain-r-test
-    - kubuntu-backports
     packages:
-    - g++-4.8
-    - cmake
+    - libc++-dev
+    - libc++abi-dev
 
 script:
-  - if [ "$CXX" = "g++" ]; then export CXX="/usr/bin/g++-4.8"; fi
-  - if [ "$CC" = "gcc" ]; then export CC="/usr/bin/gcc-4.8"; fi
+  - if [ "$STL" == "libc++" ] && [ "$TRAVIS_OS_NAME" == "linux" ]; then export CPLUS_INCLUDE_PATH=/usr/include/libcxxabi; fi
+  - echo $CPLUS_INCLUDE_PATH
   - $CXX --version
   - $CC --version
   - cmake --version
