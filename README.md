@@ -61,6 +61,7 @@ SmartSqlite has a linear versioning and the API might break at any time.
 
 Version     | SQLite version | Changes in SmartSqlite
 ----------- | -------------- | ----------------------
+v12         | 3.13.0         | Update build system: use libc++ with Linux+clang. Add sqlite3 shell binary to build.
 v11         | 3.13.0         | Add Connection::changes(); Add ScopedSavepoint
 v10         | 3.13.0         | Improve cmake configuration; Add OS X build to Travis
 v9          | 3.12.1         | NativeBinder: Correctly bind empty strings and blobs; NativeBinder: Copy pointer instead of referencing it in bindBlob(); Add SQL statement text to some exception messages
