@@ -11,10 +11,19 @@ compiler:
   - clang
   - gcc
 
+env:
+  matrix:
+    - STL=libstdc++
+    - STL=libc++
+
 matrix:
   exclude:
     - os: osx
       compiler: gcc
+    - compiler: gcc
+      env: STL=libc++
+    - compiler: clang
+      env: STL=libstdc++
 
 addons:
   apt:
@@ -23,6 +32,8 @@ addons:
     - libc++abi-dev
 
 script:
+  - if [ "$STL" == "libc++" ] && [ "$TRAVIS_OS_NAME" == "linux" ]; then export CPLUS_INCLUDE_PATH=/usr/include/libcxxabi; fi
+  - echo $CPLUS_INCLUDE_PATH
   - $CXX --version
   - $CC --version
   - cmake --version
