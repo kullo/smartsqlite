@@ -16,6 +16,12 @@ matrix:
     - os: osx
       compiler: gcc
 
+addons:
+  apt:
+    packages:
+    - libc++-dev
+    - libc++abi-dev
+
 script:
   - $CXX --version
   - $CC --version
