@@ -17,6 +17,7 @@
 
 #include <algorithm>
 #include <cassert>
+#include <limits>
 
 #include "smartsqlite/sqlite3.h"
 #include "smartsqlite/util.h"

@@ -16,6 +16,7 @@
 #include "smartsqlite/binder.h"
 
 #include <cassert>
+#include <limits>
 
 #include "smartsqlite/sqlite3.h"
 

@@ -16,6 +16,7 @@
 #include "smartsqlite/connection.h"
 
 #include <cassert>
+#include <limits>
 #include <memory>
 #include <sstream>
 
