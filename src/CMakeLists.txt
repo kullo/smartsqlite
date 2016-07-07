@@ -15,7 +15,7 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL Clang)
     set_source_files_properties(sqlite3.c shell.c
         PROPERTIES
         COMPILE_FLAGS
-        "-Wno-parentheses-equality -Wno-unused-value"
+        "-Wno-cast-align -Wno-cast-qual -Wno-conversion -Wno-disabled-macro-expansion -Wno-double-promotion -Wno-float-equal -Wno-missing-noreturn -Wno-missing-prototypes -Wno-missing-variable-declarations -Wno-parentheses-equality -Wno-reserved-id-macro -Wno-sign-conversion -Wno-undef -Wno-unreachable-code -Wno-unreachable-code-break -Wno-unused-macros -Wno-unused-value"
     )
 endif()
 
@@ -59,6 +59,14 @@ add_library(smartsqlite
     version.cpp
 )
 target_include_directories(smartsqlite PUBLIC $<BUILD_INTERFACE:${INCLUDE_DIR}>)
+if(CMAKE_CXX_COMPILER_ID STREQUAL Clang)
+    target_compile_options(smartsqlite
+        PRIVATE
+            # due to sqlite3
+            -Wno-old-style-cast
+            -Wno-reserved-id-macro
+    )
+endif()
 
 # SQLite needs threading
 find_package(Threads)

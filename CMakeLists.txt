@@ -26,6 +26,21 @@ include(CompilerSettings)
 # Google Mock / Google Test
 add_subdirectory("lib/gmock")
 include_directories("${gmock_SOURCE_DIR}/include" "${gtest_SOURCE_DIR}/include")
+if(CMAKE_CXX_COMPILER_ID STREQUAL Clang)
+    foreach(target gtest gtest_main gmock gmock_main)
+        target_compile_options(${target}
+            PUBLIC
+                -Wno-deprecated
+                -Wno-float-equal
+                -Wno-missing-noreturn
+                -Wno-shift-sign-overflow
+                -Wno-undef
+                -Wno-used-but-marked-unused
+            PRIVATE
+                -w
+        )
+    endforeach()
+endif()
 
 add_subdirectory("src")
 add_subdirectory("test")

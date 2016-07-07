@@ -1,10 +1,13 @@
 if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
     # Use libc++ on Linux and OS X; use libstdc++ on Android.
     # Clang on Linux defaults to libstdc++.
     if(NOT ANDROID)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
     endif()
+
+    set(warn_flags "-Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-exit-time-destructors -Wno-global-constructors -Wno-missing-braces -Wno-padded -Wno-weak-vtables")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c99 -pthread ${warn_flags}")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread ${warn_flags}")
 
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     set(warn_flags "-Wall -Wextra -Wpedantic -Wcast-qual -Wformat=2 -Wlogical-op -Wmissing-include-dirs -Wswitch-default -Wno-maybe-uninitialized")
