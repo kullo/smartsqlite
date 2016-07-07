@@ -37,7 +37,7 @@ public:
     template <typename T, typename std::enable_if<std::is_integral<T>::value>::type* = nullptr>
     Statement &bind(int pos, const T& value)
     {
-        CHECK_RESULT(NativeBinder::bindLongLong(statementHandle(), pos, value));
+        CHECK_RESULT(NativeBinder::bindLongLong(statementHandle(), pos, static_cast<long long>(value)));
         return *this;
     }
 
@@ -45,7 +45,7 @@ public:
     template <typename T, typename std::enable_if<std::is_floating_point<T>::value>::type* = nullptr>
     Statement &bind(int pos, const T& value)
     {
-        CHECK_RESULT(NativeBinder::bindDouble(statementHandle(), pos, value));
+        CHECK_RESULT(NativeBinder::bindDouble(statementHandle(), pos, static_cast<double>(value)));
         return *this;
     }
 

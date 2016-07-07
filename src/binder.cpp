@@ -15,6 +15,8 @@
  */
 #include "smartsqlite/binder.h"
 
+#include <cassert>
+
 #include "smartsqlite/sqlite3.h"
 
 namespace SmartSqlite {
@@ -40,13 +42,21 @@ int NativeBinder::bindString(sqlite3_stmt *stmt, int pos, const std::string &val
     auto data = value.c_str();
     auto size = value.size();
     if (!data && !size) data = EMPTY_CSTRING;
-    return sqlite3_bind_text(stmt, pos + 1, data, size, SQLITE_TRANSIENT);
+
+    assert(size <= std::numeric_limits<int>::max());
+    auto sizeInt = static_cast<int>(size);
+
+    return sqlite3_bind_text(stmt, pos + 1, data, sizeInt, SQLITE_TRANSIENT);
 }
 
 int NativeBinder::bindBlob(sqlite3_stmt *stmt, int pos, const void *data, size_t size)
 {
     if (!data && !size) data = EMPTY_CSTRING;
-    return sqlite3_bind_blob(stmt, pos + 1, data, size, SQLITE_TRANSIENT);
+
+    assert(size <= std::numeric_limits<int>::max());
+    auto sizeInt = static_cast<int>(size);
+
+    return sqlite3_bind_blob(stmt, pos + 1, data, sizeInt, SQLITE_TRANSIENT);
 }
 
 }

@@ -16,6 +16,7 @@
 #include "smartsqlite/blob.h"
 
 #include <algorithm>
+#include <cassert>
 
 #include "smartsqlite/sqlite3.h"
 #include "smartsqlite/util.h"
@@ -34,7 +35,7 @@ Blob::Blob(sqlite3 *conn, sqlite3_blob *blob)
 {
     impl->conn = conn;
     impl->blob = blob;
-    impl->size = sqlite3_blob_bytes(impl->blob);
+    impl->size = static_cast<size_t>(sqlite3_blob_bytes(impl->blob));
 }
 
 Blob::Blob(Blob &&other)
@@ -57,7 +58,7 @@ Blob::~Blob()
 void Blob::moveToRow(std::int64_t rowid)
 {
     CHECK_RESULT_CONN(sqlite3_blob_reopen(impl->blob, rowid), impl->conn);
-    impl->size = sqlite3_blob_bytes(impl->blob);
+    impl->size = static_cast<size_t>(sqlite3_blob_bytes(impl->blob));
 }
 
 size_t Blob::size() const
@@ -74,14 +75,26 @@ size_t Blob::getAccessSize(size_t bufferSize, size_t offset) const
 size_t Blob::read(void *buffer, size_t size, size_t offset) const
 {
     size_t bytesToRead = getAccessSize(size, offset);
-    CHECK_RESULT_CONN(sqlite3_blob_read(impl->blob, buffer, bytesToRead, offset), impl->conn);
+    assert(bytesToRead <= std::numeric_limits<int>::max());
+    auto bytesToReadInt = static_cast<int>(bytesToRead);
+
+    assert(offset <= std::numeric_limits<int>::max());
+    auto offsetInt = static_cast<int>(offset);
+
+    CHECK_RESULT_CONN(sqlite3_blob_read(impl->blob, buffer, bytesToReadInt, offsetInt), impl->conn);
     return bytesToRead;
 }
 
 size_t Blob::write(const void *buffer, size_t size, size_t offset)
 {
     size_t bytesToWrite = getAccessSize(size, offset);
-    CHECK_RESULT_CONN(sqlite3_blob_write(impl->blob, buffer, bytesToWrite, offset), impl->conn);
+    assert(bytesToWrite <= std::numeric_limits<int>::max());
+    auto bytesToWriteInt = static_cast<int>(bytesToWrite);
+
+    assert(offset <= std::numeric_limits<int>::max());
+    auto offsetInt = static_cast<int>(offset);
+
+    CHECK_RESULT_CONN(sqlite3_blob_write(impl->blob, buffer, bytesToWriteInt, offsetInt), impl->conn);
     return bytesToWrite;
 }
 

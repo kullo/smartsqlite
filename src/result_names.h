@@ -112,7 +112,7 @@ namespace SmartSqlite {
         case SQLITE_WARNING_AUTOINDEX: return "SQLITE_WARNING_AUTOINDEX";
 
         default:
-            if (result & 0xffffff00)
+            if (result & static_cast<int>(0xffffff00))
             {
                 // unknown extended result code, return string for basic result
                 return std::string("UNKNOWN (") + resultToResultName(result & 0xff) + ")";

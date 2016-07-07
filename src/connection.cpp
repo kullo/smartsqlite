@@ -79,9 +79,13 @@ Statement Connection::prepare(const std::string &sql)
 {
     sqlite3_stmt *stmtPtr;
     const char *tail;
+
     // size + 1 can be passed because c_str() is known to be null-terminated.
     // This will cause SQLite not to copy the input.
-    CHECK_RESULT_CONN(sqlite3_prepare_v2(conn_.get(), sql.c_str(), sql.size() + 1, &stmtPtr, &tail),
+    auto sqlSize = sql.size() + 1;
+    assert(sqlSize <= std::numeric_limits<int>::max());
+    auto sqlSizeInt = static_cast<int>(sqlSize);
+    CHECK_RESULT_CONN(sqlite3_prepare_v2(conn_.get(), sql.c_str(), sqlSizeInt, &stmtPtr, &tail),
                       conn_.get());
     Statement stmt(conn_.get(), stmtPtr);
 
@@ -123,8 +127,6 @@ void Connection::beginTransaction(TransactionType type)
     case Exclusive:
         typeStr = "EXCLUSIVE";
         break;
-    default:
-        assert(false && "Unknown transaction type");
     }
 
     exec(std::string("BEGIN ") + typeStr + " TRANSACTION");

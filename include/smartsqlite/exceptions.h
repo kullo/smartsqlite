@@ -23,9 +23,8 @@ namespace SmartSqlite {
 class Exception : public std::exception
 {
 public:
-    Exception(const std::string &message, const std::string &sql = "") throw();
-    virtual ~Exception() = default;
-    virtual const char *what() const throw();
+    Exception(const std::string &message, const std::string &sql = "") noexcept;
+    const char *what() const noexcept override;
 
 protected:
     std::string m_message;

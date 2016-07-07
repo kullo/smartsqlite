@@ -20,13 +20,12 @@
 
 namespace SmartSqlite {
 
-Exception::Exception(const std::string &message, const std::string &sql) throw()
-    : m_message(message
-                + (!sql.empty() ? " SQL: '" + sql + "'" : ""))
+Exception::Exception(const std::string &message, const std::string &sql) noexcept
+    : m_message(message + (!sql.empty() ? " SQL: '" + sql + "'" : ""))
 {
 }
 
-const char *Exception::what() const throw()
+const char *Exception::what() const noexcept
 {
     return m_message.c_str();
 }

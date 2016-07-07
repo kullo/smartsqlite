@@ -58,12 +58,8 @@ protected:
 
     std::vector<unsigned char> exampleBlob() const
     {
-        std::vector<unsigned char> data(4, '\0');
-        data[0] = '\xde';
-        data[1] = '\xad';
-        data[2] = '\xbe';
-        data[3] = '\xef';
-        return data;
+        using uchar = unsigned char;
+        return {uchar('\xde'), uchar('\xad'), uchar('\xbe'), uchar('\xef')};
     }
 
     SmartSqlite::Connection conn_;
