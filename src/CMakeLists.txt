@@ -15,7 +15,7 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL Clang)
     set_source_files_properties(sqlite3.c shell.c
         PROPERTIES
         COMPILE_FLAGS
-        "-Wno-cast-align -Wno-cast-qual -Wno-conversion -Wno-disabled-macro-expansion -Wno-double-promotion -Wno-float-equal -Wno-missing-noreturn -Wno-missing-prototypes -Wno-missing-variable-declarations -Wno-parentheses-equality -Wno-reserved-id-macro -Wno-sign-conversion -Wno-undef -Wno-unreachable-code -Wno-unreachable-code-break -Wno-unused-macros -Wno-unused-value"
+        "-Wno-cast-align -Wno-cast-qual -Wno-conversion -Wno-disabled-macro-expansion -Wno-double-promotion -Wno-float-equal -Wno-missing-noreturn -Wno-missing-prototypes -Wno-missing-variable-declarations -Wno-parentheses-equality -Wno-reserved-id-macro -Wno-sign-compare -Wno-sign-conversion -Wno-undef -Wno-unreachable-code -Wno-unreachable-code-break -Wno-unused-macros -Wno-unused-function -Wno-unused-value"
     )
 endif()
 
