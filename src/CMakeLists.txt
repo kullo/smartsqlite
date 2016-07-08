@@ -1,21 +1,18 @@
 set(INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../include")
 
-set_source_files_properties(sqlite3.c shell.c
-    PROPERTIES
-    COMPILE_DEFINITIONS
-    "HAVE_USLEEP=1;SQLITE_USE_URI=1;SQLITE_ENABLE_API_ARMOR"
+set_property(SOURCE sqlite3.c shell.c
+    APPEND PROPERTY COMPILE_DEFINITIONS
+    HAVE_USLEEP=1 SQLITE_USE_URI=1 SQLITE_ENABLE_API_ARMOR
 )
 if(CMAKE_CXX_COMPILER_ID STREQUAL GNU)
-    set_source_files_properties(sqlite3.c shell.c
-        PROPERTIES
-        COMPILE_FLAGS
-        "-Wno-array-bounds -Wno-cast-qual -Wno-missing-field-initializers -Wno-switch-default"
+    set_property(SOURCE sqlite3.c shell.c
+        APPEND_STRING PROPERTY COMPILE_FLAGS
+        " -Wno-array-bounds -Wno-cast-qual -Wno-missing-field-initializers -Wno-switch-default"
     )
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL Clang)
-    set_source_files_properties(sqlite3.c shell.c
-        PROPERTIES
-        COMPILE_FLAGS
-        "-Wno-cast-align -Wno-cast-qual -Wno-conversion -Wno-disabled-macro-expansion -Wno-double-promotion -Wno-float-equal -Wno-missing-noreturn -Wno-missing-prototypes -Wno-missing-variable-declarations -Wno-parentheses-equality -Wno-reserved-id-macro -Wno-sign-compare -Wno-sign-conversion -Wno-undef -Wno-unreachable-code -Wno-unreachable-code-break -Wno-unused-macros -Wno-unused-function -Wno-unused-value"
+    set_property(SOURCE sqlite3.c shell.c
+        APPEND_STRING PROPERTY COMPILE_FLAGS
+        " -Wno-cast-align -Wno-cast-qual -Wno-conversion -Wno-disabled-macro-expansion -Wno-double-promotion -Wno-float-equal -Wno-missing-noreturn -Wno-missing-prototypes -Wno-missing-variable-declarations -Wno-parentheses-equality -Wno-reserved-id-macro -Wno-sign-compare -Wno-sign-conversion -Wno-undef -Wno-unreachable-code -Wno-unreachable-code-break -Wno-unused-macros -Wno-unused-function -Wno-unused-value"
     )
 endif()
 
