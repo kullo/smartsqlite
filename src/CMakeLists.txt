@@ -1,6 +1,7 @@
 set(INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../include")
+set(WITH_BOTAN ${botan_FOUND})
 
-set_property(SOURCE sqlite3.c shell.c
+set_property(SOURCE sqlite3.c botansqlite3/botansqlite3.c shell.c
     APPEND PROPERTY COMPILE_DEFINITIONS
     HAVE_USLEEP=1 SQLITE_USE_URI=1 SQLITE_ENABLE_API_ARMOR
 )
@@ -38,10 +39,21 @@ set(PRIVATE_HEADERS
     result_names.h
 )
 
+if(WITH_BOTAN)
+    set(SQLITE_SOURCES
+        botansqlite3/botansqlite3.c
+        botansqlite3/codec.cpp
+    )
+else()
+    set(SQLITE_SOURCES
+        sqlite3.c
+    )
+endif()
+
 add_library(smartsqlite
     ${PUBLIC_HEADERS}
     ${PRIVATE_HEADERS}
-    sqlite3.c
+    ${SQLITE_SOURCES}
     binder.cpp
     blob.cpp
     connection.cpp
@@ -69,6 +81,10 @@ endif()
 find_package(Threads)
 target_link_libraries(smartsqlite PUBLIC ${CMAKE_THREAD_LIBS_INIT})
 
+if(WITH_BOTAN)
+    target_link_libraries(smartsqlite PUBLIC botan)
+endif()
+
 if(UNIX)
     target_link_libraries(smartsqlite PUBLIC dl)
 endif()
@@ -77,10 +93,15 @@ if(NOT IOS)
     add_executable(sqlite3 shell.c)
     target_include_directories(sqlite3 PRIVATE ${INCLUDE_DIR}/smartsqlite)
     target_link_libraries(sqlite3 smartsqlite)
-
     install(TARGETS sqlite3
         RUNTIME DESTINATION bin
     )
+
+    if(WITH_BOTAN)
+        add_executable(botansqlite3_tests botansqlite3/test_sqlite.cpp)
+        target_link_libraries(botansqlite3_tests PUBLIC smartsqlite)
+        add_test(all_tests test/${PROJECT_NAME}_tests)
+    endif()
 endif()
 
 install(TARGETS smartsqlite

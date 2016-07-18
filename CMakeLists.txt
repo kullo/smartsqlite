@@ -42,6 +42,12 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL Clang)
     endforeach()
 endif()
 
+find_package(botan
+    NO_MODULE
+    PATHS "${CMAKE_CURRENT_BINARY_DIR}/../bin-botan${install_prefix_suffix}"
+    NO_DEFAULT_PATH
+)
+
 add_subdirectory("src")
 add_subdirectory("test")
 
