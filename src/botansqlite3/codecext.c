@@ -45,8 +45,7 @@ static Bool HandleError(void *pCodec)
     return 0;
 }
 
-// Guessing that "see" is related to SQLite Encryption Extension" (the semi-official, for-pay, encryption codec)
-// Just as useful for initializing Botan.
+// "see" is "SQLite Encryption Extension" (the semi-official, for-pay, encryption codec)
 void sqlite3_activate_see(const char *info)
 {
     BOTANSQLITE_TRACE("sqlite3_activate_see");
@@ -54,14 +53,14 @@ void sqlite3_activate_see(const char *info)
 }
 
 // Free the encryption codec, called from pager.c (address passed in sqlite3PagerSetCodec)
-static void sqlite3PagerFreeCodec(void *pCodec)
+static void PagerFreeCodec(void *pCodec)
 {
     BOTANSQLITE_TRACE("sqlite3PagerFreeCodec");
     if (pCodec) DeleteCodec(pCodec);
 }
 
 // Report the page size to the codec, called from pager.c (address passed in sqlite3PagerSetCodec)
-static void sqlite3CodecSizeChange(void *pCodec, int pageSize, int nReserve)
+static void CodecSizeChange(void *pCodec, int pageSize, int nReserve)
 {
     BOTANSQLITE_TRACE("sqlite3CodecSizeChange");
     (void)nReserve;
@@ -69,8 +68,8 @@ static void sqlite3CodecSizeChange(void *pCodec, int pageSize, int nReserve)
     SetPageSize(pCodec, (size_t)pageSize);
 }
 
-// Encrypt/Decrypt functionality, called by pager.c
-static void* sqlite3Codec(void *pCodec, void *data, Pgno nPageNum, int nMode)
+// Encrypt/Decrypt functionality (address passed in sqlite3PagerSetCodec)
+static void* Codec(void *pCodec, void *data, Pgno nPageNum, int nMode)
 {
     BOTANSQLITE_TRACE("sqlite3Codec");
 
@@ -133,9 +132,9 @@ int sqlite3CodecAttach(sqlite3 *db, int nDb, const void *zKey, int nKey)
             {
                 pCodec = InitializeFromOtherCodec(pMainCodec, db);
                 sqlite3PagerSetCodec(sqlite3BtreePager(db->aDb[nDb].pBt),
-                                    sqlite3Codec,
-                                    sqlite3CodecSizeChange,
-                                    sqlite3PagerFreeCodec, pCodec);
+                                    Codec,
+                                    CodecSizeChange,
+                                    PagerFreeCodec, pCodec);
             }
         }
     }
@@ -146,9 +145,9 @@ int sqlite3CodecAttach(sqlite3 *db, int nDb, const void *zKey, int nKey)
         GenerateWriteKey(pCodec, (const char*) zKey, nKey);
         SetReadIsWrite(pCodec);
         sqlite3PagerSetCodec(sqlite3BtreePager(db->aDb[nDb].pBt),
-                            sqlite3Codec,
-                            sqlite3CodecSizeChange,
-                            sqlite3PagerFreeCodec, pCodec);
+                            Codec,
+                            CodecSizeChange,
+                            PagerFreeCodec, pCodec);
     }
 
     if (HandleError(pCodec))
@@ -215,7 +214,7 @@ int sqlite3_rekey(sqlite3 *db, const void *zKey, int nKey)
         
         if (HandleError(pCodec)) return SQLITE_ERROR;
 
-        sqlite3PagerSetCodec(pPager, sqlite3Codec, sqlite3CodecSizeChange, sqlite3PagerFreeCodec, pCodec);
+        sqlite3PagerSetCodec(pPager, Codec, CodecSizeChange, PagerFreeCodec, pCodec);
     }
     else if (zKey == NULL || nKey == 0)
     {
