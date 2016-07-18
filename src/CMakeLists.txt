@@ -4,12 +4,12 @@ set_property(SOURCE sqlite3.c shell.c
     APPEND PROPERTY COMPILE_DEFINITIONS
     HAVE_USLEEP=1 SQLITE_USE_URI=1 SQLITE_ENABLE_API_ARMOR
 )
-if(CMAKE_CXX_COMPILER_ID STREQUAL GNU)
+if(CMAKE_C_COMPILER_ID STREQUAL GNU)
     set_property(SOURCE sqlite3.c shell.c
         APPEND_STRING PROPERTY COMPILE_FLAGS
         " -Wno-array-bounds -Wno-cast-qual -Wno-missing-field-initializers -Wno-switch-default"
     )
-elseif(CMAKE_CXX_COMPILER_ID STREQUAL Clang)
+elseif(CMAKE_C_COMPILER_ID STREQUAL Clang)
     set_property(SOURCE sqlite3.c shell.c
         APPEND_STRING PROPERTY COMPILE_FLAGS
         " -w"
