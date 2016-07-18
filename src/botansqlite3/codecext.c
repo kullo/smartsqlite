@@ -16,6 +16,15 @@
     #include "../sqlite3.c"
 #endif
 
+// uncomment to enable tracing
+//#define BOTANSQLITE_TRACE_ENABLED
+
+#ifdef BOTANSQLITE_TRACE_ENABLED
+    #define BOTANSQLITE_TRACE(msg) fprintf(stderr, "TRACE: %s\n", msg)
+#else
+    #define BOTANSQLITE_TRACE(msg) (void)msg
+#endif
+
 // Forward-declare these method that SQLite uses but doesn't declare
 int sqlite3CodecAttach(sqlite3*, int, const void*, int);
 void sqlite3CodecGetKey(sqlite3*, int, void**, int*);
@@ -40,21 +49,21 @@ static Bool HandleError(void *pCodec)
 // Just as useful for initializing Botan.
 void sqlite3_activate_see(const char *info)
 {
-    fprintf(stderr, "sqlite3_activate_see\n");
+    BOTANSQLITE_TRACE("sqlite3_activate_see");
     (void)info;
 }
 
 // Free the encryption codec, called from pager.c (address passed in sqlite3PagerSetCodec)
 static void sqlite3PagerFreeCodec(void *pCodec)
 {
-    fprintf(stderr, "sqlite3PagerFreeCodec\n");
+    BOTANSQLITE_TRACE("sqlite3PagerFreeCodec");
     if (pCodec) DeleteCodec(pCodec);
 }
 
 // Report the page size to the codec, called from pager.c (address passed in sqlite3PagerSetCodec)
 static void sqlite3CodecSizeChange(void *pCodec, int pageSize, int nReserve)
 {
-    fprintf(stderr, "sqlite3CodecSizeChange\n");
+    BOTANSQLITE_TRACE("sqlite3CodecSizeChange");
     (void)nReserve;
     assert(pageSize >= 0);
     SetPageSize(pCodec, (size_t)pageSize);
@@ -63,7 +72,7 @@ static void sqlite3CodecSizeChange(void *pCodec, int pageSize, int nReserve)
 // Encrypt/Decrypt functionality, called by pager.c
 static void* sqlite3Codec(void *pCodec, void *data, Pgno nPageNum, int nMode)
 {
-    fprintf(stderr, "sqlite3Codec\n");
+    BOTANSQLITE_TRACE("sqlite3Codec");
 
     // Don't change data if DB is not encrypted
     if (pCodec == NULL) return data;
@@ -110,7 +119,7 @@ static void* sqlite3Codec(void *pCodec, void *data, Pgno nPageNum, int nMode)
 
 int sqlite3CodecAttach(sqlite3 *db, int nDb, const void *zKey, int nKey)
 {
-    fprintf(stderr, "sqlite3CodecAttach\n");
+    BOTANSQLITE_TRACE("sqlite3CodecAttach");
     void *pCodec = NULL;
 
     if (zKey == NULL || nKey <= 0)
@@ -150,7 +159,7 @@ int sqlite3CodecAttach(sqlite3 *db, int nDb, const void *zKey, int nKey)
 
 void sqlite3CodecGetKey(sqlite3* db, int nDb, void **zKey, int *nKey)
 {
-    fprintf(stderr, "sqlite3CodecGetKey\n");
+    BOTANSQLITE_TRACE("sqlite3CodecGetKey");
     (void)db;
     (void)nDb;
 
@@ -162,7 +171,7 @@ void sqlite3CodecGetKey(sqlite3* db, int nDb, void **zKey, int *nKey)
 
 int sqlite3_key_v2(sqlite3 *db, const char *zDbName, const void *zKey, int nKey)
 {
-    fprintf(stderr, "sqlite3_key_v2\n");
+    BOTANSQLITE_TRACE("sqlite3_key_v2");
     //We don't use zDbName (though maybe we could...). Pass-through to the old sqlite_key
     (void)(zDbName);
     return sqlite3_key(db, zKey, nKey);
@@ -170,7 +179,7 @@ int sqlite3_key_v2(sqlite3 *db, const char *zDbName, const void *zKey, int nKey)
 
 int sqlite3_rekey_v2(sqlite3 *db, const char * zDbName, const void *zKey, int nKey)
 {
-    fprintf(stderr, "sqlite3_rekey_v2\n");
+    BOTANSQLITE_TRACE("sqlite3_rekey_v2");
     //We don't use zDbName (though maybe we could...). Pass-through to the old sqlite_rekey
     (void)(zDbName);
     return sqlite3_rekey(db, zKey, nKey);
@@ -178,14 +187,14 @@ int sqlite3_rekey_v2(sqlite3 *db, const char * zDbName, const void *zKey, int nK
 
 int sqlite3_key(sqlite3 *db, const void *zKey, int nKey)
 {
-    fprintf(stderr, "sqlite3_key\n");
+    BOTANSQLITE_TRACE("sqlite3_key");
     // The key is only set for the main database, not the temp database
     return sqlite3CodecAttach(db, 0, zKey, nKey);
 }
 
 int sqlite3_rekey(sqlite3 *db, const void *zKey, int nKey)
 {
-    fprintf(stderr, "sqlite3_rekey\n");
+    BOTANSQLITE_TRACE("sqlite3_rekey");
     // Changes the encryption key for an existing database.
     int rc = SQLITE_ERROR;
     Btree *pbt = db->aDb[0].pBt;
