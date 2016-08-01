@@ -60,6 +60,11 @@ protected:
         connection_->exec(std::string("PRAGMA key='") + key + "'");
     }
 
+    void rekey(const std::string &key)
+    {
+        connection_->exec(std::string("PRAGMA rekey='") + key + "'");
+    }
+
     void createTable()
     {
         connection_->exec("CREATE TABLE tbl (foo INT, bar TEXT)");
@@ -130,5 +135,24 @@ TEST_F(BotanSqlite3, preventsAccessWithWrongKey)
     setKey("anotherkey");
     EXPECT_THROW(checkForTestData(), SmartSqlite::SqliteException);
     disconnect();
+    deleteDb(dbFilename_);
+}
+
+TEST_F(BotanSqlite3, encryptDatabase)
+{
+    connect();
+    createTable();
+    disconnect();
+
+    connect();
+    rekey("somekey");
+    checkForTestData();
+    disconnect();
+
+    connect();
+    setKey("somekey");
+    checkForTestData();
+    disconnect();
+
     deleteDb(dbFilename_);
 }
