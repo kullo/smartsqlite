@@ -212,3 +212,18 @@ TEST_F(BotanSqlite3, hexkeyWorks)
 
     deleteDb(dbFilename_);
 }
+
+TEST_F(BotanSqlite3, hexrekeyWorks)
+{
+    connect();
+    createTable();
+    connection_->exec("PRAGMA hexrekey='736f6d656b6579'");
+    disconnect();
+
+    connect();
+    setKey("somekey");
+    checkForTestData();
+    disconnect();
+
+    deleteDb(dbFilename_);
+}
