@@ -197,3 +197,18 @@ TEST_F(BotanSqlite3, decryptDatabase)
 
     deleteDb(dbFilename_);
 }
+
+TEST_F(BotanSqlite3, hexkeyWorks)
+{
+    connect();
+    setKey("somekey");
+    createTable();
+    disconnect();
+
+    connect();
+    connection_->exec("PRAGMA hexkey='736f6d656b6579'");
+    checkForTestData();
+    disconnect();
+
+    deleteDb(dbFilename_);
+}
