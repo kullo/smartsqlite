@@ -96,12 +96,6 @@ if(NOT IOS)
     install(TARGETS sqlite3
         RUNTIME DESTINATION bin
     )
-
-    if(WITH_BOTAN)
-        add_executable(botansqlite3_tests botansqlite3/test_sqlite.cpp)
-        target_link_libraries(botansqlite3_tests PUBLIC smartsqlite)
-        add_test(all_tests test/${PROJECT_NAME}_tests)
-    endif()
 endif()
 
 install(TARGETS smartsqlite
