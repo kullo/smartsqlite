@@ -227,3 +227,22 @@ TEST_F(BotanSqlite3, hexrekeyWorks)
 
     deleteDb(dbFilename_);
 }
+
+TEST_F(BotanSqlite3, vacuumWorks)
+{
+    connect();
+    setKey("somekey");
+    createTable();
+    disconnect();
+
+    connect();
+    setKey("somekey");
+    connection_->exec("VACUUM");
+    disconnect();
+
+    connect();
+    setKey("somekey");
+    checkForTestData();
+    disconnect();
+    deleteDb(dbFilename_);
+}
