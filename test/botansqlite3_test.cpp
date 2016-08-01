@@ -29,6 +29,7 @@ class BotanSqlite3: public Test
 protected:
     BotanSqlite3()
         : dbFilename_(tempDbName())
+        , attachedFilename_(tempDbName())
     {
     }
 
@@ -37,10 +38,11 @@ protected:
         return std::string(std::tmpnam(nullptr)) + ".db";
     }
 
-    void connect()
+    void connect(std::string filename = "")
     {
+        if (filename.empty()) filename = dbFilename_;
         connection_ = std::unique_ptr<SmartSqlite::Connection>(
-                    new SmartSqlite::Connection("file://" + dbFilename_));
+                    new SmartSqlite::Connection("file://" + filename));
     }
 
     void disconnect()
@@ -65,11 +67,18 @@ protected:
         connection_->exec(std::string("PRAGMA rekey='") + key + "'");
     }
 
-    void createTable()
+    void createTable(const std::string db = "main")
     {
-        connection_->exec("CREATE TABLE tbl (foo INT, bar TEXT)");
-        connection_->exec("INSERT INTO tbl VALUES (21, 'half the truth')");
-        connection_->exec("INSERT INTO tbl VALUES (42, 'the truth')");
+        connection_->exec(std::string("CREATE TABLE ") + db + ".tbl (foo INT, bar TEXT)");
+        connection_->exec(std::string("INSERT INTO ") + db + ".tbl VALUES (21, 'half the truth')");
+        connection_->exec(std::string("INSERT INTO ") + db + ".tbl VALUES (42, 'the truth')");
+    }
+
+    void attachWithKey(const std::string &key)
+    {
+        connection_->exec(
+                    std::string("ATTACH DATABASE '") + attachedFilename_ + "' "
+                    + "AS att KEY '" + key + "'");
     }
 
     void checkForTestData()
@@ -93,6 +102,7 @@ protected:
     }
 
     std::string dbFilename_;
+    std::string attachedFilename_;
     std::unique_ptr<SmartSqlite::Connection> connection_;
 };
 
@@ -245,4 +255,22 @@ TEST_F(BotanSqlite3, vacuumWorks)
     checkForTestData();
     disconnect();
     deleteDb(dbFilename_);
+}
+
+TEST_F(BotanSqlite3, attachWithoutKey)
+{
+    connect();
+    setKey("somekey");
+    createTable();
+
+    attachWithKey("");
+    createTable("att");
+    disconnect();
+
+    connect(attachedFilename_);
+    checkForTestData();
+    disconnect();
+
+    deleteDb(dbFilename_);
+    deleteDb(attachedFilename_);
 }
