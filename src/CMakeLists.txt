@@ -44,6 +44,14 @@ if(WITH_BOTAN)
         botansqlite3/botansqlite3.c
         botansqlite3/codec.cpp
     )
+    # This target shouldn't be built; it only exists to make the files visible
+    # in Qt Creator.
+    add_custom_target(included_source_files
+        SOURCES
+            botansqlite3/codecext.c
+            sqlite3.c
+    )
+
 else()
     set(SQLITE_SOURCES
         sqlite3.c
