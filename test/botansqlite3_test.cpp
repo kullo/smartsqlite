@@ -274,3 +274,22 @@ TEST_F(BotanSqlite3, attachWithoutKey)
     deleteDb(dbFilename_);
     deleteDb(attachedFilename_);
 }
+
+TEST_F(BotanSqlite3, attachWithDifferentKey)
+{
+    connect();
+    setKey("somekey");
+    createTable();
+
+    attachWithKey("anotherkey");
+    createTable("att");
+    disconnect();
+
+    connect(attachedFilename_);
+    setKey("anotherkey");
+    checkForTestData();
+    disconnect();
+
+    deleteDb(dbFilename_);
+    deleteDb(attachedFilename_);
+}
