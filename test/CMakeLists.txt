@@ -1,3 +1,7 @@
+if(${botan_FOUND})
+    set(_botansqlite3_tests botansqlite3_test.cpp)
+endif()
+
 add_executable(smartsqlite_tests
     blob_test.cpp
     connection_test.cpp
@@ -8,6 +12,7 @@ add_executable(smartsqlite_tests
     statement_test.cpp
     testutil.h
     version_test.cpp
+    ${_botansqlite3_tests}
 )
 
 target_link_libraries(smartsqlite_tests
