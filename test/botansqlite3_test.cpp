@@ -105,3 +105,16 @@ TEST_F(BotanSqlite3, canAccessEncryptedDatabase)
     disconnect();
     deleteDb(dbFilename_);
 }
+
+TEST_F(BotanSqlite3, preventsAccessWithoutKey)
+{
+    connect();
+    setKey("somekey");
+    createTable();
+    disconnect();
+
+    connect();
+    EXPECT_THROW(checkForTestData(), SmartSqlite::SqliteException);
+    disconnect();
+    deleteDb(dbFilename_);
+}
