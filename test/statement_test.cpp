@@ -29,10 +29,6 @@ protected:
     Statement()
         : conn_(":memory:")
     {
-    }
-
-    void SetUp()
-    {
         conn_.exec("CREATE TABLE all_types "
                   "(c_int INT, c_float FLOAT, c_text TEXT, c_blob BLOB)");
         conn_.exec("INSERT INTO all_types "
