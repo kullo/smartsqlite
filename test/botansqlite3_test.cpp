@@ -118,3 +118,17 @@ TEST_F(BotanSqlite3, preventsAccessWithoutKey)
     disconnect();
     deleteDb(dbFilename_);
 }
+
+TEST_F(BotanSqlite3, preventsAccessWithWrongKey)
+{
+    connect();
+    setKey("somekey");
+    createTable();
+    disconnect();
+
+    connect();
+    setKey("anotherkey");
+    EXPECT_THROW(checkForTestData(), SmartSqlite::SqliteException);
+    disconnect();
+    deleteDb(dbFilename_);
+}
