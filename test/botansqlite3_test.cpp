@@ -177,3 +177,23 @@ TEST_F(BotanSqlite3, changeKey)
 
     deleteDb(dbFilename_);
 }
+
+TEST_F(BotanSqlite3, decryptDatabase)
+{
+    connect();
+    setKey("somekey");
+    createTable();
+    disconnect();
+
+    connect();
+    setKey("somekey");
+    rekey("");
+    checkForTestData();
+    disconnect();
+
+    connect();
+    checkForTestData();
+    disconnect();
+
+    deleteDb(dbFilename_);
+}
