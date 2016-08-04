@@ -42,7 +42,7 @@ protected:
     {
         if (filename.empty()) filename = dbFilename_;
         connection_ = std::unique_ptr<SmartSqlite::Connection>(
-                    new SmartSqlite::Connection("file://" + filename));
+                    new SmartSqlite::Connection(filename));
     }
 
     void disconnect()
