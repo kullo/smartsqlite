@@ -45,12 +45,15 @@ if(WITH_BOTAN)
         botansqlite3/codec.cpp
     )
     # This target shouldn't be built; it only exists to make the files visible
-    # in Qt Creator.
-    add_custom_target(included_source_files
-        SOURCES
-            botansqlite3/codecext.c
-            sqlite3.c
-    )
+    # in Qt Creator. This crashes CMake 2.8.12 if sqlite3.c is present, so
+    # disable it in CMake < 3.
+    if(CMAKE_MAJOR_VERSION GREATER "2")
+        add_custom_target(included_source_files
+            SOURCES
+                botansqlite3/codecext.c
+                sqlite3.c
+        )
+    endif()
 
 else()
     set(SQLITE_SOURCES
