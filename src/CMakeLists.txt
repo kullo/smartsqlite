@@ -50,6 +50,7 @@ if(WITH_BOTAN)
     if(CMAKE_MAJOR_VERSION GREATER "2")
         add_custom_target(included_source_files
             SOURCES
+                botansqlite3/codec_c_interface.h
                 botansqlite3/codecext.c
                 sqlite3.c
         )
