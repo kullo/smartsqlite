@@ -18,9 +18,9 @@ void* InitializeNewCodec(void *db);
 
 void* InitializeFromOtherCodec(const void *otherCodec, void *db);
 
-void GenerateWriteKey(void *codec, const char *userPassword, int passwordLength);
+void GetWriteKey(void *codec, char **key, int *keyLength);
 
-void GetWritePassword(void *codec, char **password, int *passwordLength);
+void SetWriteKey(void *codec, const char *key, int keyLength);
 
 void DropWriteKey(void *codec);
 

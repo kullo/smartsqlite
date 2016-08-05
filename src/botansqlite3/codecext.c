@@ -66,25 +66,23 @@ static void* Codec(void *pCodec, void *data, Pgno nPageNum, int nMode)
 {
     BOTANSQLITE_TRACE("Codec");
 
-    // Don't change data if DB is not encrypted
-    if (!pCodec) return data;
+    assert(pCodec);
+    assert(data);
 
     switch(nMode)
     {
     case 0: // Undo a "case 7" journal file encryption
     case 2: // Reload a page
     case 3: // Load a page
-        if (HasReadKey(pCodec))
-        {
-            Decrypt(pCodec, nPageNum, (unsigned char*) data);
-        }
+        assert(HasReadKey(pCodec));
+        Decrypt(pCodec, nPageNum, (unsigned char*) data);
         break;
+
     case 6: // Encrypt a page for the main database file
-        if (HasWriteKey(pCodec))
-        {
-            data = Encrypt(pCodec, nPageNum, (unsigned char*) data, true);
-        }
+        assert(HasWriteKey(pCodec));
+        data = Encrypt(pCodec, nPageNum, (unsigned char*) data, true);
         break;
+
     case 7: // Encrypt a page for the journal file
         /*
         *Under normal circumstances, the readkey is the same as the writekey.  However,
@@ -95,15 +93,14 @@ static void* Codec(void *pCodec, void *data, Pgno nPageNum, int nMode)
         *the database's readkey, which is guaranteed to be the same key that was used to
         *read and write the original data.
         */
-        if (HasReadKey(pCodec))
-        {
-            data = Encrypt(pCodec, nPageNum, (unsigned char*) data, false);
-        }
+        assert(HasReadKey(pCodec));
+        data = Encrypt(pCodec, nPageNum, (unsigned char*) data, false);
         break;
+
     default:
         assert(false);
     }
-    
+
     HandleError(pCodec);
 
     return data;
@@ -144,7 +141,7 @@ int sqlite3CodecAttach(sqlite3 *db, int nDb, const void *zKey, int nKey)
     {
         // Key specified, setup encryption key for database
         pCodec = InitializeNewCodec(db);
-        GenerateWriteKey(pCodec, (const char*) zKey, nKey);
+        SetWriteKey(pCodec, (const char*) zKey, nKey);
         SetReadIsWrite(pCodec);
         sqlite3PagerSetCodec(
                     sqlite3BtreePager(db->aDb[nDb].pBt),
@@ -170,7 +167,7 @@ void sqlite3CodecGetKey(sqlite3* db, int nDb, void **zKey, int *nKey)
     void *pCodec = sqlite3PagerGetCodec(pPager);
     if (pCodec)
     {
-        GetWritePassword(pCodec, (char**)zKey, nKey);
+        GetWriteKey(pCodec, (char**)zKey, nKey);
     }
     else
     {
@@ -221,7 +218,7 @@ int sqlite3_rekey(sqlite3 *db, const void *zKey, int nKey)
     {
         // Database not encrypted, but key specified. Encrypt database
         pCodec = InitializeNewCodec(db);
-        GenerateWriteKey(pCodec, (const char*) zKey, nKey);
+        SetWriteKey(pCodec, (const char*) zKey, nKey);
         
         if (HandleError(pCodec))
         {
@@ -241,7 +238,7 @@ int sqlite3_rekey(sqlite3 *db, const void *zKey, int nKey)
     {
         // Database encrypted and key specified. Re-encrypt database with new key
         // Keep read key, change write key to new key
-        GenerateWriteKey(pCodec, (const char*) zKey, nKey);
+        SetWriteKey(pCodec, (const char*) zKey, nKey);
         if (HandleError(pCodec)) return SQLITE_ERROR;
     }
 

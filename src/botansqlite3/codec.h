@@ -21,32 +21,18 @@
 //make sure to add "/NoPadding" for modes that use padding schemes
 const std::string BLOCK_CIPHER_STR = "AES-256/XTS";
 
-//PBKDF_STR: Key derivation function used to derive both the encryption
-//and IV derivation keys from the given database passphrase
-const std::string PBKDF_STR = "PBKDF2(SHA-512)";
-
-//SALT_STR: Hard coded salt used to derive the key from the passphrase.
-const std::string SALT_STR = "&g#nB'9]";
-
-//SALT_SIZE: Size of the salt in bytes (as given in SALT_STR)
-const int SALT_SIZE = 64/8; //64 bit, 8 byte salt
-
 //MAC_STR: CMAC used to derive the IV that is used for db page
 //encryption
 const std::string MAC_STR = "CMAC(AES-256)";
 
-//PBKDF_ITERATIONS: Number of hash iterations used in the key derivation
-//process.
-const int PBKDF_ITERATIONS = 10000;
-
 //KEY_SIZE: Size of the encryption key. Note that XTS splits the key
 //between two ciphers, so if you're using XTS, double the intended key
 //size. (ie, "AES-128/XTS" should have a 256 bit KEY_SIZE)
-const int KEY_SIZE = 512/8; //512 bit, 64 byte key. (256 bit XTS key)
+const size_t KEY_SIZE = 512/8; //512 bit, 64 byte key. (256 bit XTS key)
 
 //IV_DERIVATION_KEY_SIZE: Size of the key used with the CMAC (MAC_STR)
 //above.
-const int IV_DERIVATION_KEY_SIZE = 256/8; //256 bit, 32 byte key
+const size_t IV_DERIVATION_KEY_SIZE = 256/8; //256 bit, 32 byte key
 
 //This is defined in sqlite3.c and very unlikely to change
 #define SQLITE_MAX_PAGE_SIZE 65536
@@ -57,8 +43,8 @@ public:
     Codec(void *db);
     Codec(const Codec *other, void *db);
 
-    void generateWriteKey(const char *userPassword, int passwordLength);
-    void getWritePassword(const char **password, int *passwordLength);
+    void getWriteKey(const char **key, int *keyLength);
+    void setWriteKey(const char *key, int keyLength);
     void dropWriteKey();
     void setWriteIsRead();
     void setReadIsWrite();
@@ -78,8 +64,8 @@ private:
     bool m_hasReadKey = false;
     bool m_hasWriteKey = false;
 
-    std::string m_readPassword;
-    std::string m_writePassword;
+    std::string m_encodedReadKey;
+    std::string m_encodedWriteKey;
 
     Botan::SymmetricKey
         m_readKey,

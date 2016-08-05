@@ -36,31 +36,55 @@ Codec::Codec(const Codec *other, void *db)
     assert(other);
     m_hasReadKey = other->m_hasReadKey;
     m_hasWriteKey = other->m_hasWriteKey;
+    m_encodedReadKey = other->m_encodedReadKey;
     m_readKey = other->m_readKey;
     m_ivReadKey = other->m_ivReadKey;
+    m_encodedWriteKey = other->m_encodedWriteKey;
     m_writeKey = other->m_writeKey;
     m_ivWriteKey = other->m_ivWriteKey;
 }
 
-void Codec::generateWriteKey(const char *userPassword, int passwordLength)
+void Codec::setWriteKey(const char *key, int keyLength)
 {
-    assert(userPassword);
-    assert(passwordLength >= 0);
-    auto pwLength = static_cast<std::string::size_type>(passwordLength);
-    m_writePassword = std::string(userPassword, pwLength);
+    assert(key);
+    assert(keyLength > 0);
+
+    auto encodedKey = std::string(key, keyLength);
+    Botan::secure_vector<Botan::byte> decodedKey;
 
     try
     {
-        auto pbkdf = Botan::PBKDF::create(PBKDF_STR);
-        Botan::SymmetricKey masterKey = pbkdf->derive_key(
-                    KEY_SIZE + IV_DERIVATION_KEY_SIZE,
-                    m_writePassword,
-                    reinterpret_cast<const Botan::byte*>(SALT_STR.c_str()),
-                    SALT_SIZE,
-                    PBKDF_ITERATIONS);
-        m_writeKey = Botan::SymmetricKey(masterKey.bits_of().data(), KEY_SIZE);
-        m_ivWriteKey = Botan::SymmetricKey(masterKey.bits_of().data() + KEY_SIZE, IV_DERIVATION_KEY_SIZE);
+        decodedKey = Botan::base64_decode(encodedKey);
+    }
+    catch (Botan::Exception &e)
+    {
+        m_botanErrorMsg.reset(new std::string(e.what()));
+        return;
+    }
 
+    auto expectedKeySize = KEY_SIZE + IV_DERIVATION_KEY_SIZE;
+    if (decodedKey.size() != expectedKeySize)
+    {
+        m_botanErrorMsg.reset(
+                    new std::string(
+                        std::string("Bad key size. Got ")
+                        + std::to_string(keyLength)
+                        + " bytes (after base64 decoding), expected "
+                        + std::to_string(expectedKeySize)
+                        + " bytes."));
+        return;
+    }
+
+    try
+    {
+        // store keys in temp vars so that either all or none of the member
+        // variables are changed
+        auto writeKey = Botan::SymmetricKey(decodedKey.data(), KEY_SIZE);
+        auto ivWriteKey = Botan::SymmetricKey(decodedKey.data() + KEY_SIZE, IV_DERIVATION_KEY_SIZE);
+
+        m_encodedWriteKey = encodedKey;
+        m_writeKey = writeKey;
+        m_ivWriteKey = ivWriteKey;
         m_hasWriteKey = true;
     }
     catch(Botan::Exception e)
@@ -69,23 +93,10 @@ void Codec::generateWriteKey(const char *userPassword, int passwordLength)
     }
 }
 
-void Codec::getWritePassword(const char **password, int *passwordLength)
+void Codec::getWriteKey(const char **key, int *keyLength)
 {
-    if (m_writePassword.empty())
-    {
-        *password = nullptr;
-        *passwordLength = 0;
-    }
-    else
-    {
-        *password = m_writePassword.c_str();
-
-        // safe conversion to int
-        using LengthType = std::remove_pointer<decltype(passwordLength)>::type;
-        auto size = m_writePassword.size();
-        assert(size < std::numeric_limits<LengthType>::max());
-        *passwordLength = static_cast<LengthType>(size);
-    }
+    *key = reinterpret_cast<const char *>(m_encodedWriteKey.c_str());
+    *keyLength = m_encodedWriteKey.size();
 }
 
 void Codec::dropWriteKey()
@@ -95,7 +106,7 @@ void Codec::dropWriteKey()
 
 void Codec::setReadIsWrite()
 {
-    m_readPassword = m_writePassword;
+    m_encodedReadKey = m_encodedWriteKey;
     m_readKey = m_writeKey;
     m_ivReadKey = m_ivWriteKey;
     m_hasReadKey = m_hasWriteKey;
@@ -103,7 +114,7 @@ void Codec::setReadIsWrite()
 
 void Codec::setWriteIsRead()
 {
-    m_writePassword = m_readPassword;
+    m_encodedWriteKey = m_encodedReadKey;
     m_writeKey = m_readKey;
     m_ivWriteKey = m_ivReadKey;
     m_hasWriteKey = m_hasReadKey;
@@ -181,15 +192,15 @@ void* InitializeFromOtherCodec(const void *otherCodec, void *db)
 {
     return new Codec(static_cast<const Codec*>(otherCodec), db);
 }
-void GenerateWriteKey(void *codec, const char *userPassword, int passwordLength)
+void SetWriteKey(void *codec, const char *key, int keyLength)
 {
     assert(codec);
-    static_cast<Codec*>(codec)->generateWriteKey(userPassword, passwordLength);
+    static_cast<Codec*>(codec)->setWriteKey(key, keyLength);
 }
-void GetWritePassword(void *codec, char **password, int *passwordLength)
+void GetWriteKey(void *codec, char **key, int *keyLength)
 {
     assert(codec);
-    static_cast<Codec*>(codec)->getWritePassword(const_cast<const char **>(password), passwordLength);
+    static_cast<Codec*>(codec)->getWriteKey(const_cast<const char **>(key), keyLength);
 }
 void DropWriteKey(void *codec)
 {
