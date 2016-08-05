@@ -162,15 +162,12 @@ int sqlite3CodecAttach(sqlite3 *db, int nDb, const void *zKey, int nKey)
 void sqlite3CodecGetKey(sqlite3* db, int nDb, void **zKey, int *nKey)
 {
     BOTANSQLITE_TRACE("sqlite3CodecGetKey");
-    (void)db;
-    (void)nDb;
 
-    // The unencrypted password is not stored for security reasons
-    // therefore always return NULL
-    *zKey = NULL;
+    Btree *pbt = db->aDb[nDb].pBt;
+    Pager *pPager = sqlite3BtreePager(pbt);
+    void *pCodec = sqlite3PagerGetCodec(pPager);
 
-    // Return non-null to prevent VACUUM from changing the page size, which is not supported
-    *nKey = -1;
+    GetWritePassword(pCodec, (char**)zKey, nKey);
 }
 
 int sqlite3_key_v2(sqlite3 *db, const char *zDbName, const void *zKey, int nKey)

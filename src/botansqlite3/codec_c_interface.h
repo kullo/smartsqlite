@@ -20,6 +20,8 @@ void* InitializeFromOtherCodec(const void *otherCodec, void *db);
 
 void GenerateWriteKey(void *codec, const char *userPassword, int passwordLength);
 
+void GetWritePassword(void *codec, char **password, int *passwordLength);
+
 void DropWriteKey(void *codec);
 
 void SetWriteIsRead(void *codec);

@@ -74,6 +74,13 @@ protected:
         connection_->exec(std::string("INSERT INTO ") + db + ".tbl VALUES (42, 'the truth')");
     }
 
+    void attach()
+    {
+        connection_->exec(
+                    std::string("ATTACH DATABASE '") + attachedFilename_ + "' "
+                    + "AS att");
+    }
+
     void attachWithKey(const std::string &key)
     {
         connection_->exec(
@@ -255,6 +262,25 @@ TEST_F(BotanSqlite3, vacuumWorks)
     checkForTestData();
     disconnect();
     deleteDb(dbFilename_);
+}
+
+TEST_F(BotanSqlite3, attachWithSameKey)
+{
+    connect();
+    setKey("somekey");
+    createTable();
+
+    attach();
+    createTable("att");
+    disconnect();
+
+    connect(attachedFilename_);
+    setKey("somekey");
+    checkForTestData();
+    disconnect();
+
+    deleteDb(dbFilename_);
+    deleteDb(attachedFilename_);
 }
 
 TEST_F(BotanSqlite3, attachWithoutKey)

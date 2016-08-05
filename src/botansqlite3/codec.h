@@ -58,6 +58,7 @@ public:
     Codec(const Codec *other, void *db);
 
     void generateWriteKey(const char *userPassword, int passwordLength);
+    void getWritePassword(const char **password, int *passwordLength);
     void dropWriteKey();
     void setWriteIsRead();
     void setReadIsWrite();
@@ -76,6 +77,9 @@ public:
 private:
     bool m_hasReadKey = false;
     bool m_hasWriteKey = false;
+
+    std::string m_readPassword;
+    std::string m_writePassword;
 
     Botan::SymmetricKey
         m_readKey,

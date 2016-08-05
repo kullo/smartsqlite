@@ -47,13 +47,14 @@ void Codec::generateWriteKey(const char *userPassword, int passwordLength)
     assert(userPassword);
     assert(passwordLength >= 0);
     auto pwLength = static_cast<std::string::size_type>(passwordLength);
+    m_writePassword = std::string(userPassword, pwLength);
 
     try
     {
         auto pbkdf = Botan::PBKDF::create(PBKDF_STR);
         Botan::SymmetricKey masterKey = pbkdf->derive_key(
                     KEY_SIZE + IV_DERIVATION_KEY_SIZE,
-                    std::string(userPassword, pwLength),
+                    m_writePassword,
                     reinterpret_cast<const Botan::byte*>(SALT_STR.c_str()),
                     SALT_SIZE,
                     PBKDF_ITERATIONS);
@@ -68,6 +69,25 @@ void Codec::generateWriteKey(const char *userPassword, int passwordLength)
     }
 }
 
+void Codec::getWritePassword(const char **password, int *passwordLength)
+{
+    if (m_writePassword.empty())
+    {
+        *password = nullptr;
+        *passwordLength = 0;
+    }
+    else
+    {
+        *password = m_writePassword.c_str();
+
+        // safe conversion to int
+        using LengthType = std::remove_pointer<decltype(passwordLength)>::type;
+        auto size = m_writePassword.size();
+        assert(size < std::numeric_limits<LengthType>::max());
+        *passwordLength = static_cast<LengthType>(size);
+    }
+}
+
 void Codec::dropWriteKey()
 {
     m_hasWriteKey = false;
@@ -75,6 +95,7 @@ void Codec::dropWriteKey()
 
 void Codec::setReadIsWrite()
 {
+    m_readPassword = m_writePassword;
     m_readKey = m_writeKey;
     m_ivReadKey = m_ivWriteKey;
     m_hasReadKey = m_hasWriteKey;
@@ -82,6 +103,7 @@ void Codec::setReadIsWrite()
 
 void Codec::setWriteIsRead()
 {
+    m_writePassword = m_readPassword;
     m_writeKey = m_readKey;
     m_ivWriteKey = m_ivReadKey;
     m_hasWriteKey = m_hasReadKey;
@@ -163,6 +185,11 @@ void GenerateWriteKey(void *codec, const char *userPassword, int passwordLength)
 {
     assert(codec);
     static_cast<Codec*>(codec)->generateWriteKey(userPassword, passwordLength);
+}
+void GetWritePassword(void *codec, char **password, int *passwordLength)
+{
+    assert(codec);
+    static_cast<Codec*>(codec)->getWritePassword(const_cast<const char **>(password), passwordLength);
 }
 void DropWriteKey(void *codec)
 {
