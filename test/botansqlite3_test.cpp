@@ -171,6 +171,39 @@ TEST_F(BotanSqlite3, preventsAccessWithWrongKey)
     deleteDb(dbFilename_);
 }
 
+TEST_F(BotanSqlite3, preventsShortKey)
+{
+    auto shortKey = SOME_KEY;
+    shortKey.pop_back();
+
+    connect();
+    EXPECT_THROW(setKey(shortKey), SmartSqlite::SqliteException);
+    disconnect();
+    deleteDb(dbFilename_);
+}
+
+TEST_F(BotanSqlite3, preventsLongKey)
+{
+    auto longKey = SOME_KEY;
+    longKey.push_back('0');
+
+    connect();
+    EXPECT_THROW(setKey(longKey), SmartSqlite::SqliteException);
+    disconnect();
+    deleteDb(dbFilename_);
+}
+
+TEST_F(BotanSqlite3, preventsInvalidBase64Key)
+{
+    auto invalidKey = SOME_KEY;
+    invalidKey.back() = 'x';
+
+    connect();
+    EXPECT_THROW(setKey(invalidKey), SmartSqlite::SqliteException);
+    disconnect();
+    deleteDb(dbFilename_);
+}
+
 TEST_F(BotanSqlite3, encryptDatabase)
 {
     connect();
