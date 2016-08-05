@@ -24,6 +24,22 @@
 
 using namespace testing;
 
+namespace {
+
+// 96B = 768b
+std::string SOME_KEY =
+        "MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0"
+        "NTY3ODkwMTIxMjM0NTY3ODkwMTIzNDU2"
+        "Nzg5MDEyMzQ1Njc4OTAxMjEyMzQ1Njc4"
+        "OTAxMjM0NTY3ODkwMTIzNDU2Nzg5MDEy";
+std::string ANOTHER_KEY =
+        "MDk4NzY1NDMyMTA5ODc2NTQzMjEwOTg3"
+        "NjU0MzIxMDkwOTg3NjU0MzIxMDk4NzY1"
+        "NDMyMTA5ODc2NTQzMjEwOTA5ODc2NTQz"
+        "MjEwOTg3NjU0MzIxMDk4NzY1NDMyMTA5";
+
+}
+
 class BotanSqlite3: public Test
 {
 protected:
@@ -117,12 +133,12 @@ protected:
 TEST_F(BotanSqlite3, canAccessEncryptedDatabase)
 {
     connect();
-    setKey("somekey");
+    setKey(SOME_KEY);
     createTable();
     disconnect();
 
     connect();
-    setKey("somekey");
+    setKey(SOME_KEY);
     checkForTestData();
     disconnect();
     deleteDb(dbFilename_);
@@ -131,7 +147,7 @@ TEST_F(BotanSqlite3, canAccessEncryptedDatabase)
 TEST_F(BotanSqlite3, preventsAccessWithoutKey)
 {
     connect();
-    setKey("somekey");
+    setKey(SOME_KEY);
     createTable();
     disconnect();
 
@@ -144,12 +160,12 @@ TEST_F(BotanSqlite3, preventsAccessWithoutKey)
 TEST_F(BotanSqlite3, preventsAccessWithWrongKey)
 {
     connect();
-    setKey("somekey");
+    setKey(SOME_KEY);
     createTable();
     disconnect();
 
     connect();
-    setKey("anotherkey");
+    setKey(ANOTHER_KEY);
     EXPECT_THROW(checkForTestData(), SmartSqlite::SqliteException);
     disconnect();
     deleteDb(dbFilename_);
@@ -162,12 +178,12 @@ TEST_F(BotanSqlite3, encryptDatabase)
     disconnect();
 
     connect();
-    rekey("somekey");
+    rekey(SOME_KEY);
     checkForTestData();
     disconnect();
 
     connect();
-    setKey("somekey");
+    setKey(SOME_KEY);
     checkForTestData();
     disconnect();
 
@@ -177,18 +193,18 @@ TEST_F(BotanSqlite3, encryptDatabase)
 TEST_F(BotanSqlite3, changeKey)
 {
     connect();
-    setKey("somekey");
+    setKey(SOME_KEY);
     createTable();
     disconnect();
 
     connect();
-    setKey("somekey");
-    rekey("anotherkey");
+    setKey(SOME_KEY);
+    rekey(ANOTHER_KEY);
     checkForTestData();
     disconnect();
 
     connect();
-    setKey("anotherkey");
+    setKey(ANOTHER_KEY);
     checkForTestData();
     disconnect();
 
@@ -198,12 +214,12 @@ TEST_F(BotanSqlite3, changeKey)
 TEST_F(BotanSqlite3, decryptDatabase)
 {
     connect();
-    setKey("somekey");
+    setKey(SOME_KEY);
     createTable();
     disconnect();
 
     connect();
-    setKey("somekey");
+    setKey(SOME_KEY);
     rekey("");
     checkForTestData();
     disconnect();
@@ -218,17 +234,17 @@ TEST_F(BotanSqlite3, decryptDatabase)
 TEST_F(BotanSqlite3, vacuumWorks)
 {
     connect();
-    setKey("somekey");
+    setKey(SOME_KEY);
     createTable();
     disconnect();
 
     connect();
-    setKey("somekey");
+    setKey(SOME_KEY);
     connection_->exec("VACUUM");
     disconnect();
 
     connect();
-    setKey("somekey");
+    setKey(SOME_KEY);
     checkForTestData();
     disconnect();
     deleteDb(dbFilename_);
@@ -237,7 +253,7 @@ TEST_F(BotanSqlite3, vacuumWorks)
 TEST_F(BotanSqlite3, attachWithSameKey)
 {
     connect();
-    setKey("somekey");
+    setKey(SOME_KEY);
     createTable();
 
     attach();
@@ -245,7 +261,7 @@ TEST_F(BotanSqlite3, attachWithSameKey)
     disconnect();
 
     connect(attachedFilename_);
-    setKey("somekey");
+    setKey(SOME_KEY);
     checkForTestData();
     disconnect();
 
@@ -256,7 +272,7 @@ TEST_F(BotanSqlite3, attachWithSameKey)
 TEST_F(BotanSqlite3, attachWithoutKey)
 {
     connect();
-    setKey("somekey");
+    setKey(SOME_KEY);
     createTable();
 
     attachWithKey("");
@@ -274,15 +290,15 @@ TEST_F(BotanSqlite3, attachWithoutKey)
 TEST_F(BotanSqlite3, attachWithDifferentKey)
 {
     connect();
-    setKey("somekey");
+    setKey(SOME_KEY);
     createTable();
 
-    attachWithKey("anotherkey");
+    attachWithKey(ANOTHER_KEY);
     createTable("att");
     disconnect();
 
     connect(attachedFilename_);
-    setKey("anotherkey");
+    setKey(ANOTHER_KEY);
     checkForTestData();
     disconnect();
 
@@ -295,12 +311,12 @@ TEST_F(BotanSqlite3, attachWhenMainIsUnencrypted)
     connect();
     createTable();
 
-    attachWithKey("somekey");
+    attachWithKey(SOME_KEY);
     createTable("att");
     disconnect();
 
     connect(attachedFilename_);
-    setKey("somekey");
+    setKey(SOME_KEY);
     checkForTestData();
     disconnect();
 
