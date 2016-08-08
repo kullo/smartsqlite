@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8.12)  # version provided by Ubuntu 14.04
 
-if((NOT CMAKE_BUILD_TYPE) OR (CMAKE_BUILD_TYPE STREQUAL "Debug"))
+if(((NOT CMAKE_BUILD_TYPE) OR (CMAKE_BUILD_TYPE STREQUAL "Debug")) AND (NOT CMAKE_GENERATOR STREQUAL "Xcode"))
     set(install_prefix_suffix "-debug")
 else()
     set(install_prefix_suffix "")
