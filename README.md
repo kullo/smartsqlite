@@ -103,8 +103,8 @@ Please add yourself to the list using PRs.
 License
 -------
 
-SmartSqlite is licensed under the Apache License 2.0.
-The encryption module botansqlite3 is licensed under the [Botan license](https://botan.randombit.net/license.txt), a 2-clause BSD license.
+SmartSqlite is licensed under the Apache License 2.0 (see LICENSE.txt).
+The encryption module botansqlite3 is licensed under the Botan license, a 2-clause BSD license (see src/botansqlite3/LICENSE.txt).
 
 ```
 Copyright 2014–2016 The SmartSqlite contributors (see NOTICE.txt)
