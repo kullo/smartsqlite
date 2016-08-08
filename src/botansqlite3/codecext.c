@@ -165,9 +165,18 @@ void sqlite3CodecGetKey(sqlite3* db, int nDb, void **zKey, int *nKey)
 
     Btree *pbt = db->aDb[nDb].pBt;
     Pager *pPager = sqlite3BtreePager(pbt);
-    void *pCodec = sqlite3PagerGetCodec(pPager);
+    assert(pPager);
 
-    GetWritePassword(pCodec, (char**)zKey, nKey);
+    void *pCodec = sqlite3PagerGetCodec(pPager);
+    if (pCodec)
+    {
+        GetWritePassword(pCodec, (char**)zKey, nKey);
+    }
+    else
+    {
+        *zKey = NULL;
+        *nKey = 0;
+    }
 }
 
 int sqlite3_key_v2(sqlite3 *db, const char *zDbName, const void *zKey, int nKey)
