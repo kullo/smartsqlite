@@ -61,6 +61,7 @@ SmartSqlite has a linear versioning and the API might break at any time.
 
 Version     | SQLite version | Changes in SmartSqlite
 ----------- | -------------- | ----------------------
+v13         | 3.13.0         | Add a copy of botansqlite3 to the project
 v12         | 3.13.0         | Update build system: use libc++ with Linux+clang. Add sqlite3 shell binary to build.
 v11         | 3.13.0         | Add Connection::changes(); Add ScopedSavepoint
 v10         | 3.13.0         | Improve cmake configuration; Add OS X build to Travis
