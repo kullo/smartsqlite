@@ -52,6 +52,9 @@ public:
     Statement prepare(const std::string &sql);
     void exec(const std::string &sql);
 
+    void setKey(const std::string &keyBase64);
+    void changeKey(const std::string &keyBase64);
+
     void beginTransaction(TransactionType type = Deferred);
     void commitTransaction();
     void rollbackTransaction();

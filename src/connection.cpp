@@ -114,6 +114,28 @@ void Connection::exec(const std::string &sql)
     }
 }
 
+void Connection::setKey(const std::string &keyBase64)
+{
+#if defined(SQLITE_HAS_CODEC) && SQLITE_HAS_CODEC
+    CHECK_RESULT_CONN(
+                sqlite3_key(conn_.get(), keyBase64.c_str(), keyBase64.size()),
+                conn_.get());
+#else
+    throw FeatureUnavailable("botansqlite3");
+#endif
+}
+
+void Connection::changeKey(const std::string &keyBase64)
+{
+#if defined(SQLITE_HAS_CODEC) && SQLITE_HAS_CODEC
+    CHECK_RESULT_CONN(
+                sqlite3_rekey(conn_.get(), keyBase64.c_str(), keyBase64.size()),
+                conn_.get());
+#else
+    throw FeatureUnavailable("botansqlite3");
+#endif
+}
+
 void Connection::beginTransaction(TransactionType type)
 {
     std::string typeStr;

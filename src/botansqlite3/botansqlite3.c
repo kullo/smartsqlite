@@ -4,8 +4,6 @@
  * Distributed under the terms of the Botan license
  */
 
-#define SQLITE_HAS_CODEC 1
-
 #if defined __clang__
     #pragma clang diagnostic push
     #pragma clang diagnostic ignored "-Wcast-align"

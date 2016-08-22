@@ -75,12 +75,12 @@ protected:
 
     void setKey(const std::string &key)
     {
-        connection_->exec(std::string("PRAGMA key='") + key + "'");
+        connection_->setKey(key);
     }
 
     void rekey(const std::string &key)
     {
-        connection_->exec(std::string("PRAGMA rekey='") + key + "'");
+        connection_->changeKey(key);
     }
 
     void createTable(const std::string db = "main")

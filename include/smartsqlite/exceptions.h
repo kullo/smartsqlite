@@ -62,4 +62,10 @@ public:
     SqliteException(const std::string &func, int resultCode, const std::string &message);
 };
 
+class FeatureUnavailable : public Exception
+{
+public:
+    FeatureUnavailable(const std::string &feature);
+};
+
 }

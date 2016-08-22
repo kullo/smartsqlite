@@ -95,6 +95,7 @@ target_link_libraries(smartsqlite PUBLIC ${CMAKE_THREAD_LIBS_INIT})
 
 if(WITH_BOTAN)
     target_link_libraries(smartsqlite PUBLIC botan)
+    target_compile_definitions(smartsqlite PRIVATE SQLITE_HAS_CODEC=1)
 endif()
 
 if(UNIX)

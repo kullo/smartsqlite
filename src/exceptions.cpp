@@ -80,4 +80,9 @@ SqliteException::SqliteException(const std::string &func, int resultCode, const 
 {
 }
 
+FeatureUnavailable::FeatureUnavailable(const std::string &feature)
+    : Exception(std::string("Feature unavailable: ") + feature)
+{
+}
+
 }
