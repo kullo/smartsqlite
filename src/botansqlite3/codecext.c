@@ -74,13 +74,17 @@ static void* Codec(void *pCodec, void *data, Pgno nPageNum, int nMode)
     case 0: // Undo a "case 7" journal file encryption
     case 2: // Reload a page
     case 3: // Load a page
-        assert(HasReadKey(pCodec));
-        Decrypt(pCodec, nPageNum, (unsigned char*) data);
+        if (HasReadKey(pCodec))
+        {
+            Decrypt(pCodec, nPageNum, (unsigned char*) data);
+        }
         break;
 
     case 6: // Encrypt a page for the main database file
-        assert(HasWriteKey(pCodec));
-        data = Encrypt(pCodec, nPageNum, (unsigned char*) data, true);
+        if (HasWriteKey(pCodec))
+        {
+            data = Encrypt(pCodec, nPageNum, (unsigned char*) data, true);
+        }
         break;
 
     case 7: // Encrypt a page for the journal file
@@ -93,8 +97,10 @@ static void* Codec(void *pCodec, void *data, Pgno nPageNum, int nMode)
         *the database's readkey, which is guaranteed to be the same key that was used to
         *read and write the original data.
         */
-        assert(HasReadKey(pCodec));
-        data = Encrypt(pCodec, nPageNum, (unsigned char*) data, false);
+        if (HasReadKey(pCodec))
+        {
+            data = Encrypt(pCodec, nPageNum, (unsigned char*) data, false);
+        }
         break;
 
     default:
