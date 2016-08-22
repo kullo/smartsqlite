@@ -43,8 +43,8 @@ public:
     Codec(void *db);
     Codec(const Codec *other, void *db);
 
-    void getWriteKey(const char **key, int *keyLength);
-    void setWriteKey(const char *key, int keyLength);
+    void getWriteKey(const char **key, size_t *keyLength);
+    void setWriteKey(const char *key, size_t keyLength);
     void dropWriteKey();
     void setWriteIsRead();
     void setReadIsWrite();

@@ -18,9 +18,9 @@ void* InitializeNewCodec(void *db);
 
 void* InitializeFromOtherCodec(const void *otherCodec, void *db);
 
-void GetWriteKey(void *codec, char **key, int *keyLength);
+void GetWriteKey(void *codec, char **key, size_t *keyLength);
 
-void SetWriteKey(void *codec, const char *key, int keyLength);
+void SetWriteKey(void *codec, const char *key, size_t keyLength);
 
 void DropWriteKey(void *codec);
 

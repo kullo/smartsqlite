@@ -147,7 +147,8 @@ int sqlite3CodecAttach(sqlite3 *db, int nDb, const void *zKey, int nKey)
     {
         // Key specified, setup encryption key for database
         pCodec = InitializeNewCodec(db);
-        SetWriteKey(pCodec, (const char*) zKey, nKey);
+        assert(nKey >= 0);
+        SetWriteKey(pCodec, (const char*) zKey, (size_t) nKey);
 
         if (HandleError(pCodec))
         {
@@ -180,7 +181,9 @@ void sqlite3CodecGetKey(sqlite3* db, int nDb, void **zKey, int *nKey)
     void *pCodec = sqlite3PagerGetCodec(pPager);
     if (pCodec)
     {
-        GetWriteKey(pCodec, (char**)zKey, nKey);
+        size_t nKeySize;
+        GetWriteKey(pCodec, (char**)zKey, &nKeySize);
+        *nKey = (int)nKeySize;
     }
     else
     {
@@ -231,7 +234,8 @@ int sqlite3_rekey(sqlite3 *db, const void *zKey, int nKey)
     {
         // Database not encrypted, but key specified. Encrypt database
         pCodec = InitializeNewCodec(db);
-        SetWriteKey(pCodec, (const char*) zKey, nKey);
+        assert(nKey >= 0);
+        SetWriteKey(pCodec, (const char*) zKey, (size_t) nKey);
         
         if (HandleError(pCodec))
         {
@@ -251,7 +255,8 @@ int sqlite3_rekey(sqlite3 *db, const void *zKey, int nKey)
     {
         // Database encrypted and key specified. Re-encrypt database with new key
         // Keep read key, change write key to new key
-        SetWriteKey(pCodec, (const char*) zKey, nKey);
+        assert(nKey >= 0);
+        SetWriteKey(pCodec, (const char*) zKey, (size_t) nKey);
         if (HandleError(pCodec)) return SQLITE_ERROR;
     }
 

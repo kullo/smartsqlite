@@ -117,8 +117,10 @@ void Connection::exec(const std::string &sql)
 void Connection::setKey(const std::string &keyBase64)
 {
 #if defined(SQLITE_HAS_CODEC) && SQLITE_HAS_CODEC
+    auto keySize = keyBase64.size();
+    assert(keySize <= std::numeric_limits<int>::max());
     CHECK_RESULT_CONN(
-                sqlite3_key(conn_.get(), keyBase64.c_str(), keyBase64.size()),
+                sqlite3_key(conn_.get(), keyBase64.c_str(), static_cast<int>(keySize)),
                 conn_.get());
 #else
     throw FeatureUnavailable("botansqlite3");
@@ -128,8 +130,10 @@ void Connection::setKey(const std::string &keyBase64)
 void Connection::changeKey(const std::string &keyBase64)
 {
 #if defined(SQLITE_HAS_CODEC) && SQLITE_HAS_CODEC
+    auto keySize = keyBase64.size();
+    assert(keySize <= std::numeric_limits<int>::max());
     CHECK_RESULT_CONN(
-                sqlite3_rekey(conn_.get(), keyBase64.c_str(), keyBase64.size()),
+                sqlite3_rekey(conn_.get(), keyBase64.c_str(), static_cast<int>(keySize)),
                 conn_.get());
 #else
     throw FeatureUnavailable("botansqlite3");

@@ -44,7 +44,7 @@ Codec::Codec(const Codec *other, void *db)
     m_ivWriteKey = other->m_ivWriteKey;
 }
 
-void Codec::setWriteKey(const char *key, int keyLength)
+void Codec::setWriteKey(const char *key, size_t keyLength)
 {
     assert(key);
     assert(keyLength > 0);
@@ -93,7 +93,7 @@ void Codec::setWriteKey(const char *key, int keyLength)
     }
 }
 
-void Codec::getWriteKey(const char **key, int *keyLength)
+void Codec::getWriteKey(const char **key, size_t *keyLength)
 {
     *key = reinterpret_cast<const char *>(m_encodedWriteKey.c_str());
     *keyLength = m_encodedWriteKey.size();
@@ -192,12 +192,12 @@ void* InitializeFromOtherCodec(const void *otherCodec, void *db)
 {
     return new Codec(static_cast<const Codec*>(otherCodec), db);
 }
-void SetWriteKey(void *codec, const char *key, int keyLength)
+void SetWriteKey(void *codec, const char *key, size_t keyLength)
 {
     assert(codec);
     static_cast<Codec*>(codec)->setWriteKey(key, keyLength);
 }
-void GetWriteKey(void *codec, char **key, int *keyLength)
+void GetWriteKey(void *codec, char **key, size_t *keyLength)
 {
     assert(codec);
     static_cast<Codec*>(codec)->getWriteKey(const_cast<const char **>(key), keyLength);
