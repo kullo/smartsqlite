@@ -148,6 +148,8 @@ int sqlite3CodecAttach(sqlite3 *db, int nDb, const void *zKey, int nKey)
         // Key specified, setup encryption key for database
         pCodec = InitializeNewCodec(db);
         SetWriteKey(pCodec, (const char*) zKey, nKey);
+        if (HandleError(pCodec)) return SQLITE_ERROR;
+
         SetReadIsWrite(pCodec);
         sqlite3PagerSetCodec(
                     sqlite3BtreePager(db->aDb[nDb].pBt),
