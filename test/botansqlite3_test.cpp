@@ -174,7 +174,7 @@ TEST_F(BotanSqlite3, preventsAccessWithWrongKey)
 TEST_F(BotanSqlite3, preventsShortKey)
 {
     auto shortKey = SOME_KEY;
-    shortKey.pop_back();
+    shortKey.back() = '='; // remove last char
 
     connect();
     EXPECT_THROW(setKey(shortKey), SmartSqlite::SqliteException);
@@ -185,7 +185,7 @@ TEST_F(BotanSqlite3, preventsShortKey)
 TEST_F(BotanSqlite3, preventsLongKey)
 {
     auto longKey = SOME_KEY;
-    longKey.push_back('0');
+    longKey.append("Mw=="); // "3" + padding
 
     connect();
     EXPECT_THROW(setKey(longKey), SmartSqlite::SqliteException);
@@ -196,7 +196,7 @@ TEST_F(BotanSqlite3, preventsLongKey)
 TEST_F(BotanSqlite3, preventsInvalidBase64Key)
 {
     auto invalidKey = SOME_KEY;
-    invalidKey.back() = 'x';
+    invalidKey.back() = '%';
 
     connect();
     EXPECT_THROW(setKey(invalidKey), SmartSqlite::SqliteException);
