@@ -61,7 +61,7 @@ static void CodecSizeChange(void *pCodec, int pageSize, int nReserve)
     BOTANSQLITE_TRACE("CodecSizeChange");
     (void)nReserve;
     assert(pageSize >= 0);
-    SetPageSize(pCodec, (size_t)pageSize);
+    if (pCodec) SetPageSize(pCodec, (size_t)pageSize);
 }
 
 // Encrypt/Decrypt functionality (address passed in sqlite3PagerSetCodec)
