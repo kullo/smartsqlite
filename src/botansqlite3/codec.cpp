@@ -15,13 +15,19 @@ Codec::Codec(void *db)
 {
     try
     {
-        m_encipherFilter = get_cipher(BLOCK_CIPHER_STR, Botan::ENCRYPTION);
-        assert(m_encipherFilter);
-        m_decipherFilter = get_cipher(BLOCK_CIPHER_STR, Botan::DECRYPTION);
-        assert(m_decipherFilter);
+        m_encryptor.reset(
+                    Botan::get_cipher_mode(
+                        BLOCK_CIPHER_STR,
+                        Botan::Cipher_Dir::ENCRYPTION));
+        assert(m_encryptor);
+
+        m_decryptor.reset(
+                    Botan::get_cipher_mode(
+                        BLOCK_CIPHER_STR,
+                        Botan::Cipher_Dir::DECRYPTION));
+        assert(m_decryptor);
+
         m_mac = Botan::MessageAuthenticationCode::create(MAC_STR);
-        m_encipherPipe.append(m_encipherFilter);
-        m_decipherPipe.append(m_decipherFilter);
         assert(m_mac);
     }
     catch(Botan::Exception e)
@@ -123,21 +129,22 @@ void Codec::setWriteIsRead()
 unsigned char* Codec::encrypt(unsigned int page, unsigned char *data, bool useWriteKey)
 {
     assert(data);
-    memcpy(m_page, data, m_pageSize);
 
     try
     {
-        m_encipherFilter->set_key(useWriteKey ? m_writeKey : m_readKey);
-        m_encipherFilter->set_iv(getIVForPage(page, useWriteKey));
-        m_encipherPipe.process_msg(m_page, m_pageSize);
-        m_encipherPipe.read(
-                    m_page,
-                    m_encipherPipe.remaining(Botan::Pipe::LAST_MESSAGE),
-                    Botan::Pipe::LAST_MESSAGE);
+        m_encryptor->clear();
+        m_encryptor->set_key(useWriteKey ? m_writeKey : m_readKey);
+        auto iv = getIVForPage(page, useWriteKey).bits_of();
+        m_encryptor->start(iv.data(), iv.size());
+        Botan::secure_vector<unsigned char> dataVector(data, data + m_pageSize);
+        m_encryptor->finish(dataVector);
+        assert(dataVector.size() == m_pageSize);
+        std::copy(dataVector.begin(), dataVector.end(), m_page);
     }
     catch(Botan::Exception e)
     {
         m_botanErrorMsg.reset(new std::string(e.what()));
+        return data;
     }
 
     return m_page; //return location of newly ciphered data
@@ -148,13 +155,14 @@ void Codec::decrypt(unsigned int page, unsigned char *data)
     assert(data);
     try
     {
-        m_decipherFilter->set_key(m_readKey);
-        m_decipherFilter->set_iv(getIVForPage(page, false));
-        m_decipherPipe.process_msg(data, m_pageSize);
-        m_decipherPipe.read(
-                    data,
-                    m_decipherPipe.remaining(Botan::Pipe::LAST_MESSAGE),
-                    Botan::Pipe::LAST_MESSAGE);
+        m_decryptor->clear();
+        m_decryptor->set_key(m_readKey);
+        auto iv = getIVForPage(page, false).bits_of();
+        m_decryptor->start(iv.data(), iv.size());
+        Botan::secure_vector<unsigned char> dataVector(data, data + m_pageSize);
+        m_decryptor->finish(dataVector);
+        assert(dataVector.size() == m_pageSize);
+        std::copy(dataVector.begin(), dataVector.end(), data);
     }
     catch(Botan::Exception e)
     {

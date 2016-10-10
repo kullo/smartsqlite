@@ -73,12 +73,8 @@ private:
         m_ivReadKey,
         m_ivWriteKey;
 
-    Botan::Pipe
-        m_encipherPipe,
-        m_decipherPipe;
-
-    Botan::Keyed_Filter *m_encipherFilter = nullptr;
-    Botan::Keyed_Filter *m_decipherFilter = nullptr;
+    std::unique_ptr<Botan::Cipher_Mode> m_encryptor;
+    std::unique_ptr<Botan::Cipher_Mode> m_decryptor;
     std::unique_ptr<Botan::MessageAuthenticationCode> m_mac;
 
     size_t m_pageSize = 0;
