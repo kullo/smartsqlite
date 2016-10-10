@@ -108,3 +108,4 @@ License
 
 SmartSqlite is licensed under the Apache License 2.0 (see [NOTICE.txt](NOTICE.txt) and [LICENSE.txt](LICENSE.txt)).
 The encryption module botansqlite3 is licensed under the Botan license, a 2-clause BSD license (see src/botansqlite3/LICENSE.txt).
+The SQLite3 shell uses the Linenoise library for line editing. It is licensed under 2-clause BSD (see src/linenoise/LICENSE).

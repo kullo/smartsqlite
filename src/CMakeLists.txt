@@ -103,8 +103,17 @@ if(UNIX)
 endif()
 
 if(NOT IOS)
-    add_executable(sqlite3 shell.c)
-    target_include_directories(sqlite3 PRIVATE ${INCLUDE_DIR}/smartsqlite)
+    add_executable(sqlite3
+        linenoise/linenoise.h
+        linenoise/linenoise.c
+        shell.c
+    )
+    target_compile_definitions(sqlite3 PRIVATE HAVE_LINENOISE)
+    target_include_directories(sqlite3
+        PRIVATE
+            ${INCLUDE_DIR}/smartsqlite
+            linenoise
+    )
     target_link_libraries(sqlite3 smartsqlite)
     install(TARGETS sqlite3
         RUNTIME DESTINATION bin
