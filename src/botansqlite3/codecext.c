@@ -129,21 +129,28 @@ int sqlite3CodecAttach(sqlite3 *db, int nDb, const void *zKey, int nKey)
 
     if (!zKey || nKey <= 0)
     {
+        Pager *pager = sqlite3BtreePager(db->aDb[nDb].pBt);
+
         // No key specified, could mean either use the main db's encryption or no encryption
         if (nDb != 0 && nKey < 0)
         {
-            //Is an attached database, therefore use the key of main database, if main database is encrypted
+            // Is an attached database, therefore use the key of main database, if main database is encrypted
             void *pMainCodec = sqlite3PagerGetCodec(sqlite3BtreePager(db->aDb[0].pBt));
             if (pMainCodec)
             {
                 pCodec = InitializeFromOtherCodec(pMainCodec, db);
                 sqlite3PagerSetCodec(
-                            sqlite3BtreePager(db->aDb[nDb].pBt),
+                            pager,
                             Codec,
                             CodecSizeChange,
                             PagerFreeCodec,
                             pCodec);
             }
+        }
+        else
+        {
+            // No encryption requested
+            sqlite3PagerSetCodec(pager, NULL, NULL, NULL, NULL);
         }
     }
     else
