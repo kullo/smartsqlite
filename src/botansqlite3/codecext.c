@@ -38,7 +38,10 @@ static bool HandleError(void *pCodec)
     const char *error = GetError(pCodec);
     if (error)
     {
-        sqlite3ErrorWithMsg((sqlite3*)(GetDB(pCodec)), SQLITE_ERROR, "Botan Error: %s", error);
+        int errCode = SQLITE_ERROR;
+        const char *format = "Botan Error: %s";
+        sqlite3_log(errCode, format, error);
+        sqlite3ErrorWithMsg((sqlite3*)(GetDB(pCodec)), errCode, format, error);
         ResetError(pCodec);
         return true;
     }
