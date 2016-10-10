@@ -75,12 +75,11 @@ private:
 
     Botan::Pipe
         m_encipherPipe,
-        m_decipherPipe,
-        m_macPipe;
+        m_decipherPipe;
 
     Botan::Keyed_Filter *m_encipherFilter = nullptr;
     Botan::Keyed_Filter *m_decipherFilter = nullptr;
-    Botan::MAC_Filter *m_cmac = nullptr;
+    std::unique_ptr<Botan::MessageAuthenticationCode> m_mac;
 
     size_t m_pageSize = 0;
     unsigned char m_page[SQLITE_MAX_PAGE_SIZE] = {0};

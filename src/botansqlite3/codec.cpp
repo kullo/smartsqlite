@@ -19,10 +19,10 @@ Codec::Codec(void *db)
         assert(m_encipherFilter);
         m_decipherFilter = get_cipher(BLOCK_CIPHER_STR, Botan::DECRYPTION);
         assert(m_decipherFilter);
-        m_cmac = new Botan::MAC_Filter(MAC_STR);
+        m_mac = Botan::MessageAuthenticationCode::create(MAC_STR);
         m_encipherPipe.append(m_encipherFilter);
         m_decipherPipe.append(m_decipherFilter);
-        m_macPipe.append(m_cmac);
+        assert(m_mac);
     }
     catch(Botan::Exception e)
     {
@@ -166,9 +166,9 @@ Botan::InitializationVector Codec::getIVForPage(uint32_t page, bool useWriteKey)
 {
     unsigned char intiv[4];
     Botan::store_le(page, intiv);
-    m_cmac->set_key(useWriteKey ? m_ivWriteKey : m_ivReadKey);
-    m_macPipe.process_msg(intiv, 4);
-    return m_macPipe.read_all(Botan::Pipe::LAST_MESSAGE);
+    m_mac->clear();
+    m_mac->set_key(useWriteKey ? m_ivWriteKey : m_ivReadKey);
+    return m_mac->process(intiv, 4);
 }
 
 const char* Codec::getError()
