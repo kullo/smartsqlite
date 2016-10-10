@@ -103,12 +103,22 @@ if(UNIX)
 endif()
 
 if(NOT IOS)
-    add_executable(sqlite3
-        linenoise/linenoise.h
-        linenoise/linenoise.c
-        shell.c
-    )
-    target_compile_definitions(sqlite3 PRIVATE HAVE_LINENOISE)
+    if(UNIX)
+        set(SHELL_SOURCES
+            linenoise/linenoise.h
+            linenoise/linenoise.c
+            shell.c
+        )
+    else()
+        set(SHELL_SOURCES shell.c)
+    endif()
+
+    add_executable(sqlite3 ${SHELL_SOURCES})
+
+    if(UNIX)
+        target_compile_definitions(sqlite3 PRIVATE HAVE_LINENOISE)
+    endif()
+
     target_include_directories(sqlite3
         PRIVATE
             ${INCLUDE_DIR}/smartsqlite
