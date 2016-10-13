@@ -8,6 +8,7 @@ A copy of SQLite is shipped with this library,
 thanks [Richard](https://www.sqlite.org/crew.html)!
 
 [![Build Status](https://travis-ci.org/kullo/smartsqlite.svg?branch=master)](https://travis-ci.org/kullo/smartsqlite)
+[![Build status](https://ci.appveyor.com/api/projects/status/rx2v5ph0fuj4lume/branch/master?svg=true)](https://ci.appveyor.com/project/webmaster128/smartsqlite)
 
 Get started
 -----------

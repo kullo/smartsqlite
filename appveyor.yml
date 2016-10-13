@@ -1,0 +1,30 @@
+os: Visual Studio 2015
+
+platform:
+  - x86
+  - x86_amd64
+
+configuration:
+  - Release
+  - Debug
+
+environment:
+  matrix:
+    - MSVS: 2013
+    - MSVS: 2015
+
+install:
+  - git submodule update --init --recursive
+  - if %MSVS% == 2013 (
+       call "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" %PLATFORM%
+    )
+  - if %MSVS% == 2015 (
+       call "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" %PLATFORM%
+    )
+
+build_script:
+  - cl # check MSVC version
+  - cmake -DCMAKE_BUILD_TYPE=%configuration% -G "NMake Makefiles" .
+  - nmake
+  - ctest
+  - nmake install
