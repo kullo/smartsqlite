@@ -84,7 +84,7 @@ Compiler support
 
 * GCC 4.8+
 * Clang 3.4+
-* MSVC 2013+
+* MSVC 2015+
 
 
 Contibutions

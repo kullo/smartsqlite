@@ -18,21 +18,13 @@
 #include <exception>
 #include <string>
 
-#if defined(_MSC_VER) && (_MSC_VER < 1900)
-  // in MSVS 2013, where is no noexcept keyword
-  #include <yvals.h>
-  #define SMARTSQLITE_NOEXCEPT _NOEXCEPT
-#else
-  #define SMARTSQLITE_NOEXCEPT noexcept
-#endif
-
 namespace SmartSqlite {
 
 class Exception : public std::exception
 {
 public:
-    Exception(const std::string &message, const std::string &sql = "") SMARTSQLITE_NOEXCEPT;
-    const char *what() const SMARTSQLITE_NOEXCEPT override;
+    Exception(const std::string &message, const std::string &sql = "") noexcept;
+    const char *what() const noexcept override;
 
 protected:
     std::string m_message;

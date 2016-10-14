@@ -10,14 +10,10 @@ configuration:
 
 environment:
   matrix:
-    - MSVS: 2013
     - MSVS: 2015
 
 install:
   - git submodule update --init --recursive
-  - if %MSVS% == 2013 (
-       call "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" %PLATFORM%
-    )
   - if %MSVS% == 2015 (
        call "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" %PLATFORM%
     )
@@ -28,3 +24,8 @@ build_script:
   - nmake
   - ctest
   - nmake install
+
+# whitelist branches to avoid testing feature branches twice (as branch and as pull request)
+branches:
+  only:
+    - master
