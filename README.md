@@ -62,6 +62,7 @@ SmartSqlite has a linear versioning and the API might break at any time.
 
 Version     | SQLite version | Changes in SmartSqlite
 ----------- | -------------- | ----------------------
+v16         | 3.15.1         | -
 v15         | 3.14.2         | -
 v14         | 3.14.1         | Rework botansqlite3 key handling
 v13         | 3.13.0         | Add a copy of botansqlite3 to the project
