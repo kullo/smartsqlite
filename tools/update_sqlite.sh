@@ -2,6 +2,16 @@
 set -o errexit -o nounset -o pipefail
 which shellcheck > /dev/null && shellcheck "$0"
 
+function print_usage {
+    echo "Usage: $0 version"
+    echo ""
+    echo "version: version in the format 3XXYY00 for SQLite 3.X.Y"
+}
+
+if [[ $# != 1 ]]; then
+    print_usage
+    exit 1
+fi
 
 VERSION="$1"
 
