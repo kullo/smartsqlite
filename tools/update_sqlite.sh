@@ -19,8 +19,9 @@ FILENAME="sqlite-amalgamation-$VERSION"
 
 (
     cd tmp
+    YEAR="${SQLITE_YEAR:-$(date +%Y)}"
     wget --output-document="$FILENAME.zip" \
-      "https://www.sqlite.org/2016/sqlite-amalgamation-$VERSION.zip"
+      "https://www.sqlite.org/$YEAR/sqlite-amalgamation-$VERSION.zip"
     sha1sum "$FILENAME.zip"
     unzip -o "$FILENAME.zip"
 )
