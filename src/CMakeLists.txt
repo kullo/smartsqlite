@@ -11,7 +11,7 @@ if(CMAKE_C_COMPILER_ID STREQUAL GNU)
         " -Wno-array-bounds -Wno-cast-qual -Wno-missing-field-initializers -Wno-switch-default"
     )
 elseif(CMAKE_C_COMPILER_ID STREQUAL Clang)
-    set_property(SOURCE sqlite3.c shell.c
+    set_property(SOURCE linenoise/linenoise.c sqlite3.c shell.c
         APPEND_STRING PROPERTY COMPILE_FLAGS
         " -w"
     )
