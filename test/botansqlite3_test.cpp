@@ -51,7 +51,8 @@ protected:
 
     std::string tempDbName()
     {
-        return std::string(std::tmpnam(nullptr)) + ".db";
+        char filename[L_tmpnam];
+        return std::string(std::tmpnam(filename));
     }
 
     void connect(std::string filename = "")
