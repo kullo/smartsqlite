@@ -84,6 +84,8 @@ namespace SmartSqlite {
         case SQLITE_IOERR_MMAP: return "SQLITE_IOERR_MMAP";
         case SQLITE_IOERR_GETTEMPPATH: return "SQLITE_IOERR_GETTEMPPATH";
         case SQLITE_IOERR_CONVPATH: return "SQLITE_IOERR_CONVPATH";
+        case SQLITE_IOERR_VNODE: return "SQLITE_IOERR_VNODE";
+        case SQLITE_IOERR_AUTH: return "SQLITE_IOERR_AUTH";
         case SQLITE_LOCKED_SHAREDCACHE: return "SQLITE_LOCKED_SHAREDCACHE";
         case SQLITE_BUSY_RECOVERY: return "SQLITE_BUSY_RECOVERY";
         case SQLITE_BUSY_SNAPSHOT: return "SQLITE_BUSY_SNAPSHOT";
@@ -110,6 +112,8 @@ namespace SmartSqlite {
         case SQLITE_NOTICE_RECOVER_WAL: return "SQLITE_NOTICE_RECOVER_WAL";
         case SQLITE_NOTICE_RECOVER_ROLLBACK: return "SQLITE_NOTICE_RECOVER_ROLLBACK";
         case SQLITE_WARNING_AUTOINDEX: return "SQLITE_WARNING_AUTOINDEX";
+        case SQLITE_AUTH_USER: return "SQLITE_AUTH_USER";
+        case SQLITE_OK_LOAD_PERMANENTLY: return "SQLITE_OK_LOAD_PERMANENTLY";
 
         default:
             if (result & static_cast<int>(0xffffff00))
