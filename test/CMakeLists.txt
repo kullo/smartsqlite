@@ -5,6 +5,7 @@ endif()
 add_executable(smartsqlite_tests
     blob_test.cpp
     connection_test.cpp
+    exceptions_test.cpp
     logging_test.cpp
     nullable_test.cpp
     scopedsavepoint_test.cpp
