@@ -1,4 +1,4 @@
-Copyright 2014–2016 The SmartSqlite contributors
+Copyright 2014–2017 The SmartSqlite contributors
 
 SmartSqlite has been contributed to by the following people (in alphabetic order):
   Daniel Seither (Kullo GmbH)
