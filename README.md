@@ -62,6 +62,7 @@ SmartSqlite has a linear versioning and the API might break at any time.
 
 Version     | SQLite version | Changes in SmartSqlite
 ----------- | -------------- | ----------------------
+v19         | 3.18.0         | -
 v18         | 3.17.0         | resultToResultName: Add missing result names
 v17         | 3.16.2         | -
 v16         | 3.15.1         | -
