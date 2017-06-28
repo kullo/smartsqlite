@@ -7,7 +7,7 @@
 #if defined __clang__
     #pragma clang diagnostic push
 
-    // ignore explicitly because clang 3.7 does not support
+    // ignore explicitly because clang 3.6/3.7 does not support
     // "-Weverything" here.
     #pragma clang diagnostic ignored "-Wcast-align"
     #pragma clang diagnostic ignored "-Wcast-qual"
@@ -16,11 +16,13 @@
     #pragma clang diagnostic ignored "-Wdisabled-macro-expansion"
     #pragma clang diagnostic ignored "-Wfloat-equal"
     #pragma clang diagnostic ignored "-Wmissing-variable-declarations"
+    #pragma clang diagnostic ignored "-Wparentheses-equality"
     #pragma clang diagnostic ignored "-Wsign-compare"
     #pragma clang diagnostic ignored "-Wsign-conversion"
     #pragma clang diagnostic ignored "-Wundef"
     #pragma clang diagnostic ignored "-Wunknown-pragmas"
     #pragma clang diagnostic ignored "-Wunused-function"
+    #pragma clang diagnostic ignored "-Wunused-value"
 
     // sufficient for newer clang versions
     #pragma clang diagnostic ignored "-Weverything"
