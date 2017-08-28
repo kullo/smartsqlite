@@ -130,6 +130,19 @@ if(NOT IOS)
     )
 endif()
 
+if(ANDROID)
+    # On Android, 64b filesystem operations aren't fully available on 32b archs
+    # below API level 24:
+    # https://android.googlesource.com/platform/bionic/+/master#32_bit-ABI-bugs-is-32_bit-1
+    # This leads to errors like the following:
+    # * SQLITE_IOERR_SHMOPEN (disk I/O error): disk I/O error
+    # * SQLITE_IOERR_SHMMAP (disk I/O error): disk I/O error
+    # Therefore, we disable the use of 64b filesystem calls, limiting maximum
+    # file size to 2 GiB.
+    target_compile_definitions(smartsqlite PRIVATE SQLITE_DISABLE_LFS)
+    target_compile_definitions(sqlite3 PRIVATE SQLITE_DISABLE_LFS)
+endif()
+
 install(TARGETS smartsqlite
     EXPORT smartsqlite
     ARCHIVE DESTINATION lib
