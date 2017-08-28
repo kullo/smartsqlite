@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <cstdio>
+#include <chrono>
 #include <memory>
 #include <string>
 
@@ -38,6 +38,7 @@ std::string ANOTHER_KEY =
         "NDMyMTA5ODc2NTQzMjEwOTA5ODc2NTQz"
         "MjEwOTg3NjU0MzIxMDk4NzY1NDMyMTA5";
 
+static int testCounter = 0;
 }
 
 class BotanSqlite3: public Test
@@ -51,8 +52,11 @@ protected:
 
     std::string tempDbName()
     {
-        char filename[L_tmpnam];
-        return std::string(std::tmpnam(filename));
+        const auto now = std::chrono::system_clock::now();
+        const auto time = std::chrono::duration_cast<std::chrono::seconds>(
+                    now.time_since_epoch()).count();
+        return "smartsqlitetest_" + std::to_string(time)
+                + "_" + std::to_string(testCounter++) + ".sqlite";
     }
 
     void connect(std::string filename = "")
