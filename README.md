@@ -62,6 +62,7 @@ SmartSqlite has a linear versioning and the API might break at any time.
 
 Version     | SQLite version | Changes in SmartSqlite
 ----------- | -------------- | ----------------------
+v21         | 3.20.1         | tests: Fix temp file name generation for BotanSqlite3; Prevent using 64b filesystem API calls on Android
 v20         | 3.19.2         | Enable FTS5 (full-text search)
 v19         | 3.18.0         | -
 v18         | 3.17.0         | resultToResultName: Add missing result names
