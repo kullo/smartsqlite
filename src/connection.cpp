@@ -123,6 +123,7 @@ void Connection::setKey(const std::string &keyBase64)
                 sqlite3_key(conn_.get(), keyBase64.c_str(), static_cast<int>(keySize)),
                 conn_.get());
 #else
+    (void)keyBase64;
     throw FeatureUnavailable("botansqlite3");
 #endif
 }
@@ -136,6 +137,7 @@ void Connection::changeKey(const std::string &keyBase64)
                 sqlite3_rekey(conn_.get(), keyBase64.c_str(), static_cast<int>(keySize)),
                 conn_.get());
 #else
+    (void)keyBase64;
     throw FeatureUnavailable("botansqlite3");
 #endif
 }
