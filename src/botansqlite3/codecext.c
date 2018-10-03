@@ -271,7 +271,7 @@ int sqlite3_rekey(sqlite3 *db, const void *zKey, int nKey)
     }
 
     // Start transaction
-    rc = sqlite3BtreeBeginTrans(pbt, 1);
+    rc = sqlite3BtreeBeginTrans(pbt, 1, 0);
     if (rc == SQLITE_OK)
     {
         // Rewrite all pages using the new encryption key (if specified)
