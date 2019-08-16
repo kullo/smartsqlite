@@ -62,6 +62,7 @@ SmartSqlite has a linear versioning and the API might break at any time.
 
 Version     | SQLite version | Changes in SmartSqlite
 ----------- | -------------- | ----------------------
+v25         | 3.29.0         | -
 v24         | 3.26.0         | resultToResultName: Add new extended result codes; Fix build breakage due to changed sqlite3BtreeBeginTrans interface
 v23         | 3.23.1         | resultToResultName: Add new extended result codes
 v22         | 3.21.0         | resultToResultName: Add new extended result codes
